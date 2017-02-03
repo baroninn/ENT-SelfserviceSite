@@ -1,0 +1,104 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Add Mailbox Permission";
+}
+@section script { 
+    <script>
+    $(document).ready(function () {
+        $("select[name=organization]").change(function () {
+            GetMailbox();
+
+        });
+
+        @if (Model.MailboxPermission != null)
+        {
+        <text>$("select[name=organization]").val("@Model.MailboxPermission.Organization");</text>
+        }
+
+        GetMailbox();
+    });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to add a permission group to a mailbox.</p>
+
+@using(Html.BeginForm("AddMailboxPermission", "Mail")) {
+<fieldset>
+    <legend>Add Mailbox Permission</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                @foreach(string organization in Model.Organizations) 
+                {
+                    <option @if(Model.ActionFailed)
+                            {
+                                if (organization == Model.MailboxPermission.Organization)
+                                {
+                                    @:selected="selected"
+                                }
+                            }>@organization</option>
+                }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox</td>
+            <td>
+                <select name="userprincipalname"><option>loading...</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">FullAccess</td>
+            <td>
+                <input name="fullaccess" type="checkbox" @if (Model.ActionFailed)
+                                                      {
+                                                          if (Model.MailboxPermission.FullAccess)
+                                                          {  
+                                                              @: checked="checked"
+                                                          } 
+                                                      } />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">SendAs</td>
+            <td>
+                <input name="sendas" type="checkbox" @if (Model.ActionFailed)
+                                                     {
+                                                         if (Model.MailboxPermission.SendAs)
+                                                         {  
+                                                             @: checked="checked"                                 
+                                                         } 
+                                                     } />
+            </td>
+        </tr>
+
+    </table>
+    
+    <input type="submit" value="Add Mailbox Permission" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

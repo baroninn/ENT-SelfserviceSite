@@ -1,0 +1,145 @@
+﻿@model SystemHostingPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Service > Customer Report > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a data usage report</p>
+
+@using (Html.BeginForm("CustomerReport", "Service")) {
+<fieldset>
+    <legend>Select Organization</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if(Model.Message != null) { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        @if (Model.MessageList.Count > 0)
+        {
+            foreach (string message in Model.MessageList)
+            {
+                <tr>
+                    <td colspan="2"><div class="message">@message</div></td>
+                </tr>
+            }
+        }
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td>
+                <select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                        <option @if(organization == Model.CustomerReport.Organization) {
+                                    @:selected="selected"
+                                }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+    </table>
+    <input type="submit" value="Create report" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}
+<fieldset>
+    <legend>Customer Report</legend>
+    
+    <fieldset>
+        <legend>Overview</legend>
+        <!-- <a href="~/Service/CustomerReportCSV?organization=@Model.CustomerReport.Organization">View Excelformat</a> -->
+
+        <table>
+            <tr>
+                <td>
+                    <center>
+                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.DiskfUsage&iQuota=@Model.CustomerReport.DiskfQuota" /><br />
+                        <small>Fig 1. Network share usage</small>
+                    </center>
+                </td>
+                <td valign="middle">
+                    <p>Disk Usage: @Model.CustomerReport.DiskUsage</p>
+                    <p>Disk Quota: @Model.CustomerReport.DiskQuota</p>
+                </td>
+                <td>
+                    <center>
+                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.ExchangefUsage&iQuota=@Model.CustomerReport.ExchangefQuota" /><br />
+                        <small>Fig 2. Exchange usage</small>
+                    </center>
+                </td>
+                <td valign="middle">
+                    <p>Exchange Usage: @Model.CustomerReport.ExchangeUsage GB</p>
+                    <p>Exchange Quota: @string.Format("{0:0.00}", Model.CustomerReport.ExchangefQuota) GB</p>
+                    <p>Exchange Users: @Model.CustomerReport.ExchangeUsersCount</p>
+                    <br />
+                    <p>Total: @Model.CustomerReport.DiskTotal GB</p>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Database usage</legend>
+        <table>
+            <tr>
+                <td>Total: @Model.CustomerReport.DatabaseUsage</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>Exchange users</legend>
+        <table>
+            <tr>
+                <td><b>Name</b></td>
+                <td><b>Email</b></td>
+                <td style="text-align:right"><b>Usage</b></td>
+                <td style="text-align:right"><b>Quota</b></td>
+            </tr>
+            @foreach (SystemHostingPortal.Models.ExchangeUser user in Model.CustomerReport.ExchangeUsers)
+            {
+                <tr>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td style="text-align:right">@user.Usage</td>
+                    <td style="text-align:right">@user.Quota</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>SPLA Licenses:</legend>
+        <table>
+            <tr>
+                <td><b>Windows: @Model.CustomerReport.Licenses.Windows.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.Windows)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Office Standard: @Model.CustomerReport.Licenses.OfficeStandard.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.OfficeStandard)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Mail Only: @Model.CustomerReport.Licenses.MailOnly.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.MailOnly)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Stud Jur: @Model.CustomerReport.Licenses.StudJur.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.StudJur)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    
+</fieldset>

@@ -1,0 +1,143 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Disable";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                GetMailbox();
+            });
+
+            GetMailbox();
+        });
+
+        function AddMailboxToList(json) {
+            //if (json.RecipientTypeDetails != "UserMailbox") { return }
+
+            var selected = json.UserPrincipalName == "@Model.EnableUser.UserPrincipalName" ? ' selected="selected"' : "";
+
+            $("select[name=userprincipalname]").append('<option value="' + json.UserPrincipalName + '"' + selected + '>' + json.Name + ' [' + json.RecipientTypeDetails + ']</option>');
+        }
+
+        function GetMailbox() {
+            var organization = $("select[name=organization]").val();
+            $("select[name=userprincipalname]").html('<option>loading...</option>');
+
+            $.get("/Ajax/GetMailbox", { "organization": organization }, function (data) {
+                $("select[name=userprincipalname]").html('');
+
+                var json = JSON.parse(data);
+                if (json.Failure) {
+                    AddError(json);
+                }
+                else {
+                    $("select[name=userprincipalname]").html("");
+                    if (json.length == null) {
+                        AddMailboxToList(json);
+                    }
+                    else {
+                        for (i = 0; i < json.length; i++) {
+                            AddMailboxToList(json[i]);
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetMailboxes() {
+            $("#upnselector").html("... loading");
+
+            var organization = $("select[name=organization]").val();
+
+            $.get("/Mail/GetMailboxes?organization=" + organization, function (data) {
+                $("#upnselector").html(data);
+            });
+        }
+
+        function DeleteConfirm() {
+            if ($("input[name=delete]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL DELETE THE USER!\n\nRESTORE COSTS CAKE!\n\nTHE CAKE IS NOT A LIE!")
+                if (!result) {
+                    $("input[name=delete]").prop("checked", false);
+                }
+            }
+        }
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to disable and/or hide a user account</p>
+
+@using(Html.BeginForm("Disable", "User")) {
+<fieldset>
+    <legend>Disable user</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                            <option @if(Model.ActionFailed)
+                                    {
+                                        if(organization == Model.DisableUser.Organization) {
+                                            @:selected="selected"
+                                        }
+                                    }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox</td>
+            <td>
+                <select name="userprincipalname"><option>loading...</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Disable user</td>
+            <td><input name="disable" type="checkbox" @if (Model.ActionFailed)
+                                                           {
+                                                               if (Model.DisableUser.Disable)
+                                                               { 
+                                                                    @:checked="checked"
+                                                                }
+                                                            }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Hide from address list</td>
+            <td><input name="hidefromaddresslist" type="checkbox" @if (Model.ActionFailed)
+                                                           {
+                                                               if (Model.DisableUser.HideFromAddressList)
+                                                               { 
+                                                                    @:checked="checked"
+                                                                }
+                                                            }/></td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Execute" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

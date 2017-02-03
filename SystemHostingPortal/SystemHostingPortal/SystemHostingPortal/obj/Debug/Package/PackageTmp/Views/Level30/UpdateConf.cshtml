@@ -1,0 +1,123 @@
+﻿@model SystemHostingPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > UpdateConf";
+}
+@section script {
+    }
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the Conf file for a given customer.</p>
+
+
+@using (Html.BeginForm("UpdateConf", "Level30")){
+<fieldset>
+    <legend>Update Configuration</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd"><span>Organization</span></td>
+            <td>
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
+                    {
+                        <option @if (Model.ActionFailed) { if (organization == Model.UpdateConf.Organization) { @: selected="selected"
+                                                                                                        } }>
+                            @organization
+                        </option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Exchange Server (FQDN)<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="exchangeserver" placeholder="XXX-EXCH-01.CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
+                                                                                                                                   } />
+
+                <div class="description">
+                    <p class="descriptiontext">
+                        If this is set, the conf will not look at Office365. Make sure you set this to "null" if the customer has Office365. You actually have to write null, if the customer previously has had their own exchange server..
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Domain FQDN<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="domainfqdn" placeholder="CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
+                                                                                                                           } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        This is mandatory..
+                    </p>
+                </div>
+            </td>
+            <td class="mandatory">*</td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Accepted Domains<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="accepteddomains" placeholder="XXX.dk, YYY.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AcceptedDomains"
+                                                                                                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        This is mandatory. ALL the customers accepteddomains must be added to this list..
+                    </p>
+                </div>
+            </td>
+            <td class="mandatory">*</td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>365 TenantID<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="tenantid365" placeholder="43eea929-d726-4742-83a9-603c12a0d195" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.TenantID365"
+                                                                                                                                                          } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        TenantID from CSP partner portal..
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">365 Admin User</td>
+            <td>
+                <input name="adminuser365" placeholder="admin@XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminUser365"
+                                                                                                                                                          } />
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">365 Admin Pass</td>
+            <td>
+                <input name="adminpass365" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminPass365"
+                                                                                                                                                          } />
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Update Conf" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+
+}

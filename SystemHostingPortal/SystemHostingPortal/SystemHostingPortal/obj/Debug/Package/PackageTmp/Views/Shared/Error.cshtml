@@ -1,0 +1,20 @@
+﻿@model System.Exception
+
+@{
+    ViewBag.Title = "Error";
+}
+
+<h1 class="title">An error has occurred...</h1>
+<p class="message error">
+    @Model.Message
+</p>
+
+@if (Model.InnerException != null)
+{
+<div class="message error collapsed">
+    <h2>Extended information [+]</h2>
+    <p>@Model.InnerException.Message</p>
+</div>
+    
+    
+}

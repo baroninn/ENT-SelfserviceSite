@@ -1,0 +1,85 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Remove";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetMailbox("UserMailbox");
+
+            $("select[name=organization]").change(function () {
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
+
+                GetMailbox("UserMailbox");
+            });
+
+            $("input[name=confirm]").click(function () {
+                if ($("input[name=confirm]").prop("checked")) {
+                    if (!confirm("DANGER DANGER DANGER\r\nThis action is permanent, which will delete the user, the users mailbox, files and folders and user profile disk.\r\nProceed at your own risk! The cake is not a lie.")) {
+                        $(this).prop("checked", false);
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+@using(Html.BeginForm("Remove", "User")) {
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <p>Use this form to remove a user.</p>
+
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        { 
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option selected="@(Model.RemoveUser.Remove != null && Model.RemoveUser.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td>
+                    <select name="userprincipalname"><option>loading...</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Confirm:</td>
+                <td>
+                    <input id="confirm" type="checkbox" name="confirm" />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Remove User" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}
+    

@@ -1,0 +1,94 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Add AcceptedDomain";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                $("#acceptedDomain").html("Loading...");
+                GetAcceptedDomain();
+            });
+
+            $("#acceptedDomain").html("Loading...");
+            GetAcceptedDomain();
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form add an accepted domain for a customer.</p>
+
+@using (Html.BeginForm("AddAcceptedDomain", "Mail"))
+{
+    <fieldset>
+        <legend>Add AcceptedDomain</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.AcceptedDomain.Organization) { @: selected="selected"
+                                                                    } }>
+                                @organization
+                                                                </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Accepted emaildomains:</td>
+                <td class="righttd">
+                    <div id="acceptedDomain"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Domain<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="domain" placeholder="testdomæne.dk" @if (Model.ActionFailed) { @: value="@Model.AcceptedDomain.Domain"
+                                                                                                                                                               } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This will add an accepted domain to the Capto tenant, and a UPN on the local on-prem AD.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Add as UPN</td>
+                <td>
+                    <input name="setasupn" type="checkbox" @if (Model.ActionFailed) { if (Model.AcceptedDomain.SetAsUPN) { @: checked="checked"
+                                                                                           } } />
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" value="Add AcceptedDomain" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

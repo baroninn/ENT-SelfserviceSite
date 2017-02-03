@@ -1,0 +1,115 @@
+﻿@model SystemHostingPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Remove Customer";
+}
+@section script {
+<script>
+            function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL REMOVE THE CUSTOMER!\n\nAre you so sure that you are willing to risk CAKE?!!")
+                if (!result) {
+                    $("input[name=confirm]").prop("checked", false);
+                }
+            }
+        }
+</script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p class="warning">  
+    Use this form to remove a customer completely. THERE IS NO TURNING BACK!!!!!
+    </p>
+
+@using (Html.BeginForm("RemoveCustomer", "Organization"))
+{
+    <fieldset>
+        <legend>Remove Customer</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd tooltip"><span>Organization<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.RemoveCustomer.Organization) { @: selected="selected"
+                                                                        } }>
+                                @organization
+                                                                    </option>
+                        }
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            When run, this will remove the customer completely. THERE IS NO TURNING BACK!!
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Remove Data<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="RemoveData" type="checkbox" @if (Model.ActionFailed) { if (Model.RemoveCustomer.RemoveData) { @: checked="checked"
+                                                                                                  } } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            By default the customer files won't be removed. Check this option to also delete the files.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Confirm<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.RemoveCustomer.Confirm) { @: checked="checked"
+                                                                                                     } } onclick="Confirm()" />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            You have to confirm.. 
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <table>
+            <tr>
+                <td class="lefttdhelp helptooltip"><span>Stuff to do manually:<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <div class="infohelp">
+                        <p class="infohelptext">
+                            <br />
+                        <p>Remove SQL DB</p>
+                        <br />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <br />
+        <input type="submit" id="buttonSubmit" value="Remove Customer" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

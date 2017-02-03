@@ -1,0 +1,127 @@
+﻿@model SystemHostingPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Create";
+}
+@section script {
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new customer.</p>
+
+
+@using(Html.BeginForm("Create", "Organization")) {
+<fieldset>
+    <legend>Create organization</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd tooltip"><span>Name<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="name" placeholder="Contoso" @if (Model.ActionFailed) {  @: value="@Model.Organization.Name"
+                                                                                                            } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Specifies the initials that the organization will be created as. This is limited to be between 2 and 5 characters.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Email Domain Name<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <span>dummy.</span>
+                <input style="width:83.7%" name="emaildomainname" placeholder="contoso.com" @if (Model.ActionFailed) {  @: value="@Model.Organization.EmailDomainName"
+                                                                                                               } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        This is the primary e-mail domain that the customer will use. The e-mail domain will be prepended with "dummy.", to ensure that existing organizations will not try to deliver e-mails to it, before it is ready.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>File Server<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <select name="fileserver">
+                    @foreach (string fileserver in Model.FileServers)
+                    {
+                        <option selected="@(Model.ActionFailed && Model.Organization.FileServer == fileserver)">@fileserver</option>
+                    }
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Specifies which file server that all user data will be stored on for the new organization. User Profile Disks are not affected by this.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>File Server Drive Letter<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="driveletter" placeholder="E" @if (Model.ActionFailed) {  @: value="@Model.Organization.FileServerDriveLetter"
+                                                                                                                                   } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Specifies on which drive on the file server that all user data will be stored on.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Solution<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <select name="solution">
+                    <option selected="@(Model.ActionFailed && Model.Organization.Solution.ToUpper() == "ADVOPLUS")">AdvoPlus</option>
+                    <option selected="@(Model.ActionFailed && Model.Organization.Solution.ToUpper() == "LEGAL")">Legal</option>
+                    <option selected="@(Model.ActionFailed && Model.Organization.Solution.ToUpper() == "MEMBER2015")">Member2015</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Specifies which Capto product the organization will be configured to use.
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+    <table>
+        <tr>
+            <td class="lefttdhelp helptooltip"><span>Click for help/guide:<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <div class="infohelp">
+                    <p class="infohelptext">
+                    <br/>
+                    <p>Følg guide på følgende link:</p>
+                    <br />
+                    <p><a href="https://dokuwiki.systemhosting.dk/doku.php?id=capto:opret_ny_kunde_ny" target="_blank">DokuWiki</a><p/>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <input type="submit" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+
+}

@@ -1,0 +1,110 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Create DistributionGroup";
+}
+@section script { 
+    <script>
+        $(document).ready(function() {
+            $("select[name=organization]").change(function () {
+                GetAcceptedDomain();
+                GetMailbox("UserMailbox");
+            });
+            
+            @if (Model.DistributionGroup != null)
+            {
+            @:$("select[name=organization]").val("@Model.DistributionGroup.Organization");
+            }
+
+            GetAcceptedDomain();
+            GetMailbox("UserMailbox");
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form create a new distributiongroup.</p>
+
+@using(Html.BeginForm("CreateDistributionGroup", "Mail")) {
+<fieldset>
+    <legend>Add alias</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                @foreach(string organization in Model.Organizations) 
+                {
+                    <option @if(Model.ActionFailed)
+                            {
+                                if(organization == Model.DistributionGroup.Organization) {
+                                    @:selected="selected"
+                                }
+                            }>@organization</option>
+                }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Accepted emaildomains:</td>
+            <td class="righttd">
+                <div id="acceptedDomain"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Group manager</td>
+            <td>
+                <select name="userprincipalname"><option>loading...</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Group name</td>
+            <td><input name="name" placeholder="Den Gode Gruppe" @if (Model.ActionFailed)
+                                                                                   { 
+                                                                                       @:value="@Model.DistributionGroup.Name" 
+                                                                                   }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Group email address</td>
+            <td><input name="primarysmtpaddress" placeholder="dgg@example.com" @if (Model.ActionFailed)
+                                                                                   { 
+                                                                                       @:value="@Model.DistributionGroup.UserPrincipalName" 
+                                                                                   }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Can receive external e-mail</td>
+            <td><input name="allowexternalemails" type="checkbox" @if (Model.ActionFailed)
+                                                           { 
+                                                                if(!Model.DistributionGroup.RequireSenderAuthentication) { 
+                                                                    @:checked
+                                                                }
+                                                            }
+                                                            else {
+                                                                @:checked
+                                                            }/></td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" value="Create Group" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

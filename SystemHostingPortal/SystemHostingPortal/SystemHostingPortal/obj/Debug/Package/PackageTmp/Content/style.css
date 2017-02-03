@@ -1,0 +1,309 @@
+﻿/*
+    CSS copyright (c) 2013 SystemHosting
+    
+ */
+
+body {
+    font-family: Verdana, Tahoma;
+    font-size: 14px;
+    background-color: white;
+}
+
+b {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    border-bottom: 1px dashed white;
+    color: blue;
+}
+p {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+small {
+    font-size: small;
+}
+
+fieldset {
+    border: 1px solid black;
+    margin-top: 10px;
+    padding: 10px;
+}
+legend {
+    font-weight: bold;
+    font-size: 80%;
+}
+
+table {
+    width: 100%;
+    background-color: white;
+}
+    table th {
+        color: white;
+        font-weight: bold;
+        padding: 5px;
+    }
+    table td {
+        padding: 5px;
+        text-align: left;
+        vertical-align: top;
+    }
+    table .headertd {
+        font-weight: bold;
+    }
+    table .headertdhelp {
+        font-weight: bold;
+    }
+    table .middletd {
+        vertical-align: middle;
+    }
+    table .middletdhelp {
+        vertical-align: middle;
+    }
+    table .lefttdtop {
+        width: 30%;
+        vertical-align: top;
+        text-align: left;
+    }
+    table .lefttdtophelp {
+        width: 30%;
+        vertical-align: top;
+        text-align: left;
+    }
+    table .lefttd {
+        width: 30%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .lefttdaccepteddomain {
+        width: 37%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .lefttdhelp {
+        width: 30%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .righttd {
+        padding: 5px;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .righttdhelp {
+        padding: 5px;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table input, textarea, select {
+        width: 95%;
+        padding: 5px;
+    }
+        table input[type=checkbox] {
+            width: auto !important;
+            margin: 5px;
+        }
+
+#topdiv {
+    padding-top: 3em;
+    padding-bottom: 3em;
+    margin-bottom: 2em;
+    border-bottom: .5em solid black;
+    background-color: #ffffff;
+    margin-left: 22%;
+    margin-right: 22%;
+
+
+}
+#topdivtest {
+    padding-top: 3em;
+    padding-bottom: 3em;
+    margin-bottom: 2em;
+    border-bottom: .5em solid black;
+    background-color: #ffffff;
+}
+
+
+#helpdiv {
+    border: 1px solid black;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+#bodydiv, #topdivtext {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 78em;
+
+}
+#leftdiv {
+    text-align: left;
+    float: left;
+    width: 18em;
+}
+    #leftdiv .navi li {
+        padding-bottom: 3px;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    #leftdiv .navisub {
+        margin-left: 25px;
+        list-style: circle;
+    }
+        #leftdiv .navisub li {
+            font-weight: initial;
+        }
+
+#maindiv {
+    text-align: left;
+    width: 60em;
+    float: left;
+    /*background-color: black;*/
+}
+
+
+
+.title {
+    font-weight: bold;
+}
+
+.warning {
+    font-weight: bold;
+    color: red;
+}
+
+.warning2 {
+    color: red;
+}
+
+.mandatory {
+    color: red;
+    text-align: left;
+    position: center;
+    vertical-align: middle;
+}
+.message, .okmessage {
+    border: 1px solid black;
+    background-color: #f88;
+    color: black;
+    padding: 10px;
+    margin: 10px 5px 10px 5px;
+}
+.message h3, .okmessage h3 {
+    font-size: large;
+    font-weight: bold;
+}
+.okmessage {
+    background-color: #8f8;
+}
+
+
+.error {
+    background-color: #c33;
+    color: white;
+}
+.error a {
+    color: white;
+}
+
+.collapsed p {
+    margin-top: 20px;
+}
+.collapsed h2 {
+    font-weight: bold;
+}
+
+.strike {
+    text-decoration: line-through;
+}
+
+.description {
+    border: 1px solid black;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+.descriptiontext {
+    font-size: 12px;
+    margin: 5px;
+    line-height: 150%;
+}
+
+.infohelp {
+    border: none;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+.infohelptext {
+    font-size: 14px;
+    margin: 5px;
+    line-height: 120%;
+}
+
+.tooltip {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.helptooltip {
+    cursor: pointer;
+}
+
+.infoicon {
+    color: cornflowerblue;
+    float: right;
+}
+.button {
+    /*background: url(../Images/button3.png) center;*/
+    /*background-color:lightgray;*/
+    /*background-size: 100% 36px;*/
+    /*background-repeat: no-repeat;*/
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 1px solid;
+    width: auto;
+    height: 25px;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius:10px;
+
+}
+
+.button:hover {
+
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border: 1px solid;
+    width: auto;
+    height: 25px;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius:10px;
+    background-color: darkgrey;
+}
+
+.buttontest2 {
+    background: url(../Images/button4.png) center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: auto;
+    height: 36px;
+    color: white;
+    border: hidden;
+}

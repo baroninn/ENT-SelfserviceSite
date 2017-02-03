@@ -1,0 +1,85 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Enable";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetMailbox("UserMailbox");
+
+            $("select[name=organization]").change(function () {
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
+
+                GetMailbox("UserMailbox");
+
+            });
+
+        });
+    </script>
+}
+
+@using(Html.BeginForm("Enable", "User")) {
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <p>Use this form to enable AD users and unhide users on the exchange address lists</p>
+
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        { 
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option selected="@(Model.EnableUser.Organization != null && Model.EnableUser.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td>
+                    <select name="userprincipalname"><option>loading...</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Enable AD user:</td>
+                <td>
+                    <input id="RemoveDisabled" type="checkbox" name="removedisable" checked="@Model.EnableUser.Disable" /><label for="RemoveDisabled">Enable AD user</label><br />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Show in Address List:</td>
+                <td>
+                    <input id="RemoveHideFromAddressList" type="checkbox" name="removehidefromaddresslist" checked="@Model.EnableUser.HideFromAddressList" /><label for="RemoveHideFromAddressList">Show in Address List</label><br />
+                </td>
+            </tr>
+        </table>
+
+        <input type="submit" id="buttonSubmit" value="Set changes" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}
+    

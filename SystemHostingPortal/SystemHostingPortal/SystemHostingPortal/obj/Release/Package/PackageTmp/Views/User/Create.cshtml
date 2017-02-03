@@ -1,0 +1,155 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Create";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                $("#acceptedDomain").html("Loading...");
+                GetAcceptedDomain();
+            });
+
+            $("#acceptedDomain").html("Loading...");
+            GetAcceptedDomain();
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new user account.</p>
+
+@using(Html.BeginForm("Create", "User")) {
+<fieldset>
+    <legend>Create user</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if(Model.Message != null) { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                            <option @if(Model.ActionFailed)
+                                    {
+                                        if(organization == Model.UserList[0].Organization) {
+                                            @:selected="selected"
+                                        }
+                                    }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Accepted emaildomains:</td>
+            <td class="righttd">
+                <div id="acceptedDomain"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">First name</td>
+            <td>
+                <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].FirstName"
+                                                                                     } />
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Last name</td>
+            <td>
+                <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].LastName"
+                                                                                     } />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Primary email</td>
+            <td><input name="userprincipalname" placeholder="john.doe@example.com" @if (Model.ActionFailed)
+                                                                                   { 
+                                                                  @:value="@Model.UserList[0].UserPrincipalName" 
+                                                              }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Password</td>
+            <td><input name="password" placeholder="Password" @if (Model.ActionFailed)
+                                                              { 
+                                                                  @:value="@Model.UserList[0].Password" 
+                                                              }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Email aliases</td>
+            <td>@if (Model.ActionFailed)
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.UserList[0].EmailAddresses)</textarea>
+                }
+                else {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Stud Jur<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="studjur" type="checkbox" @if (Model.ActionFailed) 
+                                                                   { 
+                                                                       if (Model.UserList[0].StudJur) 
+                                                                       { 
+                                                                           @: checked="checked"
+                                                                       }
+                                                                   } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Grouping used by Capto. Stud Jur users have the same rights as everyone else, but costs less. It is used for law students.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Mail Only<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="mailonly" type="checkbox" @if (Model.ActionFailed) { if (Model.UserList[0].MailOnly) { @: checked="checked"
+                                                                                              } } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Mail Only users can only use webmail, Outlook Anywhere and ActiveSync. They do not have access to a remote desktop.
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="passwordneverexpires" type="checkbox" @if (Model.ActionFailed)
+                                                                   {
+                                                                       if (Model.UserList[0].PasswordNeverExpires)
+                                                                       {
+                                                                           @:checked="checked"
+                                                                       }
+                                                                   } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Passwords will never expire if this is checked. This must be confirmed by the organization first.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Test user<i class="material-icons infoicon">info</i></span></td>
+            <td><input name="testuser" type="checkbox" @if (Model.ActionFailed)
+                                                           { 
+                                                                if(Model.UserList[0].TestUser) { 
+                                                                    @:checked="checked"
+                                                                }
+                                                            }/>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Users marked as Test User are for testing purposes, and must not be used for real users. These users does not count towards mailbox quota or SPLA's. But data left in these accounts will take up space on their file server.
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+    
+}

@@ -1,0 +1,106 @@
+﻿@model SystemHostingPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Convert to Legal (2016)";
+}
+@section script {
+<script>
+            function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL CONVERT THE CUSTOMER TO LEGAL!\n\nAre you so sure, that you are willing to risk CAKE?!!")
+                if (!result) {
+                    $("input[name=confirm]").prop("checked", false);
+                }
+            }
+        }
+</script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p class="warning">This will convert the customer to legal. THERE IS NO TURNING BACK!!!!!</p>
+
+@using (Html.BeginForm("ConvertCustomer", "Organization"))
+{
+    <fieldset>
+        <legend>Convert Customer</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd tooltip"><span>Organization<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.ConvertCustomer.Organization) { @: selected="selected"
+                                                                        } }>
+                                @organization
+                                                                    </option>
+                        }
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            When run, this will convert the customer to Legal.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Confirm<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.ConvertCustomer.Confirm) { @: checked="checked"
+                                                                                                                                } } onclick="Confirm()" />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            You have to confirm..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <table>
+            <tr>
+                <td class="lefttdhelp helptooltip"><span>Stuff to do manually:<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <div class="infohelp">
+                        <p class="infohelptext">
+                        <br/>
+                        <p>1. The new Legal GPO needs to be correctly linked to the customer and have custom settings transferred to the new Default GPO.</p>
+                        <br />
+                        <p><img src="~/Images/CPO-GPO-6.png" alt="TenantGPO"></p>
+                        <p><img src="~/Images/CPO-GPO5.png" alt="TenantGPO3"></p>
+                        <br/>
+                        <p>2. Export/Import of databases needs to be done manually.</p>
+                        <br/>
+                        <p>3. Set Nav Company Name also needs to be run after databases has been imported. Remember to use the $Force switch!</p>
+                        <br />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" id="buttonSubmit" value="Convert Customer" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

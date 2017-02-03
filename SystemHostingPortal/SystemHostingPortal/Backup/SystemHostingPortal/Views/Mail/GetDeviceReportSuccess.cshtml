@@ -1,0 +1,18 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Get Device Report > Success";
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to get a report of all connected devices to a mail account</p>
+
+<fieldset>
+    <legend>Device Report</legend>
+    <table>
+        <tr>
+            <td class="lefttd">Who?</td>
+            <td class="righttd">@Model.DeviceReport.UserPrincipalName</td>
+        </tr>
+    </table>
+
+    @Html.Raw(Model.DeviceReport.ReportHtml)
+</fieldset>

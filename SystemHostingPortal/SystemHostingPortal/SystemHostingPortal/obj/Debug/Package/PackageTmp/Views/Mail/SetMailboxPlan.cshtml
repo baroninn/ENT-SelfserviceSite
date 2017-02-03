@@ -1,0 +1,115 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Set MailboxPlan";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            GetMailbox();
+            GetMailboxPlans();
+
+            $("select[name=organization]").change(function () {
+                $("#existingMailboxPlan").html("");
+                GetMailbox();
+                GetMailboxPlans();
+            });
+
+            $("select[name=userprincipalname]").change(function () {
+                GetMailboxPlan();
+            });
+        });
+
+
+        function GetMailboxPlan() {
+            var organization = $("select[name=organization]").val();
+            var userprincipalname = $("select[name=userprincipalname]").val();
+
+            $("#existingMailboxPlan").html('loading...');
+
+            $.get("/Mail/GetMailboxPlan?userprincipalname=" + userprincipalname + "&organization=" + organization, function (data) {
+                $("#existingMailboxPlan").html(data);
+            });
+        }
+
+        function GetMailboxPlans() {
+            $("select[name=mailboxplan]").html('<option>loading...</option>'); 
+
+            var organization = $("select[name=organization]").val();
+            var selectedvalue = '@Model.MailboxPlan.MailboxPlan';
+
+            $.get("/Mail/GetMailboxPlans?selectedvalue="+selectedvalue+"&organization=" + organization, function (data) {
+                $("select[name=mailboxplan]").html(data);
+            });
+        }
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to set the current active Mailbox Plan on a mailbox</p>
+
+@using (Html.BeginForm("SetMailboxPlan", "Mail"))
+{
+    <fieldset>
+        <legend>Set MailboxPlan</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option selected="@(Model.MailboxPlan.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Current MailboxPlan</td>
+                <td>
+                    <div id="existingMailboxPlan"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td>
+                    <select name="userprincipalname"><option>loading...</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="4" class="lefttd">New MailboxPlan</td>
+                <td>
+                    <select name="mailboxplan">
+
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Set MailboxPlan" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

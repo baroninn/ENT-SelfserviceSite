@@ -1,0 +1,42 @@
+﻿@model SystemHostingPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Service > Customer Report";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a data usage report</p>
+
+@using (Html.BeginForm("CustomerReport", "Service")) {
+<fieldset>
+    <legend>Customer Report</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if(Model.Message != null) { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        @if (Model.MessageList.Count > 0)
+        {
+            foreach (string message in Model.MessageList)
+            {
+                <tr>
+                    <td colspan="2"><div class="message">@message</div></td>
+                </tr>
+            }
+        }
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                            <option @if(Model.ActionFailed)
+                                    {
+                                        if(organization == Model.CustomerReport.Organization) {
+                                            @:selected="selected"
+                                        }
+                                    }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+    </table>
+    <input type="submit" value="Create report" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

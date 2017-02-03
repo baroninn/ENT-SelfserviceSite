@@ -1,0 +1,168 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Set Mailforward";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+
+            @if (Model.Mailforward != null)
+            {
+            @:$("select[name=organization]").val("@Model.Mailforward.Organization");
+            }
+
+            GetMailbox();
+            GetMailbox("all", $("select[name=forwardselector]"))
+
+            $("select[name=organization]").change(function () {
+                GetMailbox();
+                GetMailbox("all", $("select[name=forwardselector]"))
+            });
+
+            $("select[name=userprincipalname]").change(function () {
+                GetMailforward();
+            });
+
+            $("select[name=forwardselector]").change(function () {
+                $("input[name=forwardingaddress]").val($("select[name=forwardselector]").val())
+            });
+
+            $("select[name=forwardingtype]").change(function () {
+                var type = $("select[name=forwardingtype]").val();
+                if (type == "Internal") {
+                    $("select[name=forwardselector]").show();
+                    $("input[name=forwardingaddress]").hide();
+                    $("p[name=clearmessage]").hide();
+                    $("tr[id=delivertomailboxandforward]").show()
+                }
+                else if (type == "External") {
+                    $("select[name=forwardselector]").hide();
+                    $("input[name=forwardingaddress]").val("");
+                    $("input[name=forwardingaddress]").show();
+                    $("p[name=clearmessage]").hide();
+                    $("tr[id=delivertomailboxandforward]").show()
+                }
+                else {
+                    $("select[name=forwardselector]").hide();
+                    $("input[name=forwardingaddress]").hide();
+                    $("p[name=clearmessage]").show();
+                    $("tr[id=delivertomailboxandforward]").hide()
+                }
+            });
+
+            $("select[name=forwardingtype]").change();
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to set a mailforward to an existing mailbox/mailcontact or a new mailcontact</p>
+
+@using (Html.BeginForm("SetMailforward", "Mail"))
+{
+    <fieldset>
+        <legend>Set Mailforward</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option selected="@(Model.ActionFailed && Model.Mailforward.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Existing mailforwards</td>
+                <td>
+                    <div id="existingforwards"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Mailbox<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the mailbox where incoming e-mails will be forwarded from.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Forwarding type<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <select name="forwardingtype">
+                        <option @if (Model.Mailforward == null || (Model.Mailforward != null && Model.Mailforward.ForwardingType == "Internal")) { <text>selected</text> }>Internal</option>
+                        <option @if (Model.Mailforward != null && Model.Mailforward.ForwardingType == "External") { <text> selected</text> }>External</option>
+                        <option @if (Model.Mailforward != null && Model.Mailforward.ForwardingType == "Clear") { <text> selected</text> }>Clear</option>
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            <b>Internal</b> - Use this if the recipient is also on this Exchange server.<br />
+                            <b>External</b> - If the recipient is not on this Exchange server, use External.<br />
+                            <b>Clear</b> - Clears any existing mailforward configuration on the mailbox.<br />
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Forwarding address<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    @{
+                        string forwardingaddress = Model.ActionFailed ? Model.Mailforward.ForwardingSmtpAddress : "";
+                        @:<input name="forwardingaddress" placeholder="john.doe@gmail.com" value="@forwardingaddress" />
+                    }
+                    <select name="forwardselector"><option>loading...</option></select>
+                    <p name="clearmessage" style="font-weight: bold;">The current mailforward will be removed.</p>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The recipient to where incoming e-mails will be forwarded.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr id="delivertomailboxandforward">
+                <td class="lefttd tooltip"><span>Deliver and forward<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input id="delivertomailboxandforward" name="delivertomailboxandforward" checked="@(Model.ActionFailed && Model.Mailforward.DeliverToMailboxAndForward)" type="checkbox" />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            By default, incoming e-mails will only be forwarded, not stored in the mailbox. To enable delivery to the mailbox as well, check <b>Deliver and forward</b>.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Set Mailforward" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

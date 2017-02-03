@@ -1,0 +1,142 @@
+﻿@model SystemHostingPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Create Mailbox";
+}
+@section script { 
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                GetAcceptedDomain();
+                
+            });
+
+            $("select[name=type]").change(function () {
+                var mbxType = $("select[name=type]").val()
+                var emailTextarea = $("textarea[name=emailaddresses]");
+
+                if (mbxType == 'RoomMailbox') {
+                    emailTextarea.val("Not available for RoomMailbox.");
+                    emailTextarea.prop("disabled", true);
+                }
+                else {
+                    emailTextarea.val("");
+                    emailTextarea.prop("disabled", false);
+                }
+            });
+           
+            @if (Model.Mailbox != null)
+            {
+            @:$("select[name=organization]").val("@Model.Mailbox.Organization");
+            }
+
+            GetAcceptedDomain();
+        });
+        
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create special mailboxes (RoomMailbox, SharedMailbox)</p>
+
+@using(Html.BeginForm("CreateMailbox", "Mail")) {
+<fieldset>
+    <legend>Create Mailbox</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                            <option @if(Model.ActionFailed)
+                                    {
+                                        if(organization == Model.Mailbox.Organization) {
+                                            @:selected="selected"
+                                        }
+                                    }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Accepted emaildomains:</td>
+            <td class="righttd">
+                <div id="acceptedDomain"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox name</td>
+            <td><input name="name" placeholder="Special Mailbox - Shared" @if(Model.ActionFailed)
+                                                                                   {
+                                                                                       @:value="@Model.Mailbox.Name"
+                                                                                   }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox primary SMTP</td>
+            <td><input name="userprincipalname" placeholder="mailbox1@example.com" @if(Model.ActionFailed)
+                                                                                   {
+                                                                                       @:value="@Model.Mailbox.UserPrincipalName"
+                                                                                   }/></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox type</td>
+            <td>
+                <select name="type">
+                    <option @if (Model.ActionFailed)
+                            {
+                                if (Model.Mailbox.Type == "SharedMailbox")
+                                {
+                                    @:selected="selected"
+                                }
+                            }>
+                        SharedMailbox
+                    </option>
+                    <option @if (Model.ActionFailed)
+                            {
+                                if (Model.Mailbox.Type == "RoomMailbox")
+                                {
+                                    @:selected="selected"
+                                }
+                            }>
+                        RoomMailbox
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Additional Aliases</td>
+            <td>@if (Model.ActionFailed && Model.Mailbox.EmailAddresses != null)
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Mailbox.EmailAddresses)</textarea>
+                }
+                else {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

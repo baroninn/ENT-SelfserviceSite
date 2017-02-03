@@ -1,0 +1,58 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Create Batch > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Successfully created the users.</p>
+
+<fieldset>
+    <legend>Success</legend>
+    <table>
+        @if(Model.Message != null) { 
+        <tr>
+            <td colspan="2"><div class="message">@Model.Message</div> </td>
+        </tr>
+        }
+        @if (Model.MessageArray != null)
+        {
+            <tr>
+                <td colspan="2">
+                @foreach (string message in Model.MessageArray)
+                {
+                    <div class="message">@message</div>
+                }
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="righttd">@Model.UserList[0].Organization</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="headertd">FirstName</td>
+            <td class="headertd">LastName</td>
+            <td class="headertd">Primary Email</td>
+            <td class="headertd">Password</td>
+            <td class="headertd">PwdNeverExp.</td>
+            <td class="headertd">Email aliases</td>
+        </tr>
+
+        @foreach(SystemHostingPortal.Models.CustomUser user in Model.UserList) {
+        <tr>
+            <td class="middletd">@user.FirstName</td>
+            <td class="middletd">@user.LastName</td>
+            <td class="middletd">@user.UserPrincipalName</td>
+            <td class="middletd">@user.Password</td>
+            <td class="middletd">@user.PasswordNeverExpires</td>
+            <td>
+                @if(user.EmailAddresses.Count > 0) { 
+                    <textarea rows="@user.EmailAddresses.Count" disabled="disabled">@string.Join("\r\n", user.EmailAddresses)</textarea> 
+                }
+            </td>
+        </tr>
+        }
+    </table>
+</fieldset>

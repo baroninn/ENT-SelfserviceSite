@@ -1,0 +1,120 @@
+﻿@model SystemHostingPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Set NAV CompanyName";
+}
+@section script {
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to set NAV CompanyName for a customer.</p>
+
+@using (Html.BeginForm("SetNavCompanyName", "Organization"))
+{
+    <fieldset>
+        <legend>Set NAV CompanyName</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option 
+                                @if (Model.ActionFailed) { 
+                                    if (organization == Model.NavCompanyName.Organization) { 
+                                        @: selected="selected"
+                                    } 
+                                }>@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd tooltip"><span>NAV CompanyName<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="navcompanyname" placeholder="Contoso Advokater" @if (Model.ActionFailed) {  
+                                                                                    @: value="@Model.NavCompanyName.CompanyName"
+                                                                                  } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the company in the Navision database that all Capto services will be configured to use.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Solution<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <select name="solution">
+                        <option selected="@(Model.ActionFailed && Model.NavCompanyName.Solution.ToUpper() == "ADVOPLUS")">AdvoPlus</option>
+                        <option selected="@(Model.ActionFailed && Model.NavCompanyName.Solution.ToUpper() == "LEGAL")">Legal</option>
+                        <option selected="@(Model.ActionFailed && Model.NavCompanyName.Solution.ToUpper() == "MEMBER2015")">Member2015</option>
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies which Capto product the organization will be configured to use.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Native Database<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="nativedb" type="checkbox" @if (Model.ActionFailed)
+                                                           {
+                                                                if (Model.NavCompanyName.NativeDatabase)
+                                                                {
+                                                                    @:checked="checked"
+                                                                }
+                                                           }/>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If the organiztion does not use a SQL database for Navision, but instead uses the old native database.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Force<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="force" type="checkbox" />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            By default, it should only be necessary to run this once per customer. If it needs to be run more than once, you must confirm by using the Force.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+
+
+        </table>
+        <input type="submit" id="buttonSubmit" value="Set" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

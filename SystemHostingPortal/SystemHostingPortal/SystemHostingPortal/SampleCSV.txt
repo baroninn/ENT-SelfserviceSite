@@ -1,0 +1,5 @@
+Jean-Luc;Picard;jlp@ussenterprise.com;MakeItSo1;captain@ussenterprise.com
+William;T. Riker;wtr@ussenterprise.com;Stardate1435.5;commander@ussenterprise.com
+Data;;data@ussenterprise.com;LL2*2930^$Anas]}[2++-2|;dat@ussenterprise.com,android@ussenterprise.com
+Wesley;Crusher;wc@ussenterprise.com;StarfleetAcademyNumber1;w.crusher@ussenterprise.com,wesley.crusher@ussenterprise.com
+Geordi;La Forge;glf@ussenterprise.com;ayeCapta1n
