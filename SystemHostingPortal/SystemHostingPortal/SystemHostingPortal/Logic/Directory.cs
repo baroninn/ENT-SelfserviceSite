@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -122,19 +123,32 @@ namespace SystemHostingPortal.Logic
             return organizationList.OrderBy(x => x).ToList();
         }
 
-       /* public static List<string> GetOrganizations3()
+
+        public static List<string> GetOrganizations3()
         {
-            List<string> organizationList = new List<string>(Directory.EnumerateDirectories("~/Organizations.txt"));
+            /*List<string> organizationList = new List<string>();*/
+            List<string> allLinesText = System.IO.File.ReadAllLines(@"C:\ENTConfig\Organizations.txt").ToList();
 
-            organizationList.Add("ICE");
-            organizationList.Add("BOH");
-            organizationList.Add("SGC");
-            organizationList.Add("PRV");
 
+            return allLinesText.OrderBy(x => x).ToList();
+        }
+
+        public static List<string> GetOrganizations4()
+        {
+            List<string> organizationList = new List<string>();
+            /*List<string> allLinesText = System.IO.File.ReadAllLines(@"C:\ENTConfig\Organizations.txt").ToList();*/
+
+            foreach (var d in System.IO.Directory.GetDirectories(@"C:\ENTConfig"))
+            {
+                var dir = new DirectoryInfo(d);
+                var dirName = dir.Name;
+
+                organizationList.Add(dirName);
+            }
 
             return organizationList.OrderBy(x => x).ToList();
         }
-        */
+
 
         public static List<string> GetFileServers()
         {
@@ -210,5 +224,6 @@ namespace SystemHostingPortal.Logic
 
             return groupList;
         }
+
     }
 }

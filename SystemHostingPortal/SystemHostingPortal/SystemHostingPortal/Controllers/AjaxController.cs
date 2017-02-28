@@ -367,6 +367,7 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        // Function for getting accepted domain as select list..
         public class AjaxAcceptedDomain
         {
             public string DomainName { get; set; }
@@ -438,41 +439,6 @@ namespace SystemHostingPortal.Controllers
                 return new JsonException(exc).ToString();
             }
         }
-
-        public class AjaxGetOrganizations
-        {
-            public string Name { get; set; }
-
-        }
-        public string GetOrganizations()
-        {
-            try
-            {
-                List<AjaxGetOrganizations> orgs = new List<AjaxGetOrganizations>();
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.GetOrganizations();
-                    IEnumerable<PSObject> result = ps.Invoke();
-
-                    foreach (PSObject Org in result)
-                    {
-                        Dictionary<string, object> properties = Common.GetPSObjectProperties(Org);
-                        orgs.Add(new AjaxGetOrganizations()
-                        {
-                            Name = properties["organization"].ToString(),
-                        });
-                    }
-                }
-
-                return new JavaScriptSerializer().Serialize(orgs);
-            }
-            catch (Exception exc)
-            {
-                return new JsonException(exc).ToString();
-            }
-        }
-
 
 
     }

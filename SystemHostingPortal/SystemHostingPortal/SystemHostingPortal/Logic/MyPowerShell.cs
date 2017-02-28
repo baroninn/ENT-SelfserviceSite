@@ -505,14 +505,15 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string solution, string fileserver, string fileserverDriveLetter)
+        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string subnet, string vlan, string ipaddressrangestart, string ipaddressrangeend)
         {
             ps.AddCommand(psScriptPath + @"\CreateOrganization.ps1")
                 .AddParameter("Organization", organization)
                 .AddParameter("EmailDomainName", emaildomainname)
-                .AddParameter("Solution", solution)
-                .AddParameter("FileServer", fileserver)
-                .AddParameter("FileServerDriveLetter", fileserverDriveLetter);
+                .AddParameter("Subnet", subnet)
+                .AddParameter("Vlan", vlan)
+                .AddParameter("IPAddressRangeStart", ipaddressrangestart)
+                .AddParameter("IPAddressRangeEnd", ipaddressrangeend);
 
             return this;
         }
@@ -644,6 +645,13 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
+        public MyPowerShell GetCurrentConf(string organization)
+        {
+            ps.AddCommand(psScriptPath + @"\GetCurrentConf.ps1")
+                .AddParameter("Organization", organization);
+
+            return this;
+        }
 
     }
 }

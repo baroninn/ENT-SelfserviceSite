@@ -14,7 +14,6 @@ namespace SystemHostingPortal.Models
         public CustomRemoveCustomer RemoveCustomer = new CustomRemoveCustomer();
         public CustomDisableCustomer DisableCustomer = new CustomDisableCustomer();
         public CustomEnableCustomer EnableCustomer = new CustomEnableCustomer();
-        public List<string> FileServers = Directory.GetFileServers();
     }
 
     // Custom User type containing relevant user information
@@ -22,9 +21,11 @@ namespace SystemHostingPortal.Models
     {
         public string Name { get; set; }
         public string EmailDomainName { get; set; }
-        public string FileServer { get; set; }
-        public string FileServerDriveLetter { get; set; }
-        public string Solution { get; set; }
+        public string Subnet { get; set; }
+        public string Vlan { get; set; }
+        public string IPAddressRangeStart { get; set; }
+        public string IPAddressRangeEnd { get; set; }
+
     }
 
     public class CustomRemoveCustomer

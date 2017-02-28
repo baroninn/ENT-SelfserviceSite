@@ -7,17 +7,17 @@ param (
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-$Config = Get-Content ("C:\ENTScriptsTest\Config\$Organization.txt") -Raw | ConvertFrom-Json
+Import-Module (Join-Path $PSScriptRoot Functions)
 
-$obj = $Config.EmailDomains.DomainName
+$Config = Get-ENTConfig -Organization $Organization -JSON
 
 $accepteddomains = @()
-foreach($i in $obj) {
-$accepteddomains += 
-    [pscustomobject]@{
-        Organization      = $Organization
-        DomainName        = $i
+    foreach($i in ($Config.EmailDomains.DomainName)) {
+    $accepteddomains += 
+        [pscustomobject]@{
+            Organization      = $Organization
+            DomainName        = $i
+        }
     }
-}
 
 return $accepteddomains | sort DomainName

@@ -6,14 +6,6 @@
         $("#acceptedDomain").html(data);
     });
 }
-function GetAcceptedDomain() {
-    var organization = $("select[name=organization]").val();
-    $("#acceptedDomain").html("loading...");
-
-    $.get("/Mail/GetAcceptedDomain?organization=" + organization, function (data) {
-        $("#acceptedDomain").html(data);
-    });
-}
 
 function GetTenantID() {
     var organization = $("select[name=organization]").val();
@@ -21,6 +13,15 @@ function GetTenantID() {
 
     $.get("/Office365/GetTenantID?organization=" + organization, function (data) {
         $("#TenantID").html(data);
+    });
+}
+
+function GetCurrentConf() {
+    var organization = $("select[name=organization]").val();
+    $("#currentConf").html("loading, this could take some time...");
+
+    $.get("/Level30/GetCurrentConf?organization=" + organization, function (data) {
+        $("#currentConf").html(data);
     });
 }
 

@@ -15,4 +15,4 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 2
 Import-Module (Join-Path $PSScriptRoot "Functions")
 
-Update-Config -Organization $Organization -ExchangeServer $ExchangeServer -DomainFQDN $DomainFQDN -AcceptedDomains $AcceptedDomains -TenantID365 $TenantID365 -AdminUser365 $AdminUser365 -AdminPass365 $AdminPass365
+Set-EntConfig -Organization $Organization -ExchangeServer $ExchangeServer -DomainFQDN $DomainFQDN -AcceptedDomains $AcceptedDomains -TenantID365 $TenantID365 -AdminUser365 $AdminUser365 -AdminPass365 $AdminPass365

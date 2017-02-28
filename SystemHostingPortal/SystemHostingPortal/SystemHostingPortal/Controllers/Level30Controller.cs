@@ -69,5 +69,56 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Ajax function for aquiring currentconf
+        /// </summary>
+        /// <param name="organization"></param>
+        /// <returns></returns>
+        public string GetCurrentConf(string organization)
+        {
+            string returnstr = "<table>";
+
+            using (MyPowerShell ps = new MyPowerShell())
+            {
+                ps.GetCurrentConf(organization);
+                var result = ps.Invoke();
+                
+                // Returns PSObject with properties..
+                foreach (var item in result)
+                {
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>ExchangeServer : </b></td><td>" + item.Members["ExchangeServer"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>DomainFQDN : </b></td><td>" + item.Members["DomainFQDN"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>Domain : </b></td><td>" + item.Members["Domain"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>Accepted Domains : </b></td><td>" + item.Members["AcceptedDomains"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>TenantID365 : </b></td><td>" + item.Members["TenantID365"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminUser365 : </b></td><td>" + item.Members["AdminUser365"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminPass365 : </b></td><td>" + item.Members["AdminPass365"].Value.ToString() + "</td></tr>";
+                }
+            }
+
+            returnstr += "</table>";
+
+            return returnstr;
+        }
+
+
+        private void CurrentConf()
+        {
+            using (MyPowerShell ps = new MyPowerShell())
+            {
+                ps.GetCurrentConf(model.CurrentConf.Organization);
+                var result = ps.Invoke().Single();
+                var DomainFQDN = (PSObject)result.Properties["DomainFQDN"].Value;
+                var ExchangeServer = (PSObject)result.Properties["ExchangeServer"].Value;
+
+                model.CurrentConf.DomainFQDN = model.CurrentConf.DomainFQDN.ToString();
+                model.CurrentConf.ExchangeServer = model.CurrentConf.ExchangeServer.ToString();
+
+            }
+        }
+
+
+
     }
 }

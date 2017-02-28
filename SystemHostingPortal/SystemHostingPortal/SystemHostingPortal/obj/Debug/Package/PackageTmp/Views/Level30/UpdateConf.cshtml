@@ -3,7 +3,19 @@
     ViewBag.Title = "Level30 > UpdateConf";
 }
 @section script {
-    }
+<script>
+    $(document).ready(function () {
+        $("select[name=organization]").change(function () {
+            $("#currentConf").html("Loading, this could take some time...");
+            GetCurrentConf();
+        });
+
+        $("#currentConf").html("Loading, this could take some time...");
+        GetCurrentConf();
+    });
+
+</script>
+}
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to update the Conf file for a given customer.</p>
@@ -53,7 +65,7 @@
         <tr>
             <td class="lefttd tooltip"><span>Exchange Server (FQDN)<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="exchangeserver" placeholder="XXX-EXCH-01.CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
+                <input name="exchangeserver" placeholder="XXX-exch-01.corp.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
                                                                                                                                    } />
 
                 <div class="description">
@@ -115,9 +127,35 @@
                                                                                                                                                           } />
             </td>
         </tr>
-    </table>
+       
+</table>
     <br />
-    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Update Conf" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Update Configuration" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+
+<fieldset>
+    <legend>Current configuration</legend>
+    <table>
+        <tr>
+            <td class="righttd">
+                <div id="currentConf"></div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>Current configuration</legend>
+    <table>
+        <tr>
+            <td><b>Domain FQDN: </b></td>
+            <td>@(Model.CurrentConf.DomainFQDN)</td>
+        </tr>
+        <tr>
+            <td><b>Exchange Server:</b></td>
+            <td>@(Model.CurrentConf.ExchangeServer)</td>
+        </tr>
+    </table>
 </fieldset>
 
 }

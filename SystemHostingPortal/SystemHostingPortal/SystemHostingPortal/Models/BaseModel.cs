@@ -9,7 +9,7 @@ namespace SystemHostingPortal.Models
     // Base model all models inherit from
     public class BaseModel
     {
-        public List<string> Organizations = Directory.GetOrganizations2();
+        public List<string> Organizations = Directory.GetOrganizations4();
         public string Message { get; set; }
         public List<string> OKMessage = new List<string>();
         public string[] MessageArray { get; set; }

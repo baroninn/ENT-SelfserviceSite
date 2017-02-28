@@ -9,8 +9,8 @@
 
         @Styles.Render("~/Content/reset.css")
         @Styles.Render("~/Content/style.css")
-        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-        <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
         @Scripts.Render("~/Scripts/jquery.collapse.js")
         @Scripts.Render("~/Scripts/shtfunctions.js")
         <script>
@@ -67,13 +67,13 @@
                                 <li>
                                     <ul class="navisub">
                                         <li><a href="~//User/Create">Create user</a></li>
-                                        <li><a href="~//User/CreateBatch">Create users (batch)</a></li>
+                                      <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li>
                                         <li><a href="~//User/Disable">Disable user</a></li>
                                         <li><a href="~//User/Enable">Enable user</a></li>
-                                        <li><a href="~//User/Remove">Remove user</a></li>
+                                        <li><a href="~//User/Remove">Remove user</a></li> -->
                                     </ul>
                                 </li>
-                                <li>Mail</li>
+                              <!--  <li>Mail</li>
                                 <li>
                                     <ul class="navisub">
                                         <li><a href="~//Mail/AddAcceptedDomain">Add AcceptedDomain</a></li>
@@ -86,7 +86,7 @@
                                         <li><a href="~//Mail/SetMailForward">Set Mailforward</a></li>
                                         <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
                                     </ul>
-                                </li>
+                                </li>-->
                                 <li>Organization</li>
                                 <li>
                                     <ul class="navisub">
@@ -95,19 +95,6 @@
                                         <li><a href="~//Organization/EnableCustomer">Enable Customer</a></li>
                                         <li><a class="warning2" href="~//Organization/RemoveCustomer">Remove Customer</a></li>
                                         
-                                    </ul>
-                                </li>
-                                <li>Office365</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Office365/Enable365Customer">Enable 365</a></li>
-                                        <li><a href="~//Office365/AddDomain">Add Domain</a></li>
-                                    </ul>
-                                </li>
-                                <li>Service</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Service/CustomerReport">Customer Report</a></li>
                                     </ul>
                                 </li>
                             </ul>

@@ -39,9 +39,10 @@ namespace SystemHostingPortal.Controllers
                 {
                     Name = _POST["name"].ToUpper(),
                     EmailDomainName = _POST["emaildomainname"].ToLower(),
-                    FileServer = _POST["fileserver"],
-                    FileServerDriveLetter = _POST["driveletter"],
-                    Solution = _POST["solution"].ToUpper()
+                    Subnet = _POST["subnet"].ToLower(),
+                    Vlan = _POST["vlan"].ToLower(),
+                    IPAddressRangeStart = _POST["ipaddressrangestart"].ToLower(),
+                    IPAddressRangeEnd = _POST["ipaddressrangeend"].ToLower(),
                 };
 
                 model.Organization = organization;
@@ -49,18 +50,6 @@ namespace SystemHostingPortal.Controllers
                 if (model.Organizations.Contains(model.Organization.Name))
                 {
                     throw new ArgumentException(string.Format("The organizaton '{0}' already exists.", model.Organization.Name));
-                }
-
-                switch (model.Organization.Solution.ToUpper())
-                {
-                    case "ADVOPLUS":
-                        break;
-                    case "MEMBER2015":
-                        break;
-                    case "LEGAL":
-                        break;
-                    default:
-                        throw new ArgumentException(string.Format("The value '{0}' is not a valid solution type.", model.Organization.Solution));
                 }
 
                 if (model.Organization.Name.Length < 2 || model.Organization.Name.Length > 5)
@@ -73,21 +62,16 @@ namespace SystemHostingPortal.Controllers
                     throw new ArgumentException(string.Format("'{0}' is not a valid email domain name.", model.Organization.EmailDomainName));
                 }
 
-                if (!model.Organization.EmailDomainName.StartsWith("dummy."))
-                {
-                    model.Organization.EmailDomainName = "dummy." + model.Organization.EmailDomainName;
-                }
-
                 Common.Log(string.Format("has run Organization/Create() to create {0}", model.Organization.Name));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.CreateOrganization(model.Organization.Name, model.Organization.EmailDomainName, model.Organization.Solution, model.Organization.FileServer, model.Organization.FileServerDriveLetter);
+                    ps.CreateOrganization(model.Organization.Name, model.Organization.EmailDomainName, model.Organization.Subnet, model.Organization.Vlan, model.Organization.IPAddressRangeStart, model.Organization.IPAddressRangeEnd);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("Organization '{0}' created with solution '{1}'.", model.Organization.Name, model.Organization.Solution));
+                model.OKMessage.Add(string.Format("Organization '{0}' created.", model.Organization.Name));
 
                 Common.Stats("Organization/Create");
 

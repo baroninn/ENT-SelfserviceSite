@@ -1,8 +1,8 @@
 ﻿$Orgs = @()
 
-$Orgs += [pscustomobject]@{Organization = 'BOH'
+$Orgs += [pscustomobject]@{Name = 'BOH'
                            Description  = 'Buch og Holm'}
-$Orgs += [pscustomobject]@{Organization = 'ICE'
+$Orgs += [pscustomobject]@{Name = 'ICE'
                            Description  = 'Icepower'}
 
-                           $Orgs
+$Orgs
