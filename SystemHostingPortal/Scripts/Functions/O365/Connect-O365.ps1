@@ -1,19 +1,20 @@
 ﻿function Connect-O365 {
     [Cmdletbinding()]
     param (
+        [Parameter(Mandatory)]
         [string]$Organization,
         [string]$Command
     )
     
-    $Config = Get-TenantConfig -TenantName $Organization
+    $Config = Get-EntConfig -Organization $Organization
 
 
     Import-Module MSOnline -Cmdlet Connect-MsolService
-    $Username = $Config.TenantID365.Admin
-    $password = ConvertTo-SecureString $Config.Tenantid365.Pass -AsPlainText -Force
+    $Username = $Config.AdminUser365
+    $password = ConvertTo-SecureString $Config.AdminPass365 -AsPlainText -Force
     $Credentials = New-Object System.Management.Automation.PSCredential $Username, $password
 
-    Connect-MsolService –Credential $Credentials
+    Connect-MsolService –Credential $Credentials | Out-Null
 
     if ((Get-MsolAccountSku).AccountSkuId -like "*ENTERPRISEPACK") {
     
@@ -21,8 +22,8 @@
                                                  -ConnectionUri "https://outlook.office365.com/powershell-liveid/" `
                                                  -Credential $credentials `
                                                  -Authentication "Basic" `
-                                                 -AllowRedirection) -CommandName $Command
+                                                 -AllowRedirection) -DisableNameChecking -AllowClobber | Out-Null
         }
 
-
+    Get-PSSession | where{$_.ComputerName -like "Outlook*"} | Remove-PSSession
 }

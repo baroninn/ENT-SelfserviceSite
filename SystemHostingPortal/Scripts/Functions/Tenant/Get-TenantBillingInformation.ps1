@@ -8,14 +8,19 @@ function New-BillingObject {
     }
     Process {
         [pscustomobject]@{
-            Files = [pscustomobject]@{
-                TotalAllocated = 0
-                TotalUsage     = 0
+            FileServer = [pscustomobject]@{
+                Allocated = 0
+                FreeSpace = 0
+                Used      = 0
             }
-            Mailbox = [pscustomobject]@{
+            Totalstorage = [pscustomobject]@{
                 TotalAllocated = 0
-                TotalUsage     = 0
+            }
+            ADUser = [pscustomobject]@{
                 Users = @()
+            }
+            Server = [pscustomobject]@{
+                Servers = @()
             }
             Database = [pscustomobject]@{
                 TotalUsage = 0
@@ -28,7 +33,7 @@ function New-BillingObject {
     }
 }
 
-function New-MailboxUserBillingObject {
+function New-ADUserBillingObject {
     [Cmdletbinding()]
     param ()
 
@@ -37,15 +42,28 @@ function New-MailboxUserBillingObject {
     Process {
         [pscustomobject]@{
             DisplayName        = $null
-            PrimarySmtpAddress = $null
+            PrimarySmtpAddress = 'null'
             SAMAccountName     = $null
             Type               = $null
             Disabled           = $false
             TestUser           = $false
-            StudJur            = $false
-            MailOnly           = $false
-            TotalAllocated     = 0
-            TotalUsage         = 0
+            LightUser          = $false
+        }
+    }
+}
+
+function New-ENTServerBillingObject {
+    [Cmdletbinding()]
+    param ()
+
+    Begin {
+    }
+    Process {
+        [pscustomobject]@{
+            Name            = $null
+            OperatingSystem = $null
+            Memory          = 0
+            CPUCount        = 0
         }
     }
 }
@@ -69,63 +87,162 @@ function New-Office365BillingObject {
 function Get-TenantBillingInformation {
     [Cmdletbinding()]
     param (
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [Alias('CustomAttribute1', 'Organization')]
-        [string]$TenantName,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string]$FileServer,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string]$FilePath,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName='SQL')]
-        [string]$DatabaseServer,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName='Native')]
-        [string]$NativeDatabaseServer,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName='Native')]
-        [string]$NativeDatabasePath,
-
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string]$DomainName
+        [Parameter(Mandatory)]
+        [string]$Organization
     )
 
     Begin {
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2.0
-
-        Start-VerboseEx
-
-        if ($DatabaseServer) {
-            Import-Module SQLPS
-        }
-        Import-Module (New-ExchangeProxyModule -Command 'Get-MailboxStatistics')
+        Import-Module virtualmachinemanager
+        $VMMHost = 'vmm-a.corp.systemhosting.dk'
+        
     }
 
     Process {
-        $Config = Get-TenantConfig -TenantName $TenantName
+        
+        $Config = Get-EntConfig -Organization $Organization -JSON
+
+        ## Get server information
+        $Scriptblock = {
+        param($VMMHost, $Organization)
+        Import-Module virtualmachinemanager
+        $Cloud = Get-SCCloud -VMMServer $VMMHost | where{$_.Name -like "$Organization*"}
+        Get-SCVirtualMachine -VMMServer $VMMHost -Cloud $Cloud | where {$_.CostCenter -eq $Organization -and $_.Status -eq "Running"} | sort Name | select Name, OperatingSystem, Memory, CPUCount, DynamicMemoryMaximumMB, DynamicMemoryEnabled
+        }
+        $vms = Invoke-Command -ComputerName $VMMHost -ScriptBlock $Scriptblock -ArgumentList $VMMHost, $Organization
+        
+        
+        $Cred  = Get-RemoteCredentials -Organization $Organization
+
         $stats = New-BillingObject
         
-        try {
-            $quota = Get-FsrmQuota -Path $FilePath -CimSession $FileServer -ErrorAction 'Stop'
-            $stats.Files.TotalAllocated = $quota.Size
-            $stats.Files.TotalUsage     = $quota.Usage
+        ## All Storage stats
+        $TotalStorage=@()
+            foreach($server in $VMs){
+
+            $newServer = New-ENTServerBillingObject
+            $newServer.CPUCount        = [int64][scriptblock]::Create($server.CPUCount).Invoke()[0]
+            $newServer.Name            = $server.Name
+            $newServer.OperatingSystem = $server.OperatingSystem
+
+            if($server.DynamicMemoryEnabled -eq $false){
+                $newServer.Memory      = [int64][scriptblock]::Create($server.Memory).Invoke()[0]}
+            else{$newServer.Memory     = [int64][scriptblock]::Create($server.DynamicMemoryMaximumMB).Invoke()[0]}
+
+            $stats.Server.Servers += ($newServer)
+                
+                try{
+                    $session = New-CimSession -ComputerName "$($server.name).$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred -Name $server.Name
+
+                    $volumes = Get-CimInstance -CimSession $session -Query "SELECT * FROM Win32_Volume" | 
+                                where{$_.Capacity -notlike $null -and 
+                                        $_.Name -notlike "C:\" -and 
+                                        $_.Label -notlike "User Disk" -and 
+                                        $_.Label -notlike "SwapDisk"} | 
+                                select Name, Label, PSComputername, @{label="Capacity";expression={[int64](([int64]($_.Capacity)/1073741824))}}, @{label="FreeSpace";expression={[int64](([int64]($_.FreeSpace)/1073741824))}}
+
+                    foreach($volume in $volumes){
+          
+                              $object = New-Object PSObject
+                                        Add-Member -InputObject $object -MemberType NoteProperty -Name Server -Value $server.name
+                                        Add-Member -InputObject $object -MemberType NoteProperty -Name Capacity -Value $volume.Capacity
+                                        Add-Member -InputObject $object -MemberType NoteProperty -Name FreeSpace -Value $volume.FreeSpace
+                                        Add-Member -InputObject $object -MemberType NoteProperty -Name Disk -Value $volume.Name
+                                        Add-Member -InputObject $object -MemberType NoteProperty -Name DiskName -Value $volume.Label
+                                        $TotalStorage += $object
+                                                }
+                            Get-CimSession -Name $server.name | Remove-CimSession
+                            
+                }
+                catch{
+                        Write-Verbose ("Server " +  $server.name + " not accessible")
+                }
+            }
+
+        $stats.Totalstorage.TotalAllocated = $TotalStorage.Capacity | Measure-Object -Sum | select -ExpandProperty sum
+
+        ## File server specific info
+        $FileServerStorage=@()
+        try{
+            if($Organization -eq "ASG"){$session = New-CimSession -ComputerName "$Organization-file01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred}
+            else{
+            $session = New-CimSession -ComputerName "$Organization-file-01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred}
+
+            $volumes = Get-CimInstance -CimSession $session -Query "SELECT * FROM Win32_Volume" | 
+                        where{$_.Capacity -notlike $null -and 
+                              $_.Label -like "Data"} | 
+                        select Name, Label, PSComputername, @{label="Capacity";expression={[int64](([int64]($_.Capacity)/1073741824))}}, @{label="FreeSpace";expression={[int64](([int64]($_.FreeSpace)/1073741824))}}
+
+            foreach($volume in $volumes){
+          
+                      $object = New-Object PSObject
+                                Add-Member -InputObject $object -MemberType NoteProperty -Name Capacity -Value $volume.Capacity
+                                Add-Member -InputObject $object -MemberType NoteProperty -Name FreeSpace -Value $volume.FreeSpace
+                                Add-Member -InputObject $object -MemberType NoteProperty -Name Disk -Value $volume.Name
+                                Add-Member -InputObject $object -MemberType NoteProperty -Name DiskName -Value $volume.Label
+                                $FileServerStorage += $object
+                                        }
+                    Get-CimSession | Remove-CimSession
+                            
         }
-        catch {
-            if ($_.CategoryInfo.Category -eq 'ResourceUnavailable') {
-                Write-Error "Unable to connect to $FileServer"
-            }
-            else {
-                Write-VerboseEx "No quota found for '$FilePath' on $FileServer"
-                $stats.Files.TotalAllocated = 0
-                $stats.Files.TotalUsage = 0
-            }
+        catch{
+                Write-Verbose ("Server not accessible")
+        }
+        
+        $stats.FileServer.Allocated = $FileServerStorage.Capacity | Measure-Object -Sum | select -ExpandProperty sum
+        $stats.FileServer.FreeSpace = $FileServerStorage.FreeSpace | Measure-Object -Sum | select -ExpandProperty sum
+        $stats.FileServer.Used = ($FileServerStorage.Capacity - $FileServerStorage.FreeSpace)
+
+        ## ADuser stats..
+        Write-Verbose "Finding AD users.."
+
+        Import-Module ActiveDirectory
+        if($Organization -eq "ASG") {$adserver = "$Organization-DC01.$($Config.DomainFQDN)"}
+        else{$adserver = "$Organization-DC-01.$($Config.DomainFQDN)"}
+
+        $FullUsers  = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_FullUsers
+        $LightUsers = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_LightUsers
+
+        $FullADObjects = foreach ($i in $FullUsers) {
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.EmailAddress -ne $null}
         }
 
+        foreach ($user in $FullADObjects) {
+            $newFulluser = New-ADUserBillingObject
+            
+            $newFulluser.Disabled           = $user.Enabled
+            $newFulluser.DisplayName        = $user.DisplayName
+            $newFulluser.PrimarySmtpAddress = $user.EmailAddress
+            $newFulluser.SAMAccountName     = $user.SamAccountName
+            $newFulluser.Type               = $user.ObjectClass
+            $newFulluser.LightUser          = $false
+
+            $stats.ADUser.Users += ($newFulluser | sort DisplayName)
+        }
+
+        $LightADObjects = foreach ($i in $LightUsers) {
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.EmailAddress -ne $null}
+        }
+
+        foreach ($user in $LightADObjects) {
+            $newLightuser = New-ADUserBillingObject
+            
+            $newLightuser.Disabled           = $user.Enabled
+            $newLightuser.DisplayName        = $user.DisplayName
+            $newLightuser.PrimarySmtpAddress = $user.EmailAddress
+            $newLightuser.SAMAccountName     = $user.SamAccountName
+            $newLightuser.Type               = $user.ObjectClass
+            $newLightuser.LightUser          = $true
+
+            $stats.ADUser.Users += ($newLightuser | sort DisplayName)
+        }
+
+        $stats.ADUser.Users = ($stats.ADUser.Users | sort DisplayName)
+
+        <#
         Write-VerboseEx "Finding mailboxes..."
-        $mailboxes = Get-TenantMailbox -TenantName $TenantName
+        $mailboxes = Get-TenantMailbox -Organization $Organization
         Write-VerboseEx "Done."
 
         Write-VerboseEx "Processing mailboxes..."
@@ -201,25 +318,18 @@ function Get-TenantBillingInformation {
             Write-VerboseEx "  Done for $($mbx.PrimarySmtpAddress)."
         }
         Write-VerboseEx "Done."
+        #>
 
-        $O365Info = Get-TenantID -TenantName $TenantName
+        $stats.Office365.Info = @(Get-Office365Information -Organization $Organization)
 
-        $365stats = New-Office365BillingObject
-
-        $365stats.Admin       = $O365Info.Admin
-        $365stats.License     = $O365Info.License
-        $365stats.TenantID    = $O365Info.ID
-        $365stats.PartnerName = $O365Info.PartnerName
-
-        $stats.Office365   = ($365stats)
-
+<#
         if ($DatabaseServer) {
             Write-VerboseEx "Invoking SQL query..."
             $dbSizes = Invoke-Sqlcmd -ServerInstance $DatabaseServer -Query 'sp_databases'
             Write-VerboseEx "Done."
 
             try {
-                $stats.Database.TotalUsage = $dbSizes.Where{$_.DATABASE_NAME -eq $TenantName}.DATABASE_SIZE * 1024 # It's reported in KB by SQL
+                $stats.Database.TotalUsage = $dbSizes.Where{$_.DATABASE_NAME -eq $Organization}.DATABASE_SIZE * 1024 # It's reported in KB by SQL
             }
             catch {
                 Write-VerboseEx "Unable to find SQL database"
@@ -237,11 +347,8 @@ function Get-TenantBillingInformation {
                 $stats.Database.TotalUsage = 0
             }
         }
-
+#>
         $stats
     }
 
-    End {
-        Stop-VerboseEx
-    }
 }

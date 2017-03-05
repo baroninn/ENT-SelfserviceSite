@@ -50,117 +50,109 @@
             <tr>
                 <td>
                     <center>
-                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.DiskfUsage&iQuota=@Model.CustomerReport.DiskfQuota" /><br />
-                        <small>Fig 1. Network share usage</small>
+                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.FileServerfUsed&iQuota=@Model.CustomerReport.FileServerfTotal" /><br />
+                        <small>Fig 1. File Server usage</small>
                     </center>
                 </td>
                 <td valign="middle">
-                    <p>Disk Usage: @Model.CustomerReport.DiskUsage</p>
-                    <p>Disk Quota: @Model.CustomerReport.DiskQuota</p>
-                </td>
-                <td>
-                    <center>
-                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.ExchangefUsage&iQuota=@Model.CustomerReport.ExchangefQuota" /><br />
-                        <small>Fig 2. Exchange usage</small>
-                    </center>
+                    <p>FileServer Used: @Model.CustomerReport.FileServerUsed</p>
+                    <p>FileServer Total: @Model.CustomerReport.FileServerTotal</p>
+                    <p>FileServer Free: @Model.CustomerReport.FileServerFree</p>
                 </td>
                 <td valign="middle">
-                    <p>Exchange Usage: @Model.CustomerReport.ExchangeUsage GB</p>
-                    <p>Exchange Quota: @string.Format("{0:0.00}", Model.CustomerReport.ExchangefQuota) GB</p>
-                    <p>Exchange Users: @Model.CustomerReport.ExchangeUsersCount</p>
+
+                    <p>AD Users: @Model.CustomerReport.ADUsersCount</p>
+                    <p>Full Users: @Model.CustomerReport.ADFullUsersCount</p>
+                    <p>Light Users: @Model.CustomerReport.ADLightUsersCount</p>
                     <br />
-                    <p>Total: @Model.CustomerReport.DiskTotal GB</p>
+                    <p>Server Count: @Model.CustomerReport.ENTServersCount</p>
+                    <p>All servers total storage: @Model.CustomerReport.DiskTotal GB</p>
                 </td>
-            </tr>
-        </table>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Database usage</legend>
-        <table>
-            <tr>
-                <td>Total: @Model.CustomerReport.DatabaseUsage</td>
             </tr>
         </table>
     </fieldset>
 
     <fieldset>
-        <legend>Exchange users</legend>
+        <legend>AD users</legend>
         <table>
             <tr>
                 <td><b>Name</b></td>
                 <td><b>Email</b></td>
-                <td style="text-align:right"><b>Usage</b></td>
-                <td style="text-align:right"><b>Quota</b></td>
+                <td><b>Light User</b></td>
             </tr>
-            @foreach (SystemHostingPortal.Models.ExchangeUser user in Model.CustomerReport.ExchangeUsers)
+            @foreach (SystemHostingPortal.Models.ADUser user in Model.CustomerReport.ADUsers)
             {
                 <tr>
                     <td>@user.Name</td>
                     <td>@user.Email</td>
-                    <td style="text-align:right">@user.Usage</td>
-                    <td style="text-align:right">@user.Quota</td>
+                    <td>@user.LightUser</td>
                 </tr>
             }
         </table>
     </fieldset>
 
     <fieldset>
-        <legend>SPLA Licenses:</legend>
+        <legend>Servers</legend>
         <table>
             <tr>
-                <td><b>Windows: @Model.CustomerReport.Licenses.Windows.Count</b></td>
+                <td><b>Name</b></td>
+                <td><b>CPU</b></td>
+                <td><b>RAM</b></td>
+                <td style="text-align:left"><b>Operating System</b></td>
             </tr>
-            <tr>
-                <td>
-                    @string.Join(", ", Model.CustomerReport.Licenses.Windows)
-                </td>
-            </tr>
-            <tr>
-                <td><b>Office Standard: @Model.CustomerReport.Licenses.OfficeStandard.Count</b></td>
-            </tr>
-            <tr>
-                <td>
-                    @string.Join(", ", Model.CustomerReport.Licenses.OfficeStandard)
-                </td>
-            </tr>
-            <tr>
-                <td><b>Mail Only: @Model.CustomerReport.Licenses.MailOnly.Count</b></td>
-            </tr>
-            <tr>
-                <td>
-                    @string.Join(", ", Model.CustomerReport.Licenses.MailOnly)
-                </td>
-            </tr>
-            <tr>
-                <td><b>Stud Jur: @Model.CustomerReport.Licenses.StudJur.Count</b></td>
-            </tr>
-            <tr>
-                <td>
-                    @string.Join(", ", Model.CustomerReport.Licenses.StudJur)
-                </td>
-            </tr>
+            @foreach (SystemHostingPortal.Models.ENTServer ent in Model.CustomerReport.ENTServers)
+            {
+                <tr>
+                    <td>@ent.Name</td>
+                    <td>@ent.CPU</td>
+                    <td>@ent.RAM</td>
+                    <td style="text-align:right">@ent.OS</td>
+                </tr>
+            }
         </table>
     </fieldset>
 
     <fieldset>
-        <legend>Office 365</legend>
+        <legend>Office365 billing</legend>
         <table>
             <tr>
-                <td><b>Office 365 PartnerName: </b></td>
-                <td>@(Model.CustomerReport.PartnerName)</td>
+                <td><b>PartnerName</b></td>
+                <td><b>License</b></td>
+                <td><b>Gyldig</b></td>
+                <td><b>Tildelt</b></td>
+                <td><b>Ledige</b></td>
+            </tr>
+            @foreach (SystemHostingPortal.Models.Info365 info in Model.CustomerReport.Info365s)
+            {
+                <tr>
+                    <td>@info.PartnerName</td>
+                    <td>@info.License</td>
+                    <td>@info.ActiveUnits</td>
+                    <td>@info.ConsumedUnits</td>
+                    <td>@info.FreeUnits</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+    
+    <fieldset>
+        <legend>SPLA Licenses:</legend>
+        <table>
+            <tr>
+                <td><b>Full Users: @Model.CustomerReport.Licenses.FullUser.Count</b></td>
             </tr>
             <tr>
-                <td><b>Office 365 TenantID:</b></td>
-                <td>@(Model.CustomerReport.TenantID)</td>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.FullUser)
+                </td>
             </tr>
             <tr>
-                <td><b>Office 365 Admin:</b></td>
-                <td>@(Model.CustomerReport.Admin)</td>
+                <td><b>Light Users: @Model.CustomerReport.Licenses.LightUser.Count</b></td>
             </tr>
             <tr>
-                <td><b>Office 365 License:</b></td>
-                <td>@(Model.CustomerReport.License)</td>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.LightUser)
+                </td>
             </tr>
         </table>
     </fieldset>

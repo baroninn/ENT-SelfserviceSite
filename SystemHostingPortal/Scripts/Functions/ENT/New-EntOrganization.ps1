@@ -34,5 +34,7 @@
 
         New-PrivateCloud -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
 
+        #New-SCCMCollection -Organization $Organization -FQDN "corp.$($EmailDomainName)"
+
     }
 }

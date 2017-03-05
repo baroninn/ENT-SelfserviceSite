@@ -1,14 +1,15 @@
 ﻿function Get-RemoteCredentials {
     [Cmdletbinding()]
     param(
-    [switch]$Organization
+    [string]$Organization
     )
     Begin {
         $KeyFile          = "C:\scriptstest\AES.key"
+        $Config = Get-EntConfig -Organization $Organization -JSON
     }
     Process {
 
-            $User             = "CORP\SVC_$($Organization)_ENTCon"
+            $User             = "SVC_$($Organization)_ENTCon@$($Config.DomainFQDN)"
             $File             = "C:\ENTscripts\Password.txt"
             $key              = Get-Content $KeyFile
             $Credential       = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, (Get-Content $File | ConvertTo-SecureString -Key $key)

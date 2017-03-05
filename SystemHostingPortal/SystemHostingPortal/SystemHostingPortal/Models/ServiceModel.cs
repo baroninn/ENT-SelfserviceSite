@@ -18,87 +18,75 @@ namespace SystemHostingPortal.Models
         public double ExchangefQuota { get; set; }
         public string ExchangeUsage { get; set; }
         public double ExchangefUsage { get; set; }
-        public List<ExchangeUser> ExchangeUsers;
-        public int ExchangeUsersCount { get; set; }
-        public string DiskQuota { get; set; }
-        public string DiskUsage { get; set; }
+        public List<ADUser> ADUsers;
+        public List<ENTServer> ENTServers;
+        public List<Info365> Info365s;
+        public int ADUsersCount { get; set; }
+        public int ADLightUsersCount { get; set; }
+        public int ADFullUsersCount { get; set; }
+        public int ENTServersCount { get; set; }
+        public string TotalUsage { get; set; }
         public string Admin { get; set; }
         public string PartnerName { get; set; }
         public string License { get; set; }
         public string TenantID { get; set; }
         public string DatabaseUsage { get; set; }
-        public double DiskfUsage { get; set; }
-        public double DiskfQuota { get; set; }
+        public double TotalfUsage { get; set; }
+        public string FileServerFree { get; set; }
+        public double FileServerfFree { get; set; }
+        public string FileServerTotal { get; set; }
+        public double FileServerfTotal { get; set; }
+        public string FileServerUsed { get; set; }
+        public double FileServerfUsed { get; set; }
         public double DatabasefUsage { get; set;}
-        public int DiskServers
-        {
-            get
-            {
-                int total = 0;
-                foreach (Server s in Servers)
-                {
-                    foreach (ServerDisk d in s.Disks)
-                    {
-                        try
-                        {
-                            total += int.Parse(d.Size.Split(' ')[0]);
-                        }
-                        catch { }
-                    }
-                }
-
-                return total;
-            }
-        }
 
         public int DiskTotal
         {
             get
             {
-                return (int)ExchangefQuota + (int)DiskfQuota + DiskServers;
+                return (int)TotalfUsage;
             }
         }
 
-        public List<Server> Servers;
+        //public List<Server> Servers;
 
         public CustomCustomerReport()
         {
             Licenses = new SPLA();
-            ExchangeUsers = new List<ExchangeUser>();
-            Servers = new List<Server>();
+            ADUsers = new List<ADUser>();
+            ENTServers = new List<ENTServer>();
+            Info365s = new List<Info365>();
         }
     }
 
     public class SPLA 
     {
-        public List<string> Windows = new List<string>();
-        public List<string> OfficeStandard = new List<string>();
-        public List<string> OfficeProfessional = new List<string>();
-        public List<string> Outlook = new List<string>();
-        public List<string> Unknown = new List<string>();
-        public List<string> StudJur = new List<string>();
-        public List<string> MailOnly = new List<string>();
+        public List<string> FullUser = new List<string>();
+        public List<string> LightUser = new List<string>();
     }
 
 
-    public class ExchangeUser
+    public class ADUser
     {
         public string Name { get; set; }
-        public string Usage { get; set; }
-        public string Quota { get; set; }
         public string Email { get; set; }
+        public string LightUser { get; set; }
     }
 
-    public class Server
+    public class ENTServer
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public List<ServerDisk> Disks = new List<ServerDisk>();
+        public string CPU { get; set; }
+        public string RAM { get; set; }
+        public string OS { get; set; }
     }
 
-    public class ServerDisk
+    public class Info365
     {
-        public string DeviceID { get; set; }
-        public string Size { get; set; }
+        public string PartnerName { get; set; }
+        public string License { get; set; }
+        public string ActiveUnits { get; set; }
+        public string ConsumedUnits { get; set; }
+        public string FreeUnits { get; set; }
     }
 }
