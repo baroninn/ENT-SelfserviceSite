@@ -1,0 +1,100 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Reset Password";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetADUsersList();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=distinguishedname]").html('<option>loading...</option>');
+
+                GetADUsersList();
+
+            });
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to reset a user password.</p>
+
+@using (Html.BeginForm("ResetPWD", "User"))
+{
+    <fieldset>
+        <legend>Reset Password</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.ResetPWD.Organization) { @: selected="selected"
+                                                                            } }>
+                                @organization
+                                                                        </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd"><span>AD User<i class="material-icons infoicon"></i></span></td>
+                <td class="righttd">
+                    <select name="distinguishedname"><option>loading...</option></select>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">New Password</td>
+                <td>
+                    <input name="password" placeholder="Dg3i#2ig!4)/" @if (Model.ActionFailed) {  @: value="@Model.ResetPWD.Password"
+                                                                                                                } />
+                </td>
+            </tr>
+
+        <tr>
+            <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="passwordneverexpires" type="checkbox" @if (Model.ActionFailed) { if (Model.ResetPWD.PasswordNeverExpires) { @: checked="checked"
+                                                                                              } } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Passwords will never expire if this is checked. This must be confirmed by the organization first.
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Reset" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+
+}

@@ -19,6 +19,7 @@ namespace SystemHostingPortal.Models
         public string Organization { get; set; }
         public string ExchangeServer { get; set; }
         public string DomainFQDN { get; set; }
+        public string CustomerOUDN { get; set; }
         public string AcceptedDomains { get; set; }
         public string TenantID365 { get; set; }
         public string AdminUser365 { get; set; }

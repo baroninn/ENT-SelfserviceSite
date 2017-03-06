@@ -207,23 +207,23 @@ function GetSendAsGroups(selectElement) {
 }
 
 
-function AddOrgsList(json, selectElement) {
+function AddUserToList(json, selectElement) {
 
     var selected = '';
 
-    selectElement.append('<option value="' + json.Organization + '"' + selected + '>' + json.Organization + '</option>');
+    selectElement.append('<option value="' + json.DistinguishedName + '"' + selected + '>' + json.Name + ' -- ' + json.UserPrincipalName + '</option>');
 }
 
-// New function for getting Organizations This function is tied to the <Select> list function and can be used as a dropdown menu.
-function GetOrganizations(selectElement) {
+// New function for getting accepted domain. This function is tied to the <Select> list function and can be used as a dropdown menu.
+function GetADUsersList(selectElement) {
     if (!selectElement) {
-        selectElement = $("select[name=organization]");
+        selectElement = $("select[name=distinguishedname]");
     }
 
     var organization = $("select[name=organization]").val();
     selectElement.html('<option>loading...</option>');
 
-    $.get("/Ajax/GetOrganizations", {}, function (data) {
+    $.get("/Ajax/GetADUsersList", { "organization": organization }, function (data) {
         selectElement.html('');
 
         var json = JSON.parse(data);
@@ -233,11 +233,11 @@ function GetOrganizations(selectElement) {
         else {
             selectElement.html("");
             if (json.length == null) {
-                AddOrgsList(json, selectElement);
+                AddUserToList(json, selectElement);
             }
             else {
                 for (i = 0; i < json.length; i++) {
-                    AddOrgsList(json[i], selectElement);
+                    AddUserToList(json[i], selectElement);
                 }
             }
         }

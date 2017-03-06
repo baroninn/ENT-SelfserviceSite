@@ -18,6 +18,7 @@ namespace SystemHostingPortal.Models
         public CustomUserMemberOf MemberOf = new CustomUserMemberOf();
         public CustomNav2goUser Nav2goUser = new CustomNav2goUser();
         public CustomExtUser CreateExtUser = new CustomExtUser();
+        public CustomResetPWD ResetPWD = new CustomResetPWD();
 
     }
 
@@ -43,6 +44,14 @@ namespace SystemHostingPortal.Models
         public string Description { get; set; }
         public string Password { get; set; }
         public bool Management { get; set; }
+    }
+    public class CustomResetPWD
+    {
+        public string Organization { get; set; }
+        public string Name { get; set; }
+        public string DistinguishedName { get; set; }
+        public string Password { get; set; }
+        public bool PasswordNeverExpires { get; set; }
     }
 
 
@@ -86,4 +95,6 @@ namespace SystemHostingPortal.Models
 
         public string UserPrincipalName { get; set; }
     }
+
+
 }

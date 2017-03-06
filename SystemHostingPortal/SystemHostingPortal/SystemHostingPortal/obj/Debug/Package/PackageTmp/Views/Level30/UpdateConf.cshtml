@@ -88,6 +88,21 @@
             </td>
             <td class="mandatory">*</td>
         </tr>
+
+        <tr>
+            <td class="lefttd tooltip"><span>Customer OU DN<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="customeroudn" placeholder="CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                                                                                                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        This is mandatory..
+                    </p>
+                </div>
+            </td>
+            <td class="mandatory">*</td>
+        </tr>
+
         <tr>
             <td class="lefttd tooltip"><span>Accepted Domains<i class="material-icons infoicon">info</i></span></td>
             <td>

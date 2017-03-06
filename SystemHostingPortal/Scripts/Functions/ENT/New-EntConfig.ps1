@@ -16,6 +16,7 @@
                 ExchangeServer = "null"
                 DomainFQDN     = "null"
                 Domain         = 'CORP'
+                CustomerOUDN   = "null"
                 EmailDomains   = [pscustomobject]@{
                     DomainName   = "null"
                     }

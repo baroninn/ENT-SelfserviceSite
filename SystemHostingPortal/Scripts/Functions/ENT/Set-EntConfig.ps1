@@ -5,6 +5,7 @@
         [string]$Organization,
         [string]$ExchangeServer,
         [string]$DomainFQDN,
+        [string]$CustomerOUDN,
         [string[]]$AcceptedDomains,
         [string]$TenantID365,
         [string]$AdminUser365,
@@ -26,6 +27,7 @@
 
         if(-not $ExchangeServer -eq '')  {$Config.ExchangeServer              = "$ExchangeServer"}
         if(-not $DomainFQDN -eq '')      {$Config.DomainFQDN                  = "$DomainFQDN"}
+        if(-not $CustomerOUDN -eq '')    {$Config.CustomerOUDN                = "$CustomerOUDN"}
         if(-not $AcceptedDomains -eq '') {$Config.EmailDomains.DomainName     = $AcceptedDomains.replace(' ', '').split(',')}
 
         if(-not $TenantID365 -eq '')     {$Config.Office365.TenantID          = "$TenantID365"}

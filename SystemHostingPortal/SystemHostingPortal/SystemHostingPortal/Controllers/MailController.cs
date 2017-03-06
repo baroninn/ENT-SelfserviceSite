@@ -753,50 +753,6 @@ namespace SystemHostingPortal.Controllers
         }
 
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult SetAllMailboxPlans()
-        {
-            try
-            {
-                return View("SetAllMailboxPlans", model);
-            }
-            catch (Exception exc)
-            {
-                return View("Error", exc);
-            }
-        }
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult SetAllMailboxPlans(FormCollection _POST)
-        {
-            try
-            {
-                model.MailboxPlan.Organization = _POST["organization"];
-                model.MailboxPlan.MailboxPlan = _POST["mailboxplan"];
-
-                Common.Log(string.Format("has run Mail/SetAllMailboxPlans({1}) for organization {0}", model.MailboxPlan.Organization, model.MailboxPlan.MailboxPlan));
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.SetAllMailboxPlans(model.MailboxPlan).Invoke();
-                }
-
-                Common.Stats("Mail/SetAllMailboxPlans");
-
-                //model.OKMessage = string.Format("Org: {0}, Plan: {1}", model.MailboxPlan.Organization, model.MailboxPlan.MailboxPlan);
-                model.OKMessage.Add("Success");
-
-                return View("SetAllMailboxPlans", model);
-            }
-            catch (Exception exc)
-            {
-                Common.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View("SetAllMailboxPlans", model);
-            }
-        }
-
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
         public ActionResult RemoveMailbox()
         {
             try

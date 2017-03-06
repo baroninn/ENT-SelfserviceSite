@@ -39,6 +39,7 @@ namespace SystemHostingPortal.Controllers
                     Organization = _POST["organization"].ToUpper(),
                     ExchangeServer = _POST["exchangeserver"],
                     DomainFQDN = _POST["domainfqdn"],
+                    CustomerOUDN = _POST["customeroudn"],
                     AcceptedDomains = _POST["accepteddomains"],
                     TenantID365 = _POST["tenantid365"],
                     AdminUser365 = _POST["adminuser365"],
@@ -50,7 +51,7 @@ namespace SystemHostingPortal.Controllers
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.UpdateConf(UpdateConf.Organization, UpdateConf.ExchangeServer, UpdateConf.DomainFQDN, UpdateConf.AcceptedDomains, UpdateConf.TenantID365, UpdateConf.AdminUser365, UpdateConf.AdminPass365);
+                    ps.UpdateConf(UpdateConf.Organization, UpdateConf.ExchangeServer, UpdateConf.DomainFQDN, UpdateConf.CustomerOUDN, UpdateConf.AcceptedDomains, UpdateConf.TenantID365, UpdateConf.AdminUser365, UpdateConf.AdminPass365);
                     var result = ps.Invoke();
                 }
 
@@ -90,6 +91,7 @@ namespace SystemHostingPortal.Controllers
                     returnstr += "<tr><td class=" + "lefttd" + "><b>ExchangeServer : </b></td><td>" + item.Members["ExchangeServer"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td class=" + "lefttd" + "><b>DomainFQDN : </b></td><td>" + item.Members["DomainFQDN"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td class=" + "lefttd" + "><b>Domain : </b></td><td>" + item.Members["Domain"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>Customer OU DN : </b></td><td>" + item.Members["CustomerOUDN"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td class=" + "lefttd" + "><b>Accepted Domains : </b></td><td>" + item.Members["AcceptedDomains"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td class=" + "lefttd" + "><b>TenantID365 : </b></td><td>" + item.Members["TenantID365"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td class=" + "lefttd" + "><b>AdminUser365 : </b></td><td>" + item.Members["AdminUser365"].Value.ToString() + "</td></tr>";

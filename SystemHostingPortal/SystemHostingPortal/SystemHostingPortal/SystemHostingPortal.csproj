@@ -249,6 +249,7 @@
     <Content Include="Views\Mail\EnableSikkerMail.cshtml" />
     <Content Include="Views\Mail\GetCalendarPermissions.cshtml" />
     <Content Include="Views\Level30\UpdateConf.cshtml" />
+    <Content Include="Views\User\ResetPWD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -549,5 +549,55 @@ namespace SystemHostingPortal.Controllers
 
             return "<ul>" + returnString + "</ul>";
         }
+
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ResetPWD()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ResetPWD(FormCollection _POST)
+        {
+            try
+            {
+                model.ResetPWD.Organization = _POST["organization"];
+                model.ResetPWD.Name = _POST["name"];
+                model.ResetPWD.DistinguishedName = _POST["distinguishedname"];
+                model.ResetPWD.Password = _POST["password"];
+                model.ResetPWD.PasswordNeverExpires = _POST["passwordneverexpires"] == "on" ? true : false;
+
+                Common.Log(string.Format("has run User/ResetPWD() for {0}, to reset password for user {1}", model.ResetPWD.Organization, model.ResetPWD.Name));
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.SetPassword(model.ResetPWD.Organization, model.ResetPWD.DistinguishedName, model.ResetPWD.Password, model.ResetPWD.PasswordNeverExpires);
+                    var result = ps.Invoke();
+                }
+
+                Common.Stats("User/ResetPWD");
+                model.OKMessage.Add(string.Format("Reset password for '{1}', from Organization : '{0}' ", model.ResetPWD.Organization, model.ResetPWD.DistinguishedName));
+
+                return View("ResetPWD", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View("ResetPWD", model);
+            }
+        }
     }
 }

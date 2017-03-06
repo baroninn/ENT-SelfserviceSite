@@ -441,5 +441,44 @@ namespace SystemHostingPortal.Controllers
         }
 
 
+        // Function for getting AD users as select list..
+        public class AjaxADUser
+        {
+            public string Name { get; set; }
+            public string DistinguishedName { get; set; }
+            public string UserPrincipalName { get; set; }
+        }
+        public string GetADUsersList(string organization)
+        {
+            try
+            {
+                List<AjaxADUser> users = new List<AjaxADUser>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetADUsers(organization);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject User in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(User);
+                        users.Add(new AjaxADUser()
+                        {
+                            Name = properties["Name"].ToString(),
+                            DistinguishedName = properties["DistinguishedName"].ToString(),
+                            UserPrincipalName = properties["UserPrincipalName"].ToString(),
+                        });
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(users);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+
     }
 }

@@ -27,6 +27,7 @@
                     ExchangeServer  = $JSONConfig.ExchangeServer
                     DomainFQDN      = $JSONConfig.DomainFQDN
                     Domain          = $JSONConfig.Domain
+                    CustomerOUDN    = $JSONConfig.CustomerOUDN
                     AcceptedDomains = $JSONConfig.EmailDomains.DomainName -join ','
                     TenantID365     = $JSONConfig.Office365.TenantID
                     AdminUser365    = $JSONConfig.Office365.AdminUser

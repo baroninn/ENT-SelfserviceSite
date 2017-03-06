@@ -448,15 +448,6 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell SetAllMailboxPlans(CustomMailboxPlan mailboxPlan)
-        {
-            ps.AddCommand(psScriptPath + @"\SetAllMailboxPlans.ps1");
-            ps.AddParameter("Organization", mailboxPlan.Organization);
-            ps.AddParameter("MailboxPlan", mailboxPlan.MailboxPlan);
-
-            return this;
-        }
-
         public MyPowerShell RemoveMailbox(CustomMailbox mailbox)
         {
             ps.AddCommand(psScriptPath + @"\Remove-Mailbox.ps1");
@@ -521,14 +512,6 @@ namespace SystemHostingPortal.Logic
         public MyPowerShell GetCustomerReportLive(string organization)
         {
             ps.AddCommand(psScriptPath + @"\GetCustomerReportLive.ps1")
-                .AddParameter("Organization", organization);
-
-            return this;
-        }
-
-        public MyPowerShell RemoveDummyDomain(string organization)
-        {
-            ps.AddCommand(psScriptPath + @"\RemoveDummyDomain.ps1")
                 .AddParameter("Organization", organization);
 
             return this;
@@ -631,12 +614,13 @@ namespace SystemHostingPortal.Logic
               .AddParameter("UpdateAll", updateall);
             return this;
         }
-        public MyPowerShell UpdateConf(string organization, string exchangeserver, string domainfqdn, string accepteddomains, string tenantid365, string adminuser365, string adminpass365)
+        public MyPowerShell UpdateConf(string organization, string exchangeserver, string domainfqdn, string customeroudn, string accepteddomains, string tenantid365, string adminuser365, string adminpass365)
         {
             ps.AddCommand(psScriptPath + @"\UpdateConf.ps1")
                 .AddParameter("Organization", organization)
                 .AddParameter("ExchangeServer", exchangeserver)
                 .AddParameter("DomainFQDN", domainfqdn)
+                .AddParameter("CustomerOUDN", customeroudn)
                 .AddParameter("AcceptedDomains", accepteddomains)
                 .AddParameter("TenantID365", tenantid365)
                 .AddParameter("AdminUser365", adminuser365)
@@ -648,6 +632,24 @@ namespace SystemHostingPortal.Logic
         public MyPowerShell GetCurrentConf(string organization)
         {
             ps.AddCommand(psScriptPath + @"\GetCurrentConf.ps1")
+                .AddParameter("Organization", organization);
+
+            return this;
+        }
+
+        public MyPowerShell SetPassword(string organization, string distinguishedname, string password, bool passwordneverexpires)
+        {
+            ps.AddCommand(psScriptPath + @"\SetPassword.ps1")
+              .AddParameter("Organization", organization)
+              .AddParameter("DistinguishedName", distinguishedname)
+              .AddParameter("Password", password)
+              .AddParameter("PasswordNeverExpires", passwordneverexpires);
+            return this;
+        }
+
+        public MyPowerShell GetADUsers(string organization)
+        {
+            ps.AddCommand(psScriptPath + @"\GetADUsers.ps1")
                 .AddParameter("Organization", organization);
 
             return this;
