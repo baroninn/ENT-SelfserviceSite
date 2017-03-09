@@ -5,61 +5,25 @@ function New-ExchangeProxyModule {
         [string[]]$Command,
 
         [Parameter(Mandatory)]
-        [psobject]$Config,
-
-        # Skips check for existing modules, and always creates a new one.
-        [switch]$NewModule
+        [string]$Organization
     )
 
     $sessionName = 'ENTExchange'
+    $Config      = Get-EntConfig -Organization $Organization
+    $Cred        = Get-RemoteCredentials -Organization $Organization
 
-    $returnModule = $null
-    if (-not $NewModule) {
-        Write-Verbose "Looking for existing Exchange module..."
-        foreach ($module in (Get-Module -Name "tmp_*")) {
-            Write-Verbose "'$($module.Name)' contains: $([string]$module.ExportedCommands.Keys -join ', ')."
-            $count = 0
-            foreach ($c in $Command) {
-                if ($module.ExportedCommands.ContainsKey($c)) {
-                    $count++
-                }
-                else {
-                    break
-                }
-            }
-
-            if ($count -eq $Command.Count) {
-                Write-Verbose "Found module '$($module.Name)'."
-                $returnModule = $module
-                break
-            }
-        }
-    }
-
-    if ($returnModule) {
-        return $returnModule
-    }
-    
-    # Remove existing sessions
+    # Remove the module/session from this scope, to avoid it getting stuck in the users scope.
+    Get-Module -Name "tmp_*" -ErrorAction SilentlyContinue | Remove-Module
     Get-PSSession -Name $sessionName -ErrorAction SilentlyContinue | Remove-PSSession
 
-    try {
-        $returnModule = Import-PSSession -Session (New-PSsession -Name $sessionName -ConfigurationName Microsoft.Exchange -ConnectionUri "$($Config.ExchangeServer)/Powershell") -CommandName $Command
-    }
-    catch {
-        if ($_.FullyQualifiedErrorId -ne 'ErrorNoCommandsImportedBecauseOfSkipping,Microsoft.PowerShell.Commands.ImportPSSessionCommand') {
+    if($Config.ExchangeServer -ne "null"){
+        try {
+            $returnModule = Import-PSSession -Session (New-PSsession -Name $sessionName -ConfigurationName Microsoft.Exchange -ConnectionUri "http://$($Config.ExchangeServer)/Powershell" -Credential $cred) -CommandName $Command -AllowClobber
+        }
+        catch {
             throw $_
         }
-        else {
-            if ($returnModule -eq $null) {
-                return
-            }
-        }
     }
-    
-    # Remove the module from this scope, to avoid it getting stuck in the users scope.
-    Get-Module -Name $returnModule.Name | Remove-Module
-    Get-PSSession -Name $sessionName -ErrorAction SilentlyContinue | Remove-PSSession
 
     return $returnModule
 }

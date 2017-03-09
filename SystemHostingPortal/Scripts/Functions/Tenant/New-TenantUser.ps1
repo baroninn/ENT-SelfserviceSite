@@ -65,8 +65,8 @@
 
         Write-Verbose "SAMAccountName: $SAMAccountName"
 
-        $ADinstance = Get-ADUser $CopyFrom -Credential $Cred -Server $Config.DomainFQDN -Properties c,MemberOf,wWWHomePage,StreetAddress,Title,postOfficeBox,physicalDeliveryOfficeName,Office,Company,Country,CannotChangePassword,City,co,countryCode,Department,Description,Division,EmployeeID,EmployeeNumber,Fax,HomeDirectory,HomedirRequired,HomeDrive,HomePage,HomePhone,info,l,Manager,OfficePhone,Organization,POBox,PostalCode,ProfilePath,ScriptPath,st,State
-
+        $ADinstance = Get-ADUser $CopyFrom -Credential $Cred -Server $Config.DomainFQDN -Properties accountExpires,assistant,codePage,countryCode,c,division,employeeType,homeDirectory,homeDrive,memberOf,localeID,logonHours,logonWorkstation,manager,postalAddress,postalCode,postOfficeBox,profilePath,scriptPath,street,co,title
+                                                                                                    
         $newUserParams = @{
             Name              = "$FirstName $LastName"
             Enabled           = $true

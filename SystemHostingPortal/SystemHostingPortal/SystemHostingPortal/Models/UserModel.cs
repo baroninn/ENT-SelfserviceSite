@@ -61,12 +61,12 @@ namespace SystemHostingPortal.Models
         public string LastName { get; set; }
         public string Organization { get; set; }
         public string UserPrincipalName { get; set; }
+        public string DistinguishedName { get; set; }
         public string Password { get; set; }
         public string DomainName { get; set; }
         public string CopyFrom { get; set; }
-        public bool Disable { get; set; }
+        public bool Confirm { get; set; }
         public bool Enable { get; set; }
-        public bool HideFromAddressList { get; set; }
         public bool UnhideFromAddressList { get; set; }
         public bool TestUser { get; set; }
         public bool Remove { get; set; }

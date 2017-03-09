@@ -220,7 +220,7 @@ function AddUserToList(json, selectElement) {
 
     var selected = '';
 
-    selectElement.append('<option value="' + json.DistinguishedName + '"' + selected + '>' + json.Name + ' -- ' + json.UserPrincipalName + '</option>');
+    selectElement.append('<option value="' + json.DistinguishedName + '"' + selected + '>' + json.Name + ' -- ' + json.UserPrincipalName + ' -- ' + json.Enabled + '</option>');
 }
 
 // New function for getting accepted domain. This function is tied to the <Select> list function and can be used as a dropdown menu.

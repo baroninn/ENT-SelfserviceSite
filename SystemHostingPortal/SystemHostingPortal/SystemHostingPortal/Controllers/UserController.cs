@@ -91,16 +91,14 @@ namespace SystemHostingPortal.Controllers
             {
                 CustomUser disableUser = new CustomUser()
                 {
-                    UserPrincipalName = _POST["userprincipalname"],
+                    DistinguishedName = _POST["distinguishedname"],
                     Organization = _POST["organization"],
-                    Disable = _POST["disable"] == "on" ? true : false,
-                    HideFromAddressList = _POST["hidefromaddresslist"] == "on" ? true : false,
-                    Remove = _POST["delete"] == "on" ? true : false
+                    Confirm = _POST["confirm"] == "on" ? true : false
                 };
 
                 model.DisableUser = disableUser;
 
-                Common.Log(string.Format("has run User/DisableUser(disable={1}, hidefromaddresslist={2}, delete={3}) for user {0}", disableUser.UserPrincipalName, disableUser.Disable, disableUser.HideFromAddressList, disableUser.Remove));
+                Common.Log(string.Format("has run User/DisableUser(confirm={1}, for user {0}", disableUser.DistinguishedName, disableUser.Confirm));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
@@ -108,13 +106,9 @@ namespace SystemHostingPortal.Controllers
                     var result = ps.Invoke();
                 }
 
-                if (model.DisableUser.Disable)
+                if (model.DisableUser.Confirm)
                 {
                     model.OKMessage.Add("User disabled.");
-                }
-                if (model.DisableUser.HideFromAddressList)
-                {
-                    model.OKMessage.Add("User hidden from address lists.");
                 }
 
                 Common.Stats("User/Disable");

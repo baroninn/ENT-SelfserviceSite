@@ -1,36 +1,31 @@
 ﻿param(
     [parameter(Mandatory=$true)]
-    $Organization,
+    $Organization = 'ASG',
     [parameter(Mandatory=$true)]
-    $UserPrincipalName,
-    [switch]$Disable,
-    [switch]$HideFromAddressList,
-    [switch]$Delete
+    $DistinguishedName = 'CN=jstest,OU=Users,OU=Local Admins,OU=Accounts,DC=asgdom,DC=local',
+    [switch]$Confirm = $true
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot Capto)
+Import-Module (Join-Path $PSScriptRoot Functions)
 
-Import-Module (New-ExchangeProxyModule -Command "Set-Mailbox")
 
-$Config = Get-TenantConfig -TenantName $Organization
+$Config = Get-EntConfig -Organization $Organization -JSON
 
-$mbx = @(Get-TenantMailbox -TenantName $Organization -Name $UserPrincipalName)
-if ($mbx.Count -eq 0) {
-    Write-Error "No mailbox was found with UserPrincipalName '$UserPrincipalName'."
-}
-elseif ($mbx.Count -ne 1) {
-	throw "Multiple mailboxes found from UserPrincipalName."
-}
+$Cred  = Get-RemoteCredentials -Organization $Organization
 
-if($Disable) {
-    Disable-ADAccount -Identity $mbx.DistinguishedName -Server $Config.DomainFQDN
-    Set-Aduser -Identity $mbx.DistinguishedName -Server $Config.DomainFQDN -Add @{extensionAttribute12="Disabled"}
 
-}
+if($Confirm) {
+    
+    if($Organization -eq "ASG"){
+        $user = @(Get-ADUser -Credential $Cred -Server "$Organization-DC01.$($Config.DomainFQDN)" -Identity $DistinguishedName)
+        Disable-ADAccount -Identity $DistinguishedName -Server "$Organization-DC01.$($Config.DomainFQDN)" -Credential $Cred
+    }
+    else{
+        $user = @(Get-ADUser -Credential $Cred -Server "$Organization-DC-01.$($Config.DomainFQDN)" -Identity $DistinguishedName)
+        Disable-ADAccount -Identity $DistinguishedName -Server "$Organization-DC-01.$($Config.DomainFQDN)" -Credential $Cred
+    }
 
-if($HideFromAddressList) {
-    $mbx | Set-Mailbox -HiddenFromAddressListsEnabled $true
 }

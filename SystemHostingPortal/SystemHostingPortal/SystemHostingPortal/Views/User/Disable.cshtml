@@ -5,61 +5,23 @@
 @section script {
     <script>
         $(document).ready(function () {
-            $("select[name=organization]").change(function () {
-                GetMailbox();
-            });
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
-            GetMailbox();
+            GetADUsersList();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=distinguishedname]").html('<option>loading...</option>');
+
+                GetADUsersList();
+
+            });
         });
 
-        function AddMailboxToList(json) {
-            //if (json.RecipientTypeDetails != "UserMailbox") { return }
-
-            var selected = json.UserPrincipalName == "@Model.EnableUser.UserPrincipalName" ? ' selected="selected"' : "";
-
-            $("select[name=userprincipalname]").append('<option value="' + json.UserPrincipalName + '"' + selected + '>' + json.Name + ' [' + json.RecipientTypeDetails + ']</option>');
-        }
-
-        function GetMailbox() {
-            var organization = $("select[name=organization]").val();
-            $("select[name=userprincipalname]").html('<option>loading...</option>');
-
-            $.get("/Ajax/GetMailbox", { "organization": organization }, function (data) {
-                $("select[name=userprincipalname]").html('');
-
-                var json = JSON.parse(data);
-                if (json.Failure) {
-                    AddError(json);
-                }
-                else {
-                    $("select[name=userprincipalname]").html("");
-                    if (json.length == null) {
-                        AddMailboxToList(json);
-                    }
-                    else {
-                        for (i = 0; i < json.length; i++) {
-                            AddMailboxToList(json[i]);
-                        }
-                    }
-                }
-            });
-        }
-
-        function GetMailboxes() {
-            $("#upnselector").html("... loading");
-
-            var organization = $("select[name=organization]").val();
-
-            $.get("/Mail/GetMailboxes?organization=" + organization, function (data) {
-                $("#upnselector").html(data);
-            });
-        }
-
-        function DeleteConfirm() {
-            if ($("input[name=delete]").prop('checked')) {
-                var result = confirm("WARNING: THIS WILL DELETE THE USER!\n\nRESTORE COSTS CAKE!\n\nTHE CAKE IS NOT A LIE!")
+        function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL DISABLE THE USER!")
                 if (!result) {
-                    $("input[name=delete]").prop("checked", false);
+                    $("input[name=confirm]").prop("checked", false);
                 }
             }
         }
@@ -111,26 +73,16 @@
                 </select></td>
         </tr>
         <tr>
-            <td class="lefttd">Mailbox</td>
+            <td class="lefttd">AD User</td>
             <td>
-                <select name="userprincipalname"><option>loading...</option></select>
+                <select name="distinguishedname"><option>loading...</option></select>
             </td>
         </tr>
         <tr>
-            <td class="lefttd">Disable user</td>
-            <td><input name="disable" type="checkbox" @if (Model.ActionFailed)
+            <td class="lefttd">Confirm</td>
+            <td><input name="confirm" type="checkbox" @if (Model.ActionFailed)
                                                            {
-                                                               if (Model.DisableUser.Disable)
-                                                               { 
-                                                                    @:checked="checked"
-                                                                }
-                                                            }/></td>
-        </tr>
-        <tr>
-            <td class="lefttd">Hide from address list</td>
-            <td><input name="hidefromaddresslist" type="checkbox" @if (Model.ActionFailed)
-                                                           {
-                                                               if (Model.DisableUser.HideFromAddressList)
+                                                               if (Model.DisableUser.Confirm)
                                                                { 
                                                                     @:checked="checked"
                                                                 }
@@ -138,6 +90,6 @@
         </tr>
     </table>
     <br />
-    <input type="submit" class="button" class:hover="button:hover" value="Execute" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+    <input type="submit" class="button" class:hover="button:hover" value="Disable" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>
 }

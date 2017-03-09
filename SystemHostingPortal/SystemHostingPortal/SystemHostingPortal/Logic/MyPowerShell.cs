@@ -106,14 +106,12 @@ namespace SystemHostingPortal.Logic
         /// <returns></returns>
         public MyPowerShell DisableUser(CustomUser user)
         {
-            if (!(user.Disable || user.HideFromAddressList || user.Remove)) { throw new Exception("Missing action Disable/HideFromAddressList/Delete. Can't do nothing."); }
+            if (!(user.Confirm)) { throw new Exception("Missing action Confirm. Can't do nothing."); }
 
             ps.AddCommand(psScriptPath + @"\DisableUser.ps1");
             ps.AddParameter("Organization", user.Organization);
-            ps.AddParameter("UserPrincipalName", user.UserPrincipalName);
-            if (user.Disable) { ps.AddParameter("Disable"); }
-            if (user.HideFromAddressList) { ps.AddParameter("HideFromAddressList"); }
-            if (user.Remove) { ps.AddParameter("Delete"); }
+            ps.AddParameter("DistinguishedName", user.DistinguishedName);
+            if (user.Confirm) { ps.AddParameter("Confirm"); }
 
             return this;
         }

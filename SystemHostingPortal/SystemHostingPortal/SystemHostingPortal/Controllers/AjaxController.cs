@@ -447,6 +447,7 @@ namespace SystemHostingPortal.Controllers
             public string Name { get; set; }
             public string DistinguishedName { get; set; }
             public string UserPrincipalName { get; set; }
+            public string Enabled { get; set; }
         }
         public string GetADUsersList(string organization)
         {
@@ -467,6 +468,7 @@ namespace SystemHostingPortal.Controllers
                             Name = properties["Name"].ToString(),
                             DistinguishedName = properties["DistinguishedName"].ToString(),
                             UserPrincipalName = properties["UserPrincipalName"].ToString(),
+                            Enabled = properties["Enabled"].ToString(),
                         });
                     }
 
