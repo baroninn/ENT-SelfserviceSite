@@ -43,9 +43,9 @@ function Get-Office365Information {
         $newid.TenantID      = 'null'
         $newid.Admin         = 'null'
         $newid.License       = "Not O365 enabled.."
-        $newid.ActiveUnits   = [int32]''
-        $newid.ConsumedUnits = [int32]''
-        $newid.FreeUnits     = [int32]''
+        $newid.ActiveUnits   = 0
+        $newid.ConsumedUnits = 0
+        $newid.FreeUnits     = 0
 
         $ID += $newid
         #$ID += $newid

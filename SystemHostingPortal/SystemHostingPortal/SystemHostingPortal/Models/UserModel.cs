@@ -36,7 +36,6 @@ namespace SystemHostingPortal.Models
         public List<string> Groups = new List<string>();
     }
 
-
     public class CustomServiceUser
     {
         public string Service { get; set; }
@@ -64,8 +63,7 @@ namespace SystemHostingPortal.Models
         public string UserPrincipalName { get; set; }
         public string Password { get; set; }
         public string DomainName { get; set; }
-
-        public List<string> EmailAddresses;
+        public string CopyFrom { get; set; }
         public bool Disable { get; set; }
         public bool Enable { get; set; }
         public bool HideFromAddressList { get; set; }

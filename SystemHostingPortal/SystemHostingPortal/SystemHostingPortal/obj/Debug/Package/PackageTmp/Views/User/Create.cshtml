@@ -8,11 +8,14 @@
             if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
             GetAcceptedDomain2();
+            GetADUsersList();
 
             $("select[name=organization]").change(function () {
                 $("select[name=domainname]").html('<option>loading...</option>');
+                $("select[name=distinguishedname]").html('<option>loading...</option>');
 
                 GetAcceptedDomain2();
+                GetADUsersList();
 
             });
         });
@@ -44,6 +47,12 @@
                 </select></td>
         </tr>
         <tr>
+            <td class="lefttd"><span>Copy settings from<i class="material-icons infoicon"></i></span></td>
+            <td class="righttd">
+                <select name="distinguishedname"><option>loading...</option></select>
+            </td>
+        </tr>
+        <tr>
             <td class="lefttd">First name</td>
             <td>
                 <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].FirstName"
@@ -57,6 +66,7 @@
                                                                                      } />
             </td>
         </tr>
+
     </table>
     <table>
         <tr>
@@ -77,35 +87,11 @@
         
         <tr>
             <td class="lefttd">Password</td>
-            <td><input name="password" placeholder="Password" @if (Model.ActionFailed)
+            <td><input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed)
                                                               { 
                                                                   @:value="@Model.UserList[0].Password" 
                                                               }/></td>
         </tr>
-        <tr>
-            <td class="lefttd">Email aliases</td>
-            <td>@if (Model.ActionFailed)
-                {
-                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.UserList[0].EmailAddresses)</textarea>
-                }
-                else {
-                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
-                }
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>Light User<i class="material-icons infoicon">info</i></span></td>
-            <td>
-                <input name="mailonly" type="checkbox" @if (Model.ActionFailed) { if (Model.UserList[0].LightUser) { @: checked="checked"
-                                                                                              } } />
-                <div class="description">
-                    <p class="descriptiontext">
-                        Light users can normally only use webmail, Outlook Anywhere and ActiveSync. with Enterprise customers it will be random what this role combines.
-                    </p>
-                </div>
-            </td>
-        </tr>
-
         <tr>
             <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
             <td>

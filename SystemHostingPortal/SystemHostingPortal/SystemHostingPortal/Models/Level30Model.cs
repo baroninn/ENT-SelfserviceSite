@@ -10,7 +10,7 @@ namespace SystemHostingPortal.Models
     public class Level30Model : BaseModel
     {
         public CustomUpdateConf UpdateConf = new CustomUpdateConf();
-        public CustomCurrentConf CurrentConf = new CustomCurrentConf();
+        public CustomGetConf GetConf = new CustomGetConf();
     }
 
 
@@ -27,7 +27,7 @@ namespace SystemHostingPortal.Models
 
     }
 
-    public class CustomCurrentConf
+    public class CustomGetConf
     {
         public string Organization { get; set; }
         public string ExchangeServer { get; set; }

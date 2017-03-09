@@ -469,6 +469,7 @@ namespace SystemHostingPortal.Controllers
                             UserPrincipalName = properties["UserPrincipalName"].ToString(),
                         });
                     }
+
                 }
 
                 return new JavaScriptSerializer().Serialize(users);

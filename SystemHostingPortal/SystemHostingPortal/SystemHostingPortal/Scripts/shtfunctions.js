@@ -20,8 +20,17 @@ function GetCurrentConf() {
     var organization = $("select[name=organization]").val();
     $("#currentConf").html("loading, this could take some time...");
 
-    $.get("/Level30/GetCurrentConf?organization=" + organization, function (data) {
+    $.get("/Level30/getCurrentConf?organization=" + organization, function (data) {
         $("#currentConf").html(data);
+    });
+}
+
+function GetConf() {
+    var organization = $("select[name=organization]").val();
+    $("#getConf").html("loading, this could take some time...");
+
+    $.get("/Level30/GetConf?organization=" + organization, function (data) {
+        $("#getConf").html(data);
     });
 }
 

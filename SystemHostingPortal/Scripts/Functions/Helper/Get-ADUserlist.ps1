@@ -16,8 +16,8 @@
         
         $ADUsers  = @()
         if($Organization -eq "ASG") {
-        $ADUsers += Get-ADUser -Credential $Cred -Server ("$ORganization-dc01.$($Config.DomainFQDN)") -SearchBase $Config.CustomerOUDN -LDAPFilter "(DisplayName=*)(!DisplayName=*_Template_*)(UserPrincipalName=*)" -Properties DisplayName, DistinguishedName}
-        else{$ADUsers += Get-ADUser -Credential $Cred -Server ("$ORganization-dc-01.$($Config.DomainFQDN)") -SearchBase $Config.CustomerOUDN -LDAPFilter "(DisplayName=*)(!DisplayName=*_Template_*)(UserPrincipalName=*)" -Properties DisplayName, DistinguishedName}
+        $ADUsers += Get-ADUser -Credential $Cred -Server ("$ORganization-dc01.$($Config.DomainFQDN)") -SearchBase $Config.CustomerOUDN -LDAPFilter "(DisplayName=*)(UserPrincipalName=*)" -Properties DisplayName, DistinguishedName | sort Name}
+        else{$ADUsers += Get-ADUser -Credential $Cred -Server ("$ORganization-dc-01.$($Config.DomainFQDN)") -SearchBase $Config.CustomerOUDN -LDAPFilter "(DisplayName=*)(UserPrincipalName=*)" -Properties DisplayName, DistinguishedName | sort Name}
 
         $UserObject = @()
         foreach ($user in $ADUsers) {

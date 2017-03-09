@@ -10,6 +10,10 @@ param (
 
     [Parameter(Mandatory)]
     [string]
+    $CopyFrom,
+
+    [Parameter(Mandatory)]
+    [string]
     $DomainName,
 
     [Parameter(Mandatory)]
@@ -24,44 +28,32 @@ param (
     [string]
     $Password,
 
-    [string[]]$EmailAlias,
-
     [bool]$PasswordNeverExpires,
         
-    [bool]$TestUser,
+    [bool]$TestUser
 
-    [bool]$StudJur,
-
-    [bool]$MailOnly
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot "Capto")
+Import-Module (Join-Path $PSScriptRoot "Functions")
 
 $newUserParams = @{
-    TenantName         = $Organization
+    Organization       = $Organization
     PrimarySmtpAddress = ($UserPrincipalName + '@' + $DomainName)
     FirstName          = $FirstName 
     LastName           = $LastName 
     Password           = $Password
+    CopyFrom           = $CopyFrom
 }
 
-if ($EmailAlias) {
-    $newUserParams.Add("EmailAlias", $EmailAlias)
-}
 if ($PasswordNeverExpires) {
     $newUserParams.Add("PasswordNeverExpires", $true)
 }
 if ($TestUser) {
     $newUserParams.Add("TestUser", $true)
 }
-if ($StudJur) {
-    $newUserParams.Add("StudJur", $true)
-}
-if ($MailOnly) {
-    $newUserParams.Add("MailOnly", $true)
-}
+
 
 New-TenantUser @newUserParams -Verbose:$VerbosePreference

@@ -205,7 +205,7 @@ function Get-TenantBillingInformation {
         $LightUsers = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_LightUsers
 
         $FullADObjects = foreach ($i in $FullUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.EmailAddress -ne $null}
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass, extensionAttribute2 | where{$_.Enabled -eq $true}
         }
 
         foreach ($user in $FullADObjects) {
@@ -213,7 +213,10 @@ function Get-TenantBillingInformation {
             
             $newFulluser.Disabled           = $user.Enabled
             $newFulluser.DisplayName        = $user.DisplayName
-            $newFulluser.PrimarySmtpAddress = $user.EmailAddress
+
+            if($user.EmailAddress -eq $null){$newFulluser.PrimarySmtpAddress = 'Null'}
+            else{$newFulluser.PrimarySmtpAddress = $user.EmailAddress}
+
             $newFulluser.SAMAccountName     = $user.SamAccountName
             $newFulluser.Type               = $user.ObjectClass
             $newFulluser.LightUser          = $false
@@ -222,7 +225,7 @@ function Get-TenantBillingInformation {
         }
 
         $LightADObjects = foreach ($i in $LightUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.EmailAddress -ne $null}
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass, extensionAttribute2 | where{$_.Enabled -eq $true}
         }
 
         foreach ($user in $LightADObjects) {
@@ -230,7 +233,10 @@ function Get-TenantBillingInformation {
             
             $newLightuser.Disabled           = $user.Enabled
             $newLightuser.DisplayName        = $user.DisplayName
-            $newLightuser.PrimarySmtpAddress = $user.EmailAddress
+
+            if($user.EmailAddress -eq $null){$newLightuser.PrimarySmtpAddress = 'Null'}
+            else{$newLightuser.PrimarySmtpAddress = $user.EmailAddress}
+
             $newLightuser.SAMAccountName     = $user.SamAccountName
             $newLightuser.Type               = $user.ObjectClass
             $newLightuser.LightUser          = $true

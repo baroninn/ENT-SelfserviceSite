@@ -21,6 +21,10 @@
             <td class="righttd">@Model.UserList[0].FirstName</td>
         </tr>
         <tr>
+            <td class="lefttd">Copy From:</td>
+            <td class="righttd">@Model.UserList[0].CopyFrom</td>
+        </tr>
+        <tr>
             <td class="lefttd">Last Name:</td>
             <td class="righttd">@Model.UserList[0].LastName</td>
         </tr>
@@ -31,16 +35,6 @@
         <tr>
             <td class="lefttd">Password:</td>
             <td class="righttd">@Model.UserList[0].Password</td>
-        </tr>
-        <tr>
-            <td class="lefttd">Email aliases:</td>
-            <td>
-                <textarea rows="10" disabled="disabled">@string.Join("\r\n", Model.UserList[0].EmailAddresses)</textarea>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd">Stud Jur</td>
-            <td class="righttd">@Model.UserList[0].StudJur</td>
         </tr>
         <tr>
             <td class="lefttd">Password Never Expires</td>

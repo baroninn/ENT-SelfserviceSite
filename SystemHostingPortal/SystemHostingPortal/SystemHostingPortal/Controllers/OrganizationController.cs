@@ -16,7 +16,7 @@ namespace SystemHostingPortal.Controllers
         OrganizationModel model = new OrganizationModel();
 
         // Display create view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        [Authorize(Roles = "Role_Level_30")]
         public ActionResult Create()
         {
             try
@@ -28,7 +28,7 @@ namespace SystemHostingPortal.Controllers
 
         // Create POSTed organization
         [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        [Authorize(Roles = "Role_Level_30")]
         public ActionResult Create(FormCollection _POST)
         {
             try

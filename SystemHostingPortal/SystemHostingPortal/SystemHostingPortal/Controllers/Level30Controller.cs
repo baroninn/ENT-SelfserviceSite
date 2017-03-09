@@ -16,7 +16,7 @@ namespace SystemHostingPortal.Controllers
         Level30Model model = new Level30Model();
 
         // Display create view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        [Authorize(Roles = "Role_Level_30")]
         public ActionResult UpdateConf()
         {
             try
@@ -28,7 +28,7 @@ namespace SystemHostingPortal.Controllers
 
         // Create POSTed user and display create view
         [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        [Authorize(Roles = "Role_Level_30")]
         public ActionResult UpdateConf(FormCollection _POST)
         {
             try
@@ -84,18 +84,19 @@ namespace SystemHostingPortal.Controllers
             {
                 ps.GetCurrentConf(organization);
                 var result = ps.Invoke();
-                
+                const int MaxLength = 75;
                 // Returns PSObject with properties..
                 foreach (var item in result)
                 {
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>ExchangeServer : </b></td><td>" + item.Members["ExchangeServer"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>DomainFQDN : </b></td><td>" + item.Members["DomainFQDN"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>Domain : </b></td><td>" + item.Members["Domain"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>Customer OU DN : </b></td><td>" + item.Members["CustomerOUDN"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>Accepted Domains : </b></td><td>" + item.Members["AcceptedDomains"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>TenantID365 : </b></td><td>" + item.Members["TenantID365"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminUser365 : </b></td><td>" + item.Members["AdminUser365"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminPass365 : </b></td><td>" + item.Members["AdminPass365"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>ExchangeServer: </b></td><td>" + item.Members["ExchangeServer"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>DomainFQDN: </b></td><td>" + item.Members["DomainFQDN"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>Domain: </b></td><td>" + item.Members["Domain"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>Customer OU DN: </b></td><td>" + item.Members["CustomerOUDN"].Value.ToString() + "</td></tr></table>";
+                  //  returnstr += "<tr><td class=" + "lefttd" + "><b>Accepted Domains : </b></td><td>" + item.Members["AcceptedDomains"].Value.ToString() + "</td></tr>";
+                    returnstr += "<table><tr><td class=" + "lefttd" + "><b>Accepted Domains: </b></td><td>" + item.Members["AcceptedDomains"].Value.ToString().PadRight(MaxLength).Substring(0, MaxLength) + "</td></tr></table>";
+                    returnstr += "<table><tr><td class=" + "lefttd" + "><b>TenantID365: </b></td><td>" + item.Members["TenantID365"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminUser365: </b></td><td>" + item.Members["AdminUser365"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminPass365: </b></td><td>" + item.Members["AdminPass365"].Value.ToString() + "</td></tr>";
                 }
             }
 
@@ -104,18 +105,18 @@ namespace SystemHostingPortal.Controllers
             return returnstr;
         }
 
-
-        private void CurrentConf()
+        // test config get.. Needs to be retrieved by .net instead of javascript..
+        private void GetConf()
         {
             using (MyPowerShell ps = new MyPowerShell())
             {
-                ps.GetCurrentConf(model.CurrentConf.Organization);
+                ps.GetCurrentConf(model.GetConf.Organization);
                 var result = ps.Invoke().Single();
                 var DomainFQDN = (PSObject)result.Properties["DomainFQDN"].Value;
                 var ExchangeServer = (PSObject)result.Properties["ExchangeServer"].Value;
 
-                model.CurrentConf.DomainFQDN = model.CurrentConf.DomainFQDN.ToString();
-                model.CurrentConf.ExchangeServer = model.CurrentConf.ExchangeServer.ToString();
+                model.GetConf.DomainFQDN = (DomainFQDN.Members.ToString());
+                model.GetConf.ExchangeServer = model.GetConf.ExchangeServer.ToString();
 
             }
         }

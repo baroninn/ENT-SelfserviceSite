@@ -92,11 +92,9 @@ namespace SystemHostingPortal.Logic
             ps.AddParameter("UserPrincipalName", user.UserPrincipalName.Trim());
             ps.AddParameter("Password", user.Password);
             ps.AddParameter("DomainName", user.DomainName);
-
-            if (user.EmailAddresses.Count > 0) { ps.AddParameter("EmailAlias", user.EmailAddresses); }
+            ps.AddParameter("CopyFrom", user.CopyFrom);
             if (user.TestUser) { ps.AddParameter("TestUser", true); }
             if (user.PasswordNeverExpires) { ps.AddParameter("PasswordNeverExpires", true); }
-            if (user.LightUser) { ps.AddParameter("LightUser", true); }
 
             return this;
         }
@@ -215,32 +213,6 @@ namespace SystemHostingPortal.Logic
             ps.AddParameter("UserPrincipalName", addMailboxPermission.UserPrincipalName);
             if (addMailboxPermission.FullAccess) { ps.AddParameter("FullAccess"); }
             if (addMailboxPermission.SendAs) { ps.AddParameter("SendAs"); }
-
-            return this;
-        }
-
-        public MyPowerShell CreateBatch(List<CustomUser> userList, bool PasswordNeverExpires)
-        {
-            List<PSObject> newUserList = new List<PSObject>();
-
-            foreach (CustomUser user in userList)
-            {
-                PSObject newObj = new PSObject();
-
-                newObj.Members.Add(new PSNoteProperty("TenantName", user.Organization));
-                newObj.Members.Add(new PSNoteProperty("PrimarySmtpAddress", user.UserPrincipalName));
-                newObj.Members.Add(new PSNoteProperty("FirstName", user.FirstName));
-                newObj.Members.Add(new PSNoteProperty("LastName", user.LastName));
-                newObj.Members.Add(new PSNoteProperty("Password", user.Password));
-                newObj.Members.Add(new PSNoteProperty("EmailAlias", user.EmailAddresses));
-                newObj.Members.Add(new PSNoteProperty("PasswordNeverExpires", PasswordNeverExpires));
-                newObj.Members.Add(new PSNoteProperty("TestUser", false));
-
-                newUserList.Add(newObj);
-            }
-
-            ps.AddCommand(psScriptPath + @"\CreateBatch.ps1");
-            ps.AddParameter("UserList", newUserList);
 
             return this;
         }

@@ -36,7 +36,7 @@ namespace SystemHostingPortal.Controllers
                 // set up a user account for display in view
                 CustomUser newUser = new CustomUser()
                 {
-                    EmailAddresses = _POST["emailaddresses"].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList<string>(),
+                    CopyFrom = _POST["distinguishedname"],
                     FirstName = _POST["firstname"],
                     LastName = _POST["lastname"],
                     Organization = _POST["organization"],
@@ -45,9 +45,7 @@ namespace SystemHostingPortal.Controllers
                     DomainName = _POST["domainname"],
                     TestUser = _POST["testuser"] == "on" ? true : false,
                     PasswordNeverExpires = _POST["passwordneverexpires"] == "on" ? true : false,
-                    LightUser = _POST["lightuser"] == "on" ? true : false
                 };
-                for (int i = 0; i < newUser.EmailAddresses.Count; i++) { newUser.EmailAddresses[i] = newUser.EmailAddresses[i].Trim(); }
 
                 model.UserList.Add(newUser);
 
@@ -193,126 +191,6 @@ namespace SystemHostingPortal.Controllers
                 model.ActionFailed = true;
                 model.Message = exc.Message;
                 return View(model);
-            }
-        }
-
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult CreateBatch()
-        {
-            try
-            {
-                return View(model);
-            }
-            catch (Exception exc)
-            {
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View(model);
-            }
-        }
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult CreateBatchVerify(FormCollection _POST)
-        {
-            try
-            {
-                List<CustomUser> newUsers = new List<CustomUser>();
-
-                string[] newUserStrings = _POST["input"].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                bool passwordNeverExpires = _POST["passwordneverexpires"] == "on" ? true : false;
-                Session.Add("PasswordNeverExpires", passwordNeverExpires);
-
-                int count = 1;
-                foreach (string newUserString in newUserStrings)
-                {
-                    try
-                    {
-                        //user entry is empty, skip. happens when you add an empty newline at the end.
-                        if (newUserString.Trim() == "") { continue; }
-
-                        string[] newUserStringSplit = newUserString.Split(';');
-                        CustomUser newUser = new CustomUser()
-                        {
-                            FirstName = newUserStringSplit[0].Trim(),
-                            LastName = newUserStringSplit[1].Trim(),
-                            UserPrincipalName = newUserStringSplit[2].Trim(),
-                            Password = newUserStringSplit[3].Trim(),
-                            Organization = _POST["organization"],
-                            PasswordNeverExpires = passwordNeverExpires,
-                        };
-
-                        if (newUserStringSplit.Length == 5)
-                        {
-                            newUser.EmailAddresses = newUserStringSplit[4].Trim().Split(',').ToList<string>();
-                            for (int i = 0; i < newUser.EmailAddresses.Count; i++)
-                            {
-                                newUser.EmailAddresses[i] = newUser.EmailAddresses[i].Trim();
-                            }
-                        }
-                        else
-                        {
-                            newUser.EmailAddresses = new List<string>();
-                        }
-
-                        newUsers.Add(newUser);
-                    }
-                    catch(IndexOutOfRangeException)
-                    {
-                        throw new Exception("Incorrect CSV format on line " + count.ToString() + ": " + newUserString);
-                    }
-
-                    count++;
-                }
-
-                model.UserList = newUsers;
-
-                Session.Add("CreateBatch_UserList", newUsers);
-
-                return View(model);
-            }
-            catch (Exception exc)
-            {
-                Common.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View("CreateBatch", model);
-            }
-        }
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult CreateBatch(FormCollection _POST)
-        {
-
-            try
-            {
-                model.UserList = (List<CustomUser>)Session["CreateBatch_UserList"];
-                Session.Remove("CreateBatch_UserList");
-                bool passwordNeverExpires = (bool)Session["PasswordNeverExpires"];
-                Session.Remove("PasswordNeverExpires");
-
-                //extract comma seperated list of users for the log entry
-                var userList = from user in model.UserList select user.UserPrincipalName;
-                string userListLog = string.Join(", ", userList);
-
-                Common.Log(string.Format("has run User/CreateBatch() for users {0}", userListLog));
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.CreateBatch(model.UserList, passwordNeverExpires);
-                    var result = ps.Invoke();
-                    model.MessageArray = string.Join(";;;", result).Split(new string[] { ";;;" }, StringSplitOptions.RemoveEmptyEntries);
-                }
-
-                Common.Stats("User/CreateBatch");
-
-                return View("CreateBatchSuccess", model);
-            }
-            catch (Exception exc)
-            {
-                Common.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View("CreateBatch", model);
             }
         }
 
