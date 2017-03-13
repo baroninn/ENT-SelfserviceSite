@@ -7,16 +7,24 @@
         $(document).ready(function () {
             if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
-            GetMailbox("UserMailbox");
+            GetADUsersList();
 
             $("select[name=organization]").change(function () {
-                $("select[name=userprincipalname]").html('<option>loading...</option>');
+                $("select[name=distinguishedname]").html('<option>loading...</option>');
 
-                GetMailbox("UserMailbox");
+                GetADUsersList();
 
             });
-
         });
+
+        function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL ENABLE THE USER!\n\nRemember, you can easily disable the user again.")
+                if (!result) {
+                    $("input[name=confirm]").prop("checked", false);
+                }
+            }
+        }
     </script>
 }
 
@@ -60,26 +68,21 @@
                 </td>
             </tr>
             <tr>
-                <td class="lefttd">Mailbox</td>
+                <td class="lefttd">AD User</td>
                 <td>
-                    <select name="userprincipalname"><option>loading...</option></select>
+                    <select name="distinguishedname"><option>loading...</option></select>
                 </td>
             </tr>
             <tr>
-                <td class="lefttd">Enable AD user:</td>
+                <td class="lefttd">Confirm<br /></td>
                 <td>
-                    <input id="RemoveDisabled" type="checkbox" name="removedisable" checked="@Model.EnableUser.Disable" /><label for="RemoveDisabled">Enable AD user</label><br />
-                </td>
-            </tr>
-            <tr>
-                <td class="lefttd">Show in Address List:</td>
-                <td>
-                    <input id="RemoveHideFromAddressList" type="checkbox" name="removehidefromaddresslist" checked="@Model.EnableUser.HideFromAddressList" /><label for="RemoveHideFromAddressList">Show in Address List</label><br />
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.DisableUser.Confirm) { @: checked="checked"
+                                                                                                                                             } } onclick="Confirm()" />
                 </td>
             </tr>
         </table>
         <br />
-        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Set changes" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Enable user" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
 }
     

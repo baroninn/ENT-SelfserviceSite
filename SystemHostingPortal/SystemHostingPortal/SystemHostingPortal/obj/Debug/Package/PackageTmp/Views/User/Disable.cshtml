@@ -19,7 +19,7 @@
 
         function Confirm() {
             if ($("input[name=confirm]").prop('checked')) {
-                var result = confirm("WARNING: THIS WILL DISABLE THE USER!")
+                var result = confirm("WARNING: THIS WILL DISABLE THE USER!\n\nRemember, you can easily enable the user again.")
                 if (!result) {
                     $("input[name=confirm]").prop("checked", false);
                 }
@@ -29,7 +29,7 @@
 }
 
 <h1 class="title">@ViewBag.Title</h1>
-<p>Use this form to disable and/or hide a user account</p>
+<p>Use this form to disable AD users and hide users on the exchange address lists</p>
 
 @using(Html.BeginForm("Disable", "User")) {
 <fieldset>
@@ -79,14 +79,11 @@
             </td>
         </tr>
         <tr>
-            <td class="lefttd">Confirm</td>
-            <td><input name="confirm" type="checkbox" @if (Model.ActionFailed)
-                                                           {
-                                                               if (Model.DisableUser.Confirm)
-                                                               { 
-                                                                    @:checked="checked"
-                                                                }
-                                                            }/></td>
+            <td class="lefttd">Confirm<br /></td>
+            <td>
+                <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.DisableUser.Confirm) { @: checked="checked"
+                                                                                                                  } } onclick="Confirm()" />
+            </td>
         </tr>
     </table>
     <br />

@@ -1,5 +1,4 @@
 ﻿function New-EntOrganization {
-    [Cmdletbinding()]
     param (
         [Parameter(Mandatory)]
         [string]$Organization,
@@ -7,17 +6,16 @@
         [Parameter(Mandatory)]
         [string]$EmailDomainName,
 
-        [Parameter(Mandatory)]
         [string]$Subnet,
-
-        [Parameter(Mandatory)]
+        
         [string]$Vlan,
         
-        [Parameter(Mandatory)]
         [string]$IPAddressRangeStart,
+        
+        [string]$IPAddressRangeEnd,
+        
 
-        [Parameter(Mandatory)]
-        [string]$IPAddressRangeEnd
+
     )
 
     Begin {
@@ -27,12 +25,15 @@
 
     }
     Process {
+
     
         New-EntConfig -Organization $Organization
 
         Set-EntConfig -Organization $Organization -DomainFQDN ("corp.$EmailDomainName")
 
-        New-PrivateCloud -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
+        if ($CreateVMM) {
+            New-PrivateCloud -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
+        }
 
         #New-SCCMCollection -Organization $Organization -FQDN "corp.$($EmailDomainName)"
 

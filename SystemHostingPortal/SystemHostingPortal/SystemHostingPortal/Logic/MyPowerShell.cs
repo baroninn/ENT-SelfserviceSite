@@ -459,14 +459,13 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\EnableUser.ps1");
             ps.AddParameter("Organization", enableUser.Organization);
-            ps.AddParameter("UserPrincipalName", enableUser.UserPrincipalName);
-            if (enableUser.Enable) { ps.AddParameter("Enable"); }
-            if (enableUser.UnhideFromAddressList) { ps.AddParameter("UnhideFromAddressList"); }
+            ps.AddParameter("DistinguishedName", enableUser.DistinguishedName);
+            if (enableUser.Confirm) { ps.AddParameter("Confirm"); }
 
             return this;
         }
 
-        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string subnet, string vlan, string ipaddressrangestart, string ipaddressrangeend)
+        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string subnet, string vlan, string ipaddressrangestart, string ipaddressrangeend, bool createvmm)
         {
             ps.AddCommand(psScriptPath + @"\CreateOrganization.ps1")
                 .AddParameter("Organization", organization)
@@ -474,7 +473,8 @@ namespace SystemHostingPortal.Logic
                 .AddParameter("Subnet", subnet)
                 .AddParameter("Vlan", vlan)
                 .AddParameter("IPAddressRangeStart", ipaddressrangestart)
-                .AddParameter("IPAddressRangeEnd", ipaddressrangeend);
+                .AddParameter("IPAddressRangeEnd", ipaddressrangeend)
+                .AddParameter("CreateVMM", createvmm);
 
             return this;
         }

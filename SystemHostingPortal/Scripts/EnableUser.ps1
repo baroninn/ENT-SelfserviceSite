@@ -2,36 +2,60 @@
     [parameter(Mandatory=$true)]
     $Organization,
     [parameter(Mandatory=$true)]
-    $UserPrincipalName,
-    [switch]$Enable,
-    [switch]$UnhideFromAddressList
+    $DistinguishedName,
+    [switch]$Confirm = $true
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot Capto)
+Import-Module (Join-Path $PSScriptRoot Functions)
 
-Import-Module (New-ExchangeProxyModule -Command "Set-Mailbox")
 
-$Config = Get-TenantConfig -TenantName $Organization
+$Config = Get-EntConfig -Organization $Organization
+$Cred  = Get-RemoteCredentials -Organization $Organization
 
-$mbx = @(Get-TenantMailbox -TenantName $Organization -Name $UserPrincipalName)
-if ($mbx.Count -eq 0) {
-    Write-Error "No mailbox was found with UserPrincipalName '$UserPrincipalName'."
-}
-elseif ($mbx.Count -ne 1) {
-	throw "Multiple mailboxes found from UserPrincipalName."
-}
 
-if ($mbx.RecipientTypeDetails -ne "UserMailbox") {
-    Write-Error "'$($mbx.DisplayName)' can not be enabled, because it is of type '$($mbx.RecipientTypeDetails)'. Only a mailbox of type 'UserMailbox' can be enabled."
-}
+if($Confirm) {
+    
+    if($Organization -eq "ASG"){
+        $user = @(Get-ADUser -Credential $Cred -Server "$Organization-DC01.$($Config.DomainFQDN)" -Identity $DistinguishedName)
+        Disable-ADAccount -Identity $DistinguishedName -Server "$Organization-DC01.$($Config.DomainFQDN)" -Credential $Cred
+    }
+    else{
+        $user = @(Get-ADUser -Credential $Cred -Server "$Organization-DC-01.$($Config.DomainFQDN)" -Identity $DistinguishedName)
+        Disable-ADAccount -Identity $DistinguishedName -Server "$Organization-DC-01.$($Config.DomainFQDN)" -Credential $Cred
+    }
 
-if($Enable) {
-    Enable-ADAccount -Identity $mbx.DistinguishedName -Server $Config.DomainFQDN
-}
+    if($Config.ExchangeServer -ne "null"){
+        try {
+            Import-Module (New-ExchangeProxyModule -Organization $Organization -Command Get-Mailbox, Set-Mailbox)
+            $mbx = Get-Mailbox -Identity $user.UserPrincipalName
+            if($mbx) {
+                Set-Mailbox -HiddenFromAddressListsEnabled $false -Identity $user.UserPrincipalName
+            }
+            Else {
+                Write-Verbose "User doesn't appear to have a mailbox, skipping.."
+            }
+        }
+        catch {
+            throw $_
+        }
+    }
+    if($Config.TenantID365 -ne "null"){
+        try {
+            Connect-O365 -Organization $Organization
+            $mbx = Get-Mailbox -Identity $user.UserPrincipalName
+            if($mbx) {
+                Set-Mailbox -HiddenFromAddressListsEnabled $false -Identity $user.UserPrincipalName
+            }
+            Else {
+                Write-Verbose "User doesn't appear to have a mailbox, skipping.."
+            }
+        }
+        catch {
+            throw $_
+        }
+    }
 
-if($UnhideFromAddressList) {
-    $mbx | Set-Mailbox -HiddenFromAddressListsEnabled $false
 }

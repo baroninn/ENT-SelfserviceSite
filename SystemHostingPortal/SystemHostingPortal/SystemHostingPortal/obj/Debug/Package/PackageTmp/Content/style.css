@@ -6,7 +6,14 @@
 body {
     font-family: Verdana, Tahoma;
     font-size: 14px;
-    background-color: white;
+    background-color: black;
+    width: 1100px;
+    float: none;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    border:solid 1px black;
+    
 }
 
 b {
@@ -108,22 +115,28 @@ table {
         }
 
 #topdiv {
-    padding-top: 3em;
+    padding-top: 20px;
     padding-bottom: 3em;
-    margin-bottom: 2em;
+    margin-bottom: 4px;
     border-bottom: .5em solid black;
     background-color: #ffffff;
-    margin-left: 22%;
-    margin-right: 22%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1100px;
+    float: none;
+    position: center;
+    margin-top: 30px;
 
 
 }
+
 #topdivtest {
     padding-top: 3em;
-    padding-bottom: 3em;
-    margin-bottom: 2em;
+    padding-bottom: 1px;
+    margin-bottom: 1px;
     border-bottom: .5em solid black;
     background-color: #ffffff;
+    width: 1100px;
 }
 
 
@@ -136,26 +149,43 @@ table {
     background-color: ghostwhite;
 }
 
-#bodydiv, #topdivtext {
+#bodydiv {
     margin: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 78em;
+    /*width: 78em;*/
+    width: 1000px;
+    padding-top: 20px;
 
+    /*background-color: lightgray;*/
 }
+
+#topdivtext {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    /*width: 78em;*/
+    width: 1000px;
+    background-color: white;
+    padding-top: 20px;
+}
+
 #leftdiv {
     text-align: left;
     float: left;
-    width: 18em;
+    /*width: 18em;*/
+    width: 200px;
 }
     #leftdiv .navi li {
         padding-bottom: 3px;
         margin-bottom: 5px;
         font-weight: bold;
+        /*margin-right: 75px;*/
     }
     #leftdiv .navisub {
-        margin-left: 25px;
-        list-style: circle;
+        margin-left: 0px;
+        list-style: disc;
+        margin-right: 15px;
     }
         #leftdiv .navisub li {
             font-weight: initial;
@@ -163,9 +193,48 @@ table {
 
 #maindiv {
     text-align: left;
-    width: 60em;
-    float: left;
-    /*background-color: black;*/
+    /*width: 60em;*/
+    width: 800px;
+    float: right;
+    background-color: white;
+    padding-bottom: 40px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 5px;
+  padding: 0px;
+}
+
+li {
+  font: 200 14px/1 Verdana, Tahoma, sans-serif;
+  border-bottom: 0px solid #ccc;
+
+}
+
+li:last-child {
+  border: none;
+}
+
+li a {
+  text-decoration: none;
+  color: #000;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -webkit-transition: font-size 0.2s ease, background-color 0.2s ease;
+  -moz-transition: font-size 0.2s ease, background-color 0.2s ease;
+  -o-transition: font-size 0.2s ease, background-color 0.2s ease;
+  transition: font-size 0.2s ease, background-color 0.2s ease;
+  display: block;
+  width: 200px;
+  background-color: white
+}
+
+li a:hover {
+  font-size: 15px;
+  background-color: white;
+  font-weight: bold;
+
 }
 
 
@@ -272,30 +341,36 @@ table {
     /*background-color:lightgray;*/
     /*background-size: 100% 36px;*/
     /*background-repeat: no-repeat;*/
-    -moz-border-radius: 15px;
-    -webkit-border-radius: 15px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
     border: 1px solid;
     width: auto;
-    height: 25px;
+    height: auto;
     color: black;
     padding-left: 10px;
     padding-right: 10px;
     border-radius:10px;
-
+    -webkit-transition: font-size 0.2s ease, background-color 0.2s ease;
+    -moz-transition: font-size 0.2s ease, background-color 0.2s ease;
+    -o-transition: font-size 0.2s ease, background-color 0.2s ease;
+    transition: font-size 0.2s ease, background-color 0.2s ease;
+    background-color: white;
 }
 
 .button:hover {
 
-    -moz-border-radius: 15px;
-    -webkit-border-radius: 15px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
     border: 1px solid;
     width: auto;
-    height: 25px;
+    height: auto;
     color: black;
     padding-left: 10px;
     padding-right: 10px;
     border-radius:10px;
-    background-color: darkgrey;
+    background-color: white;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .buttontest2 {

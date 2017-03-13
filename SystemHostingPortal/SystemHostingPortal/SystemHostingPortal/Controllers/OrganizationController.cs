@@ -23,7 +23,10 @@ namespace SystemHostingPortal.Controllers
             {
                 return View(model);
             }
-            catch (Exception exc) { return View("Error", exc); }
+            catch (Exception exc)
+            {
+                return View("Error", exc);
+            }
         }
 
         // Create POSTed organization
@@ -33,45 +36,44 @@ namespace SystemHostingPortal.Controllers
         {
             try
             {
-
-                // set up a user account for display in view
                 CustomOrganization organization = new CustomOrganization()
                 {
                     Name = _POST["name"].ToUpper(),
                     EmailDomainName = _POST["emaildomainname"].ToLower(),
-                    Subnet = _POST["subnet"].ToLower(),
-                    Vlan = _POST["vlan"].ToLower(),
-                    IPAddressRangeStart = _POST["ipaddressrangestart"].ToLower(),
-                    IPAddressRangeEnd = _POST["ipaddressrangeend"].ToLower(),
+                    Subnet = _POST["subnet"],
+                    Vlan = _POST["vlan"],
+                    IPAddressRangeStart = _POST["ipaddressrangestart"],
+                    IPAddressRangeEnd = _POST["ipaddressrangeend"],
+                    CreateVMM = _POST["createvmm"] == "on" ? true : false
                 };
 
                 model.Organization = organization;
 
-                if (model.Organizations.Contains(model.Organization.Name))
+                if (model.Organizations.Contains(organization.Name))
                 {
-                    throw new ArgumentException(string.Format("The organizaton '{0}' already exists.", model.Organization.Name));
+                    throw new ArgumentException(string.Format("The organizaton '{0}' already exists.", organization.Name));
                 }
 
-                if (model.Organization.Name.Length < 2 || model.Organization.Name.Length > 5)
+                if (organization.Name.Length < 2 || organization.Name.Length > 5)
                 {
                     throw new ArgumentException("The organizaton name must be between 2 and 5 characters.");
                 }
 
-                if (!model.Organization.EmailDomainName.Contains(".") || model.Organization.EmailDomainName.Contains("@"))
+                if (!organization.EmailDomainName.Contains(".") || organization.EmailDomainName.Contains("@"))
                 {
-                    throw new ArgumentException(string.Format("'{0}' is not a valid email domain name.", model.Organization.EmailDomainName));
+                    throw new ArgumentException(string.Format("'{0}' is not a valid email domain name.", organization.EmailDomainName));
                 }
 
-                Common.Log(string.Format("has run Organization/Create() to create {0}", model.Organization.Name));
+                Common.Log(string.Format("has run Organization/Create() to create {0}", organization.Name));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.CreateOrganization(model.Organization.Name, model.Organization.EmailDomainName, model.Organization.Subnet, model.Organization.Vlan, model.Organization.IPAddressRangeStart, model.Organization.IPAddressRangeEnd);
+                    ps.CreateOrganization(organization.Name, organization.EmailDomainName, organization.Subnet, organization.Vlan, organization.IPAddressRangeStart, organization.IPAddressRangeEnd, organization.CreateVMM);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("Organization '{0}' created.", model.Organization.Name));
+                model.OKMessage.Add(string.Format("Organization '{0}' created.", organization.Name));
 
                 Common.Stats("Organization/Create");
 

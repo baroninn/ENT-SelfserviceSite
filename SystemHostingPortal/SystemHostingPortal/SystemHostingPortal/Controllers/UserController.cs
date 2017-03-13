@@ -108,7 +108,7 @@ namespace SystemHostingPortal.Controllers
 
                 if (model.DisableUser.Confirm)
                 {
-                    model.OKMessage.Add("User disabled.");
+                    model.OKMessage.Add("User disabled, and hidden in addressbook (if mailbox)..");
                 }
 
                 Common.Stats("User/Disable");
@@ -362,17 +362,16 @@ namespace SystemHostingPortal.Controllers
             {
                 // property is disable but means enable
                 model.EnableUser.Organization = _POST["organization"];
-                model.EnableUser.UserPrincipalName = _POST["userprincipalname"];
-                model.EnableUser.Enable = _POST["removedisable"] == "on" ? true : false;
-                model.EnableUser.UnhideFromAddressList = _POST["removehidefromaddresslist"] == "on" ? true : false;
+                model.EnableUser.DistinguishedName = _POST["distinguishedname"];
+                model.EnableUser.Confirm = _POST["confirm"] == "on" ? true : false;
 
-                if (!model.EnableUser.Enable && !model.EnableUser.UnhideFromAddressList)
+                if (!model.EnableUser.Confirm)
                 {
-                    model.OKMessage.Add("No changes");
+                    model.OKMessage.Add("No changes, please confirm");
                     return View("Enable", model);
                 }
 
-                Common.Log(string.Format("has run User/Enable(hidden: {0}, enable: {1}) on user {2}", model.EnableUser.UnhideFromAddressList, model.EnableUser.Enable, model.EnableUser.UserPrincipalName));
+                Common.Log(string.Format("has run User/Enable(Confirmed: {0}) on user {1}", model.EnableUser.Confirm, model.EnableUser.DistinguishedName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
@@ -381,13 +380,9 @@ namespace SystemHostingPortal.Controllers
 
                 Common.Stats("User/EnableUser");
 
-                if (model.EnableUser.Enable)
+                if (model.EnableUser.Confirm)
                 {
-                    model.OKMessage.Add("User enabled.");
-                }
-                if (model.EnableUser.UnhideFromAddressList)
-                {
-                    model.OKMessage.Add("User shown in address lists.");
+                    model.OKMessage.Add("User enabled, and shown in addressbook (if mailbox)..");
                 }
 
                 return View("Enable", model);

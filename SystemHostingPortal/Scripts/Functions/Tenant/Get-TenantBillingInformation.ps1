@@ -205,7 +205,7 @@ function Get-TenantBillingInformation {
         $LightUsers = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_LightUsers
 
         $FullADObjects = foreach ($i in $FullUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass, extensionAttribute2 | where{$_.Enabled -eq $true}
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true}
         }
 
         foreach ($user in $FullADObjects) {
@@ -225,7 +225,7 @@ function Get-TenantBillingInformation {
         }
 
         $LightADObjects = foreach ($i in $LightUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass, extensionAttribute2 | where{$_.Enabled -eq $true}
+        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true}
         }
 
         foreach ($user in $LightADObjects) {

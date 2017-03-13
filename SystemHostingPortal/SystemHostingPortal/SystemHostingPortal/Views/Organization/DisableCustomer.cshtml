@@ -4,7 +4,7 @@
 }
 @section script {
 <script>
-            function Confirm() {
+        function Confirm() {
             if ($("input[name=confirm]").prop('checked')) {
                 var result = confirm("WARNING: THIS WILL DISABLE THE CUSTOMER!\n\nRemember, you can easily enable the customer again.")
                 if (!result) {

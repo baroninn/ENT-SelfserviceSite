@@ -52,7 +52,7 @@
             }
             else
             {
-                <div id="topdivtext"><img src="~/Images/Columbus.png" /></div>
+                <div id="topdivtext"><img src="~/Images/Columbus3.png" /></div>
             }
         </div>
         <table>
@@ -61,8 +61,10 @@
                     <div id="bodydiv">
                         <div id="leftdiv">
                             <ul class="navi">
+
                                 <li><a href="~//">Home</a></li>
                                 <li><a href="~//Home/Log">SelfService Log</a></li>
+
                                 <li>User</li>
                                 <li>
                                     <ul class="navisub">
@@ -70,11 +72,11 @@
                                         <li><a href="~//User/ResetPWD">Reset Password</a></li>
                                         <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li> -->
                                         <li><a href="~//User/Disable">Disable user</a></li>
-                                     <!--   <li><a href="~//User/Enable">Enable user</a></li>
-                                        <li><a href="~//User/Remove">Remove user</a></li> -->
+                                        <li><a href="~//User/Enable">Enable user</a></li>
+                                        <!--    <li><a href="~//User/Remove">Remove user</a></li> -->
                                     </ul>
                                 </li>
-                              <!--  <li>Mail</li>
+                                <!--  <li>Mail</li>
                                 <li>
                                     <ul class="navisub">
                                         <li><a href="~//Mail/AddAcceptedDomain">Add AcceptedDomain</a></li>
@@ -93,9 +95,9 @@
                                     <ul class="navisub">
                                         <li><a href="~//Organization/Create">Create organization</a></li>
                                         <!--<li><a href="~//Organization/DisableCustomer">Disable Customer</a></li>
-                                        <li><a href="~//Organization/EnableCustomer">Enable Customer</a></li>
-                                        <li><a class="warning2" href="~//Organization/RemoveCustomer">Remove Customer</a></li>-->
-                                        
+                                    <li><a href="~//Organization/EnableCustomer">Enable Customer</a></li>
+                                    <li><a class="warning2" href="~//Organization/RemoveCustomer">Remove Customer</a></li>-->
+
                                     </ul>
                                 </li>
                                 <li>Service</li>
@@ -107,16 +109,16 @@
                             </ul>
                             @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
                             {<ul class="navi">
-                                <li>Level30 stuff</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
-                                    </ul>
+                    <li>Level30 stuff</li>
+                    <li>
+                        <ul class="navisub">
+                            <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
+                        </ul>
 
-                                </li>
-                            </ul>
+                    </li>
+                </ul>
                             }
-                          </div>
+                        </div>
                         <div id="maindiv">
                             @RenderBody()
                         </div>
@@ -125,26 +127,26 @@
                 </td>
             </tr>
         </table>
-        @RenderSection("script", required: false)
+            @RenderSection("script", required: false)
 
-        <script>
-            $(document).ready(function () {
-                $(".collapsed").collapse();
-            });
+            <script>
+                $(document).ready(function () {
+                    $(".collapsed").collapse();
+                });
 
-            function ClearErrors() {
-                $('#messageDiv').html("");
-            }
+                function ClearErrors() {
+                    $('#messageDiv').html("");
+                }
 
-            function AddError(json) {
-                $('#messageDiv').append('<div class="message"><p>' + json.Message + '</p>' +
-                    (json.InnerMesssage != null ? '<p>' + json.InnerMesssage + '</p>' : '') +
-                    '<pre>' + json.Stack + '</pre><small><a href="javascript:ClearErrors()">Clear errors</a></small></div>');
-            }
+                function AddError(json) {
+                    $('#messageDiv').append('<div class="message"><p>' + json.Message + '</p>' +
+                        (json.InnerMesssage != null ? '<p>' + json.InnerMesssage + '</p>' : '') +
+                        '<pre>' + json.Stack + '</pre><small><a href="javascript:ClearErrors()">Clear errors</a></small></div>');
+                }
 
-            function ClearMessages() {
-                $('#okMessageDiv').html("");
-            }
-        </script>
-    </body>
+                function ClearMessages() {
+                    $('#okMessageDiv').html("");
+                }
+            </script>
+</body>
 </html>

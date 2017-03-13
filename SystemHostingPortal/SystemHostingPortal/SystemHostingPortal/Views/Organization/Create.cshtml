@@ -3,6 +3,47 @@
     ViewBag.Title = "Organization > Create";
 }
 @section script {
+  
+    <script>
+
+        window.onload = function () {
+            document.forms[0].createvmm.checked = true;
+            // you can change the 0 to a string of the form's name
+        };
+
+      function setGrey() {
+            var el = document.getElementById("createvmm");
+            var subnet = document.getElementById("subnet");
+            var vlan = document.getElementById("vlan");
+            var ipstart = document.getElementById("ipstart");
+            var ipend = document.getElementById("ipend");
+            var mandatory_subnet = document.getElementById("mandatory_subnet");
+            var mandatory_vlan = document.getElementById("mandatory_vlan");
+            var mandatory_ipstart = document.getElementById("mandatory_ipstart");
+            var mandatory_ipend = document.getElementById("mandatory_ipend");
+            if (el.checked) {
+                subnet.disabled = false;
+                vlan.disabled = false;
+                ipstart.disabled = false;
+                ipend.disabled = false;
+                mandatory_subnet.hidden = false;
+                mandatory_vlan.hidden = false;
+                mandatory_ipstart.hidden = false;
+                mandatory_ipend.hidden = false;
+
+            } else {
+                subnet.disabled = true;
+                vlan.disabled = true;
+                ipstart.disabled = true;
+                ipend.disabled = true;
+                mandatory_subnet.hidden = true;
+                mandatory_vlan.hidden = true;
+                mandatory_ipstart.hidden = true;
+                mandatory_ipend.hidden = true;
+            }
+        };
+    </script>
+
 }
 
 <h1 class="title">@ViewBag.Title</h1>
@@ -47,6 +88,7 @@
                     </p>
                 </div>
             </td>
+            <td class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Email Domain Name<i class="material-icons infoicon">info</i></span></td>
@@ -59,11 +101,12 @@
                     </p>
                 </div>
             </td>
+            <td class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Subnet<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="subnet" placeholder="172.25.185.0/24" @if (Model.ActionFailed) {  @: value="@Model.Organization.Subnet"
+                <input name="subnet" placeholder="172.25.185.0/24" id="subnet" @if (Model.ActionFailed) {  @: value="@Model.Organization.Subnet"
                                                                                                                                       } />
                 <div class="description">
                     <p class="descriptiontext">
@@ -71,11 +114,12 @@
                     </p>
                 </div>
             </td>
+            <td id="mandatory_subnet" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>VLan<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="vlan" placeholder="185" @if (Model.ActionFailed) {  @: value="@Model.Organization.Vlan"
+                <input name="vlan" placeholder="185" id="vlan" @if (Model.ActionFailed) {  @: value="@Model.Organization.Vlan"
                                                                                                                                       } />
                 <div class="description">
                     <p class="descriptiontext">
@@ -83,11 +127,12 @@
                     </p>
                 </div>
             </td>
+            <td id="mandatory_vlan" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>IPAddressRangeStart<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="ipaddressrangestart" placeholder="172.25.185.10" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeStart"
+                <input name="ipaddressrangestart" placeholder="172.25.185.10" id="ipstart" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeStart"
                                                                                                                                                              } />
                 <div class="description">
                     <p class="descriptiontext">
@@ -95,11 +140,12 @@
                     </p>
                 </div>
             </td>
+            <td id="mandatory_ipstart" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>IPAddressRangeEnd<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="ipaddressrangeend" placeholder="172.25.185.250" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeEnd"
+                <input name="ipaddressrangeend" placeholder="172.25.185.250" id="ipend" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeEnd"
                                                                                                                                                              } />
                 <div class="description">
                     <p class="descriptiontext">
@@ -107,7 +153,21 @@
                     </p>
                 </div>
             </td>
+            <td id="mandatory_ipend" class="mandatory">*</td>
         </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Create VMM Private Cloud<i class="material-icons infoicon">info</i></span></td>
+            <td>
+                <input name="createvmm" type="checkbox" id="createvmm" onchange="setGrey();" @if (Model.ActionFailed) { if (Model.Organization.CreateVMM) { @: checked="checked"
+                                                                                                                     } } /><span>Recommended!</span>
+                <div class="description">
+                    <p class="descriptiontext">
+                        If checked, we will also create the VMM Private Cloud, Vlan's, accounts, and service template..
+                    </p>
+                </div>
+            </td>
+        </tr>
+
     </table>
     <table>
         <tr>
