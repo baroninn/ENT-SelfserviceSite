@@ -25,22 +25,20 @@ namespace SystemHostingPortal.Models
         public string Vlan { get; set; }
         public string IPAddressRangeStart { get; set; }
         public string IPAddressRangeEnd { get; set; }
+        public bool CreateVMM { get; set; }
 
     }
 
     public class CustomRemoveCustomer
     {
         public string Organization { get; set; }
-
         public bool RemoveData { get; set; }
-
         public bool Confirm { get; set; }
     }
 
     public class CustomDisableCustomer
     {
         public string Organization { get; set; }
-
         public bool Confirm { get; set; }
     }
 

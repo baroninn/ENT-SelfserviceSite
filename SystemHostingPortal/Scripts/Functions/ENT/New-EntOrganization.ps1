@@ -1,4 +1,5 @@
 ﻿function New-EntOrganization {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [string]$Organization,
@@ -14,6 +15,7 @@
         
         [string]$IPAddressRangeEnd,
         
+        [switch]$CreateVMM
 
 
     )

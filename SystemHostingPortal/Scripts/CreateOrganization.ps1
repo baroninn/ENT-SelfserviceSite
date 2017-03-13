@@ -1,22 +1,20 @@
 [Cmdletbinding()]
-param (
-        [Parameter(Mandatory)]
-        [string]$Organization,
+param(
+    [Parameter(Mandatory)]
+    [string]$Organization,
 
-        [Parameter(Mandatory)]
-        [string]$EmailDomainName,
+    [Parameter(Mandatory)]
+    [string]$EmailDomainName,
 
-        [Parameter(Mandatory)]
-        [string]$Subnet,
+    [string]$Subnet,
 
-        [Parameter(Mandatory)]
-        [string]$Vlan,
+    [string]$Vlan,
         
-        [Parameter(Mandatory)]
-        [string]$IPAddressRangeStart,
+    [string]$IPAddressRangeStart,
 
-        [Parameter(Mandatory)]
-        [string]$IPAddressRangeEnd
+    [string]$IPAddressRangeEnd,
+
+    [bool]$CreateVMM
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,4 +22,10 @@ Set-StrictMode -Version 2
 
 Import-Module (Join-Path $PSScriptRoot Functions)
 
-New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
+if($CreateVMM){
+    New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd -CreateVMM
+}
+else {
+    New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName
+}
+
