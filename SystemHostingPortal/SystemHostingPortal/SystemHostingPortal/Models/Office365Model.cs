@@ -10,7 +10,6 @@ namespace SystemHostingPortal.Models
     public class Office365Model : BaseModel
     {
         public CustomAddDomain AddDomain = new CustomAddDomain();
-        public CustomEnable365Customer Enable365Customer = new CustomEnable365Customer();
         public CustomGetTenantInfo GetTenantInfo = new CustomGetTenantInfo();
     }
 
@@ -19,17 +18,6 @@ namespace SystemHostingPortal.Models
     {
         public string Organization { get; set; }
         public string Domain { get; set; }
-    }
-    public class CustomEnable365Customer
-    {
-        public string Organization { get; set; }
-        public string TenantID { get; set; }
-        public string TenantAdmin { get; set; }
-        public string TenantPass { get; set; }
-        public string Admin { get; set; }
-        public string PartnerName { get; set; }
-        public string License { get; set; }
-
     }
 
     public class CustomGetTenantInfo
