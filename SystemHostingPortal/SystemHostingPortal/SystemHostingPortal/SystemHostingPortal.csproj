@@ -166,6 +166,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-datetimepicker-standalone.css" />
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
@@ -183,6 +186,9 @@
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Images\logo_2.png" />
     <Content Include="SampleCSV.txt" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -198,6 +204,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\shtfunctions.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -250,6 +257,7 @@
     <Content Include="Views\Mail\GetCalendarPermissions.cshtml" />
     <Content Include="Views\Level30\UpdateConf.cshtml" />
     <Content Include="Views\User\ResetPWD.cshtml" />
+    <Content Include="Views\Level30\ExpandVHD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

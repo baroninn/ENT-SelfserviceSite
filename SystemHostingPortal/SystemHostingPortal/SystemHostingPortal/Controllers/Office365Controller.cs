@@ -67,60 +67,6 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
-        // Display Enable365Customer view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult Enable365Customer()
-        {
-            try
-            {
-                return View(model);
-            }
-            catch (Exception exc) { return View("Error", exc); }
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult Enable365Customer(FormCollection _POST)
-        {
-            try
-            {
-                model.Enable365Customer = new CustomEnable365Customer()
-                {
-                    Organization = _POST["organization"],
-                    TenantID = _POST["tenantid"],
-                    TenantAdmin = _POST["tenantadmin"],
-                    TenantPass = _POST["tenantpass"]
-                };
-
-                if (!model.Organizations.Contains(model.Enable365Customer.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
-
-                Common.Log(string.Format("has run Office365/Enable365Customer() to add ID '{0}' for '{1}'", model.Enable365Customer.TenantID, model.Enable365Customer.Organization));
-
-                // execute powershell script and dispose powershell object
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.Enable365Customer(model.Enable365Customer.Organization, model.Enable365Customer.TenantID, model.Enable365Customer.TenantAdmin, model.Enable365Customer.TenantPass);
-                    var result = ps.Invoke();
-                }
-
-                model.OKMessage.Add(string.Format("TenantID '{0}' added for organization '{1}'.", model.Enable365Customer.TenantID, model.Enable365Customer.Organization));
-
-                Common.Stats("Office365/Enable365Customer");
-
-                return View("Enable365Customer", model);
-            }
-            catch (Exception exc)
-            {
-                Common.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View(model);
-            }
-        }
-
         /// <summary>
         /// Ajax function for aquiring TenantIDs
         /// </summary>

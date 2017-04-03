@@ -89,4 +89,5 @@ namespace SystemHostingPortal.Models
         public string ConsumedUnits { get; set; }
         public string FreeUnits { get; set; }
     }
+
 }

@@ -121,7 +121,54 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        // Display Expand view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandVHD()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
 
+        // Post VHD changes and return view
+        [HttpPost]
+        [Authorize(Roles = "Role_Level_30")]
+        public ActionResult ExpandVHD(FormCollection _POST)
+        {
+            try
+            {
+                // set up a user account for display in view
+                CustomExpandVHD ExpandVHD = new CustomExpandVHD()
+                {
+                    Name = _POST["name"].ToUpper(),
+                    VHDID = _POST["vhdid"]
+                };
+
+                Common.Log(string.Format("has run Organization/UpdateConf() to create {0}", ExpandVHD.Name));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.ExpandVHD(ExpandVHD.Name, ExpandVHD.VHDID);
+                    var result = ps.Invoke();
+                }
+
+                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", ExpandVHD.Name));
+
+                Common.Stats("Level30/ExpandVHD");
+
+                return View("ExpandVHD", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
 
     }
 }

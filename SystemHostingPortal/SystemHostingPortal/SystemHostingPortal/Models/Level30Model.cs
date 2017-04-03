@@ -6,11 +6,13 @@ using SystemHostingPortal.Logic;
 
 namespace SystemHostingPortal.Models
 {
-    // model for View display in the 365 controller
+    // model for View display in the level30 controller
     public class Level30Model : BaseModel
     {
         public CustomUpdateConf UpdateConf = new CustomUpdateConf();
         public CustomGetConf GetConf = new CustomGetConf();
+        public CustomExpandVHD ExpandVHD = new CustomExpandVHD();
+
     }
 
 
@@ -34,5 +36,12 @@ namespace SystemHostingPortal.Models
         public string DomainFQDN { get; set; }
 
     }
+
+    public class CustomExpandVHD
+    {
+        public string Name { get; set; }
+        public string VHDID { get; set; }
+    }
+
 
 }

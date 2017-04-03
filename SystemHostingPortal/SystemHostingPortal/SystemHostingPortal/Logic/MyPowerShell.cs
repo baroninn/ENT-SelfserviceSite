@@ -625,5 +625,28 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
+        public MyPowerShell GetVMServers()
+        {
+            ps.AddCommand(psScriptPath + @"\GetVMServers.ps1");
+
+            return this;
+        }
+
+        public MyPowerShell GetVMVHDs(string vhdid)
+        {
+            ps.AddCommand(psScriptPath + @"\GetVMVHDs.ps1")
+                .AddParameter("VHDID", vhdid);
+
+            return this;
+        }
+
+        public MyPowerShell ExpandVHD(string name, string vhdid)
+        {
+            ps.AddCommand(psScriptPath + @"\ExpandVHD.ps1")
+              .AddParameter("Name", name)
+              .AddParameter("VHDID", vhdid);
+            return this;
+        }
+
     }
 }

@@ -97,15 +97,15 @@
             <tr>
                 <td><b>Name</b></td>
                 <td><b>CPU</b></td>
-                <td><b>RAM</b></td>
-                <td style="text-align:left"><b>Operating System</b></td>
+                <td style="padding-left:30px"><b>RAM</b></td>
+                <td style="text-align:right"><b>Operating System</b></td>
             </tr>
             @foreach (SystemHostingPortal.Models.ENTServer ent in Model.CustomerReport.ENTServers)
             {
                 <tr>
                     <td>@ent.Name</td>
                     <td>@ent.CPU</td>
-                    <td>@ent.RAM</td>
+                    <td style="padding-left:30px">@ent.RAM</td>
                     <td style="text-align:right">@ent.OS</td>
                 </tr>
             }

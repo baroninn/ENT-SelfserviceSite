@@ -104,6 +104,7 @@
                                 <li>
                                     <ul class="navisub">
                                         <li><a href="~//Service/CustomerReport">Customer Report</a></li>
+
                                     </ul><br />
                                 </li>
                             </ul>
@@ -113,6 +114,10 @@
                     <li>
                         <ul class="navisub">
                             <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
+                            @if (SystemHostingPortal.Logic.Common.DebugMode)
+                            {
+                                <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
+                            }
                         </ul>
 
                     </li>

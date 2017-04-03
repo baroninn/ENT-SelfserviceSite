@@ -223,14 +223,14 @@ function AddUserToList(json, selectElement) {
     selectElement.append('<option value="' + json.DistinguishedName + '"' + selected + '>' + json.Name + ' __ ' + json.UserPrincipalName + ' __ ' + json.Enabled + '</option>');
 }
 
-// New function for getting accepted domain. This function is tied to the <Select> list function and can be used as a dropdown menu.
+// New function for getting AD Users. This function is tied to the <Select> list function and can be used as a dropdown menu.
 function GetADUsersList(selectElement) {
     if (!selectElement) {
         selectElement = $("select[name=distinguishedname]");
     }
 
     var organization = $("select[name=organization]").val();
-    selectElement.html('<option>loading...</option>');
+    selectElement.html('<option>loading, this could take some time...</option>');
 
     $.get("/Ajax/GetADUsersList", { "organization": organization }, function (data) {
         selectElement.html('');
@@ -247,6 +247,81 @@ function GetADUsersList(selectElement) {
             else {
                 for (i = 0; i < json.length; i++) {
                     AddUserToList(json[i], selectElement);
+                }
+            }
+        }
+        selectElement.change();
+    });
+}
+
+function AddVMToList(json, selectElement) {
+
+    var selected = '';
+
+    selectElement.append('<option value="' + json.ID + '"' + selected + '>' + json.Name + '</option>');
+}
+
+// New function for getting VMServer. This function is tied to the <Select> list function and can be used as a dropdown menu.
+function GetVMServers(selectElement) {
+    if (!selectElement) {
+        selectElement = $("select[name=id]");
+    }
+
+    selectElement.html('<option>loading, this could take some time (VMM is a little slow)...</option>');
+
+    $.get("/Ajax/GetVMServers", function (data) {
+        selectElement.html('');
+
+        var json = JSON.parse(data);
+        if (json.Failure) {
+            AddError(json);
+        }
+        else {
+            selectElement.html("");
+            if (json.length == null) {
+                AddVMToList(json, selectElement);
+            }
+            else {
+                for (i = 0; i < json.length; i++) {
+                    AddVMToList(json[i], selectElement);
+                }
+            }
+        }
+        selectElement.change();
+    });
+}
+
+function AddVHDToList(json, selectElement) {
+
+    var selected = '';
+
+    selectElement.append('<option value="' + json.ID + '"' + selected + '>' + json.Name + ' __ ' + json.Size + ' ' + "GB" + '</option>');
+}
+
+// New function for getting VHD. This function is tied to the <Select> list function and can be used as a dropdown menu.
+function GetVMVHDs(selectElement) {
+    if (!selectElement) {
+        selectElement = $("select[name=vhdid]");
+    }
+
+    var vhdid = $("select[name=id]").val();
+    selectElement.html('<option>loading, this could take some time (VMM is a little slow)...</option>');
+
+    $.get("/Ajax/GetVMVHDs",{ "vhdid": vhdid }, function (data) {
+        selectElement.html('');
+
+        var json = JSON.parse(data);
+        if (json.Failure) {
+            AddError(json);
+        }
+        else {
+            selectElement.html("");
+            if (json.length == null) {
+                AddVHDToList(json, selectElement);
+            }
+            else {
+                for (i = 0; i < json.length; i++) {
+                    AddVHDToList(json[i], selectElement);
                 }
             }
         }

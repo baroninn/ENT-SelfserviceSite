@@ -76,14 +76,6 @@ namespace SystemHostingPortal.Models
 
     public class CustomExtUser
     {
-        /*  [Parameter(Mandatory=$true)][string]$Organization,
-    [Parameter(Mandatory=$true)][string]$Vendor,
-    [Parameter(Mandatory=$true)][string]$Description,
-    [Parameter(Mandatory=$true)]$ExpirationDate,
-    [Parameter(Mandatory=$true)]$Password
-         * 
-         * 
-         * */
 
         public string Name { get; set; }
         public string Organization { get; set; }

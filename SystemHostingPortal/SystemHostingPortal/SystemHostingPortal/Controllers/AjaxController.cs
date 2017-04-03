@@ -482,6 +482,85 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        // Function for getting VMServers as select list..
+        public class AjaxVMServers
+        {
+            public string Name { get; set; }
+            public string ID { get; set; }
+
+        }
+        public string GetVMServers()
+        {
+            try
+            {
+                List<AjaxVMServers> servers = new List<AjaxVMServers>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetVMServers();
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject Server in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(Server);
+                        servers.Add(new AjaxVMServers()
+                        {
+                            Name = properties["Name"].ToString(),
+                            ID = properties["ID"].ToString(),
+                        });
+                    }
+
+                }
+                
+
+                return new JavaScriptSerializer().Serialize(servers); 
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+        public class AjaxVMVHDs
+        {
+            public string Name { get; set; }
+            public string ID { get; set; }
+            public string Size { get; set; }
+
+        }
+        public string GetVMVHDs(string vhdid)
+        {
+            try
+            {
+                List<AjaxVMVHDs> vhds = new List<AjaxVMVHDs>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetVMVHDs(vhdid);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject VHD in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(VHD);
+                        vhds.Add(new AjaxVMVHDs()
+                        {
+                            Name = properties["Name"].ToString(),
+                            ID = properties["ID"].ToString(),
+                            Size = properties["Size"].ToString(),
+                        });
+                    }
+
+                }
+
+
+                return new JavaScriptSerializer().Serialize(vhds);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
 
     }
 }
