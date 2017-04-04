@@ -3,27 +3,28 @@
     ViewBag.Title = "Level30 > ExpandVHD";
 }
 @section script {
-<script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
-<script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
-<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
-<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" />
-<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
-
 
     <script>
         $(document).ready(function () {
 
             GetVMServers();
-        $("select[name=id]").html('<option>loading, this could take some time......</option>').change(function () {
-            GetVMVHDs();
-            $("select[name=vhdid]").html('<option>loading, this could take some time......</option>');
+            $("select[name=id]").html('<option>loading, this could take some time......</option>').change(function () {
+                GetVMVHDs();
+                $("select[name=vhdid]").html('<option>loading, this could take some time......</option>');
+            });
+            $("#date").datepicker({
+                firstDay: 1,
+                navigationAsDateFormat: true
+
             });
         });
-        $(function () {
-            // This will make every element with the class "date-picker" into a DatePicker element
-            $('.date-picker').datepicker();
-        })
+        /*jQuery('#datetimepicker').datetimepicker();*/
+
+        jQuery('#datetimepicker3').datetimepicker({
+            format: 'd.m.Y H:i',
+            inline: true,
+            lang: 'da'
+        });
     </script>
 }
 
@@ -52,16 +53,21 @@
                     <select name="vhdid"><option>loading...</option></select>
                 </td>
             </tr>
+           
+        </table>
+        <table>
             <tr>
-                <td class="lefttd"><span>$(selector).datepick({dateFormat: 'yyyy-mm-dd'});</span></td>
+                <td class="lefttd"><span>Date<i class="material-icons infoicon"></i></span></td>
                 <td class="righttd">
-                    <div id="datepicker"></div>
+                <div>
+                        <form method="post">
+                            <div><input id="date" name="date" placeholder="MM/DD/YYYY" type="text" /></div>
+                        </form>
+                </div>
                 </td>
             </tr>
-
         </table>
-        <input class="date-picker" />
-        @Html.TextBox("YourTextBox", "", new { @class = "date-picker" })
+
         <br />
         <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Expand" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>

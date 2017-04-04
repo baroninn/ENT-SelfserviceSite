@@ -41,7 +41,10 @@ namespace SystemHostingPortal.Models
     {
         public string Name { get; set; }
         public string VHDID { get; set; }
-    }
+        public string Date { get; set; }
+        public string Time { get; set; }
+        public DateTime DateTime { get; set; }
+}
 
 
 }

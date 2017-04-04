@@ -11,6 +11,10 @@
         @Styles.Render("~/Content/style.css")
         <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script> src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"</script>
+        <link href="@Url.Content("~/Content/jquery-ui.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/jquery-ui.theme.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/jquery-ui.theme.min.css")" rel="stylesheet" type="text/css" />
         @Scripts.Render("~/Scripts/jquery.collapse.js")
         @Scripts.Render("~/Scripts/shtfunctions.js")
         <script>
@@ -125,6 +129,8 @@
                             }
                         </div>
                         <div id="maindiv">
+                            @Styles.Render("~/Content/datepicker")
+                            @Scripts.Render("~/bundles/datePicker")
                             @RenderBody()
                         </div>
 
@@ -132,6 +138,7 @@
                 </td>
             </tr>
         </table>
+
             @RenderSection("script", required: false)
 
             <script>
