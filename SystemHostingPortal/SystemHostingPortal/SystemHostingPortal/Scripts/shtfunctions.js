@@ -328,3 +328,12 @@ function GetVMVHDs(selectElement) {
         selectElement.change();
     });
 }
+
+function GetVMInfo() {
+    var id = $("select[name=id]").val();
+    $("#vminfo").html("Loading...");
+
+    $.get("/Level30/GetVMInfo?id=" + id, function (data) {
+        $("#vminfo").html(data);
+    });
+}

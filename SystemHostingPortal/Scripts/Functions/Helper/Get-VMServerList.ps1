@@ -20,8 +20,12 @@
             foreach ($vm in $VMs) {
                 $Serverlist += 
                   [pscustomobject]@{
-                      Name = $vm.Name
-                      ID   = $vm.ID.guid
+                      Name                   = $vm.Name
+                      ID                     = $vm.ID.guid
+                      DynamicMemoryMaximumMB = $vm.DynamicMemoryMaximumMB
+                      CPUCount               = $vm.CPUCount
+                      Memory                 = $vm.Memory
+                      DynamicMemoryEnabled   = $vm.DynamicMemoryEnabled
                   }
             }
         return $serverlist
@@ -29,7 +33,7 @@
         }
         $VMS = Invoke-Command -ComputerName $Server -ScriptBlock $ScriptBlock
 
-        return $VMS | sort Name | select Name, ID, Cloud, CloudID, VirtualHardDisks, ComputerName, DynamicMemoryMaximumMB, CPUCount, Memory, DynamicMemoryEnabled, VMId, MemoryAssignedMB
+        return $VMS | sort Name | select Name, ID, DynamicMemoryMaximumMB, CPUCount, Memory, DynamicMemoryEnabled
 
 
  

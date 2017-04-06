@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -640,11 +641,32 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell ExpandVHD(string name, string vhdid)
+        public MyPowerShell GetVMInfo(string id)
+        {
+            ps.AddCommand(psScriptPath + @"\GetVMInfo.ps1")
+              .AddParameter("ID", id);
+            return this;
+        }
+
+        public MyPowerShell ExpandVHD(string name, string vhdid, string datetime, string gb, string email)
         {
             ps.AddCommand(psScriptPath + @"\ExpandVHD.ps1")
               .AddParameter("Name", name)
-              .AddParameter("VHDID", vhdid);
+              .AddParameter("VHDID", vhdid)
+              .AddParameter("DateTime", datetime)
+              .AddParameter("GB", gb)
+              .AddParameter("Email", email);
+            return this;
+        }
+
+        public MyPowerShell ExpandCPURAM(string name, string datetime, string cpu, string ram, string email)
+        {
+            ps.AddCommand(psScriptPath + @"\ExpandCPURAM.ps1")
+              .AddParameter("Name", name)
+              .AddParameter("DateTime", datetime)
+              .AddParameter("CPU", cpu)
+              .AddParameter("RAM", ram)
+              .AddParameter("Email", email);
             return this;
         }
 

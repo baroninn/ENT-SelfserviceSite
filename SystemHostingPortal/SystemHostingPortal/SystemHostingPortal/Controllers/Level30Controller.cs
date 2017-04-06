@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.DirectoryServices;
 using System.Linq;
 using System.Web;
@@ -139,23 +140,26 @@ namespace SystemHostingPortal.Controllers
         {
             try
             {
-                // set up a user account for display in view
+                // Expand VHD and create View.
                 CustomExpandVHD ExpandVHD = new CustomExpandVHD()
                 {
-                    Name = _POST["name"].ToUpper(),
-                    VHDID = _POST["vhdid"]
+                    Name = _POST["id"].ToUpper(),
+                    VHDID = _POST["vhdid"],
+                    DateTime = _POST["datetime"].ToString(),
+                    GB = _POST["gb"],
+                    Email = _POST["email"]
                 };
 
-                Common.Log(string.Format("has run Organization/UpdateConf() to create {0}", ExpandVHD.Name));
+                Common.Log(string.Format("has run Level30/ExpandVHD() to Expand VHD on {0}", ExpandVHD.DateTime));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.ExpandVHD(ExpandVHD.Name, ExpandVHD.VHDID);
+                    ps.ExpandVHD(ExpandVHD.Name, ExpandVHD.VHDID, ExpandVHD.DateTime, ExpandVHD.GB, ExpandVHD.Email);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", ExpandVHD.Name));
+                model.OKMessage.Add(string.Format("The VM has been scheduled for expansion on {0}", ExpandVHD.DateTime));
 
                 Common.Stats("Level30/ExpandVHD");
 
@@ -168,6 +172,89 @@ namespace SystemHostingPortal.Controllers
                 model.Message = exc.Message;
                 return View(model);
             }
+        }
+
+
+
+        // Display Expand CPU view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandCPURAM()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
+
+        // Post CPU changes and return view
+        [HttpPost]
+        [Authorize(Roles = "Role_Level_30")]
+        public ActionResult ExpandCPURAM(FormCollection _POST)
+        {
+            try
+            {
+                // Expand CPU and create View.
+                CustomExpandCPURAM ExpandCPURAM = new CustomExpandCPURAM()
+                {
+                    Name = _POST["id"].ToUpper(),
+                    DateTime = _POST["datetime"].ToString(),
+                    CPU = _POST["cpu"].ToString(),
+                    RAM = _POST["ram"].ToString(),
+                    Email = _POST["email"]
+                };
+
+                Common.Log(string.Format("has run Level30/ExpandVHD() to Expand CPU/RAM on {0}", ExpandCPURAM.DateTime));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.ExpandCPURAM(ExpandCPURAM.Name, ExpandCPURAM.DateTime, ExpandCPURAM.CPU, ExpandCPURAM.RAM, ExpandCPURAM.Email);
+                    var result = ps.Invoke();
+                }
+
+                model.OKMessage.Add(string.Format("The VM has been scheduled for expansion on {0}. CPU/RAM will be set to: {1}{2}", ExpandCPURAM.DateTime, ExpandCPURAM.CPU, ExpandCPURAM.RAM));
+
+                Common.Stats("Level30/ExpandCPURAM");
+
+                return View("ExpandCPURAM", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+        /// <summary>
+        /// Ajax function for aquiring CPU and RAM for VMs
+        /// </summary>
+        /// <param name="VMID"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string GetVMInfo(string id)
+        {
+            string returnstr = "<table>";
+
+            using (MyPowerShell ps = new MyPowerShell())
+            {
+                ps.GetVMInfo(id);
+                var result = ps.Invoke();
+
+                // Returns string with properties..
+                foreach (var item in result)
+                {
+                    returnstr += "<tr><td><b>Current CPU Count : </b></td><td class='lefttd'>" + item.Members["CPUCount"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td><b>Current Memory Count : </b></td><td>" + item.Members["Memory"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td><b>DynamicMemoryEnabled : </b></td><td>" + item.Members["DynamicMemoryEnabled"].Value.ToString() + "</td></tr>";
+                }
+            }
+
+            returnstr += "</table>";
+
+            return returnstr;
         }
 
     }

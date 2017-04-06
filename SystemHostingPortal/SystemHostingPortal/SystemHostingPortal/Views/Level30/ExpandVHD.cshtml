@@ -8,23 +8,23 @@
         $(document).ready(function () {
 
             GetVMServers();
-            $("select[name=id]").html('<option>loading, this could take some time......</option>').change(function () {
+            $("select[name=id]").html('<option>loading, this could take some time, (VMM is sooo slow)......</option>').change(function () {
                 GetVMVHDs();
                 $("select[name=vhdid]").html('<option>loading, this could take some time......</option>');
             });
-            $("#date").datepicker({
-                firstDay: 1,
-                navigationAsDateFormat: true
-
+            jQuery.datetimepicker.setLocale('da');
+            jQuery('#datetime').datetimepicker({
+                theme: 'default',
+                dayOfWeekStart: 1,
+                format: 'Y-m-d H:i',
+                inline: false,
+                weeks:true
+                
             });
-        });
-        /*jQuery('#datetimepicker').datetimepicker();*/
 
-        jQuery('#datetimepicker3').datetimepicker({
-            format: 'd.m.Y H:i',
-            inline: true,
-            lang: 'da'
         });
+
+        
     </script>
 }
 
@@ -37,8 +37,26 @@
         <legend>Expand VHD</legend>
         <table>
             <tr>
-                <td colspan="2">@if (Model.Message != null)
-                { <div class="message">@Model.Message</div> }</td>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
             </tr>
 
             <tr>
@@ -50,23 +68,50 @@
             <tr>
                 <td class="lefttd"><span>VHDs<i class="material-icons infoicon"></i></span></td>
                 <td class="righttd">
-                    <select name="vhdid"><option>loading...</option></select>
+                    <select name="vhdid"><option>Waiting...</option></select>
                 </td>
             </tr>
            
         </table>
         <table>
+
             <tr>
-                <td class="lefttd"><span>Date<i class="material-icons infoicon"></i></span></td>
+                <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
                 <td class="righttd">
-                <div>
-                        <form method="post">
-                            <div><input id="date" name="date" placeholder="MM/DD/YYYY" type="text" /></div>
-                        </form>
-                </div>
+                    <input id="datetime" name="datetime" placeholder="YYYY-MM-DD 00:00" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.DateTime"
+                                                                                                                                                                     } />
+
                 </td>
+                <td class="mandatory">*</td>
             </tr>
-        </table>
+
+            <tr>
+                <td class="lefttd tooltip"><span>GB to expand with<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="gb" placeholder="ex 10" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.GB"
+                                                                                                                                                                     } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter GB in whole number. ex. 10
+                        </p>
+                    </div>
+                </td>
+                <td class="mandatory">*</td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="email" placeholder="xxx@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.Email"
+                                                                                                                                                                                                } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter the email which will be notified when task is complete.
+                        </p>
+                    </div>
+                </td>
+                <td class="mandatory">*</td>
+            </tr>
+        </table>  
 
         <br />
         <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Expand" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
