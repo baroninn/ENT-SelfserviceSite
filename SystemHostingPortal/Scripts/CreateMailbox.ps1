@@ -1,40 +1,57 @@
-[Cmdletbinding()]
+﻿[Cmdletbinding()]
 param (
     [Parameter(Mandatory)]
-    [string]
-    $Organization,
+    [string]$Organization,
+
+    [parameter(Mandatory)]
+    [string]$Displayname,
 
     [Parameter(Mandatory)]
-    [string]
-    $Name,
+    [string]$UserName,
+    
+    [Parameter(Mandatory)]
+    [string]$Password,
 
     [Parameter(Mandatory)]
-    [string]
-    $PrimarySmtpAddress,
+    [string]$DomainName,
 
     [Parameter(Mandatory)]
-    [ValidateSet("SharedMailbox","RoomMailbox")]
-    [string]
-    $Type,
+    [string]$Type,
 
-    [string[]]
-    $EmailAddresses
+    [string[]]$EmailAddresses
+
 )
 
-$ErrorActionPreference = "Stop"
+if ($Password -like "*null*") {
+    throw "password empty"
+}
+
+$ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot "Capto")
+Import-Module (Join-Path $PSScriptRoot "Functions")
 
-$params = @{
-    TenantName = $Organization
-    Name = $Name
-    PrimarySmtpAddress = $PrimarySmtpAddress
-    Type = $Type
+$Config = Get-EntConfig -Organization $Organization
+
+if ($config.ExchangeServer -eq "null" -and $Config.TenantID365 -eq "null") {
+
+    Throw "$Organization doesn't appear to have any mail service running.. Please check config if this is wrong.."
 }
+else {
 
-if ($EmailAddresses) {
-    $params.Add("EmailAlias", $EmailAddresses)
+    $newUserParams = @{
+        Organization       = $Organization
+        DisplayName        = $DisplayName
+        PrimarySmtpAddress = ($UserName + '@' + $DomainName)
+        Type               = $Type
+        EmailAddresses     = $EmailAddresses
+    }
+
+
+    New-TenantMailbox @newUserParams -Verbose:$VerbosePreference
+
+    if ($config.ExchangeServer -eq "null") {
+
+        New-TenantUser -Organization $Organization -DisplayName $Displayname -Password $Password -PrimarySmtpAddress ($UserName + '@' + $DomainName) -SharedMailbox
+    }
 }
-
-New-TenantMailbox @params

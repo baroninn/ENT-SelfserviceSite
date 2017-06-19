@@ -5,15 +5,15 @@
     [string[]]$AccessRights
 )
 
-    Import-Module (Join-Path $PSScriptRoot Capto)
+    Import-Module (Join-Path $PSScriptRoot "Functions")
     $ErrorActionPreference = 'Stop'
     Set-StrictMode -Version 2
 
-    Import-Module (New-ExchangeProxyModule -Command "Get-Mailbox","Set-MailboxFolderPermission","Get-MailboxFolderStatistics","Add-MailboxFolderPermission")
+    Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Get-Mailbox","Set-MailboxFolderPermission","Get-MailboxFolderStatistics","Add-MailboxFolderPermission") -Global
 
 try {
 
-    $mbx = Get-TenantMailbox -TenantName $Organization -Name $UserPrincipalName -Single
+    $mbx = Get-TenantMailbox -Organization $Organization -Name $UserPrincipalName -Single
     if($mbx.UserPrincipalName -ne $UserPrincipalName) {
         throw "Found user $($mbx.UserPrincipalName) does not match identity $UserPrincipalName - Please try to be more specific"
     }

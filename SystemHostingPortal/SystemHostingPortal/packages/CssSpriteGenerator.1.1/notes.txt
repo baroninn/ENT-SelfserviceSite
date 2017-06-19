@@ -1,0 +1,9 @@
+
+d:
+cd "D:\@Projects\CssSpriteGenerator\NuGet"
+"C:\Program Files (x86)\NuGet\NuGet.exe" spec lib\CssSpriteGenerator.dll
+
+"C:\Program Files (x86)\NuGet\NuGet.exe"  pack CssSpriteGenerator.dll.nuspec
+
+========================================
+

@@ -5,32 +5,28 @@
 @section script { 
     <script>
         $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
             $("select[name=organization]").change(function () {
-                GetMailbox();
+                GetADUsersList();
 
                 $("#existingAliases").html("");
             });
             $("select[name=userprincipalname]").change(function () {
                 GetAliases();
             });
-            
-            @if (Model.Alias != null)
-            {
-            <text>$("select[name=organization]").val("@Model.Alias.Organization");</text>
-            }
-            
-            GetMailbox();
-
+            GetADUsersList();
         });
     </script>
 }
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form remove email aliases from a user account.</p>
+<br />
 
 @using(Html.BeginForm("RemoveAlias", "Mail")) {
 <fieldset>
-    <legend>Add alias</legend>
+    <legend>Remove alias</legend>
     <table>
         <tr>
             <td colspan="2">
@@ -56,7 +52,7 @@
         </tr>
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
+            <td class="middletd"><select name="organization">
                 @foreach(string organization in Model.Organizations) 
                 {
                     <option @if(Model.ActionFailed)
@@ -66,29 +62,39 @@
                                 }
                             }>@organization</option>
                 }
-                </select></td>
+                </select>
+                <span class="mandatory">*</span>
+            </td>
         </tr>
         <tr>
             <td class="lefttd">Existing aliases:</td>
-            <td class="righttd">
+            <td class="middletd">
                 <div id="existingAliasesDiv">
                     <ul id="existingAliases"></ul>
                 </div>
             </td>
         </tr>
         <tr>
-            <td class="lefttd">Mailbox</td>
-            <td>
+            <td class="lefttd">AD User</td>
+            <td class="middletd">
                 <select name="userprincipalname"><option>loading...</option></select>
+                <span class="mandatory">*</span>
             </td>
         </tr>
         <tr>
             <td class="lefttd">Remove email aliases</td>
-            <td><textarea name="emailaddresses" rows="10" placeholder="One alias per line">@if (Model.ActionFailed)
-                                                                                                 {
-                                                                                                     string.Join("\r\n", Model.Alias.EmailAddresses);
-                                                                                                 }</textarea></td>
-        </tr>
+            <td class="middletd">
+                @if (Model.ActionFailed)
+                {
+                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
+            }
+            else
+            {
+                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+            }
+          <span class="mandatory">*</span>
+        </td>
+    </tr>
     </table>
     <br />
     <input type="submit" class="button" class:hover="button:hover" value="Remove Alias" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />

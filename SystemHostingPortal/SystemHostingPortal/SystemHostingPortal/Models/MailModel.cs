@@ -18,9 +18,9 @@ namespace SystemHostingPortal.Models
         public CustomMailboxPlan MailboxPlan = new CustomMailboxPlan();
         public CustomDeviceReport DeviceReport = new CustomDeviceReport();
         public CustomMailContact MailContact = new CustomMailContact();
-        public CustomCalendarPermssions CalendarPermissions = new CustomCalendarPermssions();
+        public CustomCalendarPermissions CalendarPermissions = new CustomCalendarPermissions();
         public CustomMailboxAutoResize MailboxAutoResize = new CustomMailboxAutoResize();
-        public CustomAcceptedDomain AcceptedDomain = new CustomAcceptedDomain();
+        public CustomDomain Domain = new CustomDomain();
         public CustomItemsReport ItemsReport = new CustomItemsReport();
         public CustomSikkermail Sikkermail = new CustomSikkermail();
 
@@ -33,7 +33,7 @@ namespace SystemHostingPortal.Models
         public string Organization { get; set; }
     }
 
-    public class CustomCalendarPermssions
+    public class CustomCalendarPermissions
     {
         public string Organization { get; set; }
         public string UserPrincipalName { get; set; }
@@ -87,16 +87,20 @@ namespace SystemHostingPortal.Models
         public string Type { get; set; }
         public bool FullAccess { get; set; }
         public bool SendAs { get; set; }
-        public string Name { get; set; }
+        public string UserName { get; set; }
+        public string DisplayName { get; set; }
+        public string DomainName { get; set; }
+        public string Password { get; set; }
+
     }
 
     public class CustomDistributionGroup
     {
         public string Organization { get; set; }
         public string Name { get; set; }
-        public string UserPrincipalName { get; set; }
+        public string UserName { get; set; }
         public string ManagedBy { get; set; }
-        public string PrimarySmtpAddress { get; set; }
+        public string DomainName { get; set; }
         public bool RequireSenderAuthentication { get; set; }
     }
 
@@ -113,11 +117,12 @@ namespace SystemHostingPortal.Models
         public bool ExcludeFromAutoResize { get; set; }
     }
 
-    public class CustomAcceptedDomain
+    public class CustomDomain
     {
         public string Organization { get; set; }
         public string Domain { get; set; }
-        public bool SetAsUPN { get; set; }
+        public bool AddasEmail { get; set; }
+        public bool RemoveasEmail { get; set; }
     }
 
     public class CustomItemsReport

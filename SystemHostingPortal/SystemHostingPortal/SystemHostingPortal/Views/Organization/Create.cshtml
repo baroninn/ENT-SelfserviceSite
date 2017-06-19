@@ -15,6 +15,7 @@
             var el = document.getElementById("createvmm");
             var subnet = document.getElementById("subnet");
             var vlan = document.getElementById("vlan");
+            var gateway = document.getElementById("gateway");
             var ipstart = document.getElementById("ipstart");
             var ipend = document.getElementById("ipend");
             var mandatory_subnet = document.getElementById("mandatory_subnet");
@@ -24,20 +25,24 @@
             if (el.checked) {
                 subnet.disabled = false;
                 vlan.disabled = false;
+                gateway.disabled = false;
                 ipstart.disabled = false;
                 ipend.disabled = false;
                 mandatory_subnet.hidden = false;
                 mandatory_vlan.hidden = false;
+                mandatory_gateway.hidden = false;
                 mandatory_ipstart.hidden = false;
                 mandatory_ipend.hidden = false;
 
             } else {
                 subnet.disabled = true;
                 vlan.disabled = true;
+                gateway.disabled = true;
                 ipstart.disabled = true;
                 ipend.disabled = true;
                 mandatory_subnet.hidden = true;
                 mandatory_vlan.hidden = true;
+                mandatory_gateway.hidden = true;
                 mandatory_ipstart.hidden = true;
                 mandatory_ipend.hidden = true;
             }
@@ -48,11 +53,11 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to create a new customer.</p>
-
+<br />
 
 @using(Html.BeginForm("Create", "Organization")) {
 <fieldset>
-    <legend>Create organization</legend>
+    <legend>Create Organization</legend>
     <table>
         <tr>
             <td colspan="2">
@@ -79,81 +84,94 @@
 
         <tr>
             <td class="lefttd tooltip"><span>Name<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="name" placeholder="Contoso" @if (Model.ActionFailed) {  @: value="@Model.Organization.Name"
                                                                                                             } />
+                <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         Specifies the initials that the organization will be created as. This is limited to be between 2 and 5 characters.
                     </p>
                 </div>
             </td>
-            <td class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Email Domain Name<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="emaildomainname" placeholder="contoso.com" @if (Model.ActionFailed) {  @: value="@Model.Organization.EmailDomainName"
                                                                                                                } />
+                <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         This is the primary e-mail domain that the customer will use..
                     </p>
                 </div>
             </td>
-            <td class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Subnet<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="subnet" placeholder="172.25.185.0/24" id="subnet" @if (Model.ActionFailed) {  @: value="@Model.Organization.Subnet"
                                                                                                                                       } />
+                <span id="mandatory_subnet" class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         The subnet has to be in the following format: xxx.xx.xxx.x/xx.
                     </p>
                 </div>
             </td>
-            <td id="mandatory_subnet" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>VLan<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="vlan" placeholder="185" id="vlan" @if (Model.ActionFailed) {  @: value="@Model.Organization.Vlan"
                                                                                                                                       } />
+                <span id="mandatory_vlan" class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         This is the Vlan used for the customer. It has to be specific for that customer.
                     </p>
                 </div>
             </td>
-            <td id="mandatory_vlan" class="mandatory">*</td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Gateway<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="gateway" placeholder="172.25.xxx.254" id="gateway" @if (Model.ActionFailed) {  @: value="@Model.Organization.Gateway"
+                                                                                                                                                             } />
+                <span id="mandatory_gateway" class="mandatory">*</span>
+                <div class="description">
+                    <p class="descriptiontext">
+                        This is the default Gateway used for the customer. It has to be specific for that customer.
+                    </p>
+                </div>
+            </td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>IPAddressRangeStart<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="ipaddressrangestart" placeholder="172.25.185.10" id="ipstart" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeStart"
                                                                                                                                                              } />
+                <span id="mandatory_ipstart" class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         Usually we start the ip address range at xxx.xxx.xxx.10 -> 250. This way we can automate the gateway address.
                     </p>
                 </div>
             </td>
-            <td id="mandatory_ipstart" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>IPAddressRangeEnd<i class="material-icons infoicon">info</i></span></td>
-            <td>
+            <td class="middletd">
                 <input name="ipaddressrangeend" placeholder="172.25.185.250" id="ipend" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeEnd"
                                                                                                                                                              } />
+                <span id="mandatory_ipend" class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         The end range address..
                     </p>
                 </div>
             </td>
-            <td id="mandatory_ipend" class="mandatory">*</td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Create VMM Private Cloud<i class="material-icons infoicon">info</i></span></td>
@@ -169,14 +187,18 @@
         </tr>
 
     </table>
+    <br/>
     <table>
         <tr>
-            <td class="lefttdhelp helptooltip"><span>Manual steps: <i class="material-icons infoicon">info</i></span></td>
+            <td class="lefttdhelp helptooltip"><span>Guide: <i class="material-icons infoicon">info</i></span></td>
             <td>
                 <div class="infohelp">
                     <p class="infohelptext">
                         <br />
-                    <p>Følg guide på følgende link:</p>
+                    <p><img src="~/Images/CreateGuide1.png" width="700" /></p>
+                    <p>When deployment is 100% complete, the next thing you should do, is scale out the admin tier.</p>
+                    <br />
+                    <p>Følg evt guide på følgende link:</p>
                     <br />
                     <p><a href="https://dokuwiki.systemhosting.dk/doku.php?id=drift:deploy_enterprise_customer:start&s[]=enterprise" target="_blank">DokuWiki</a><p />
                 </div>

@@ -9,6 +9,8 @@ param(
     [string]$Subnet,
 
     [string]$Vlan,
+
+    [string]$Gateway,
         
     [string]$IPAddressRangeStart,
 
@@ -23,7 +25,7 @@ Set-StrictMode -Version 2
 Import-Module (Join-Path $PSScriptRoot Functions)
 
 if($CreateVMM){
-    New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd -CreateVMM
+    New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -Gateway $Gateway -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd -CreateVMM
 }
 else {
     New-ENTOrganization -Organization $Organization -EmailDomainName $EmailDomainName

@@ -5,4 +5,4 @@ Set-StrictMode -Version 2
 
 Import-Module (Join-Path $PSScriptRoot Functions)
 
-Get-VMServerList
+Get-VMServerList -level25 $False

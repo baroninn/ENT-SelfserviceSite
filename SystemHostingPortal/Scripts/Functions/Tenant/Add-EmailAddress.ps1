@@ -1,9 +1,9 @@
-function Add-EmailAddress {
+﻿function Add-EmailAddress {
     [Cmdletbinding()]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
-        $TenantName,
+        $Organization,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
@@ -22,32 +22,55 @@ function Add-EmailAddress {
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2
 
-        Import-Module (New-ExchangeProxyModule -Command "Set-Mailbox")
+        $Config = Get-EntConfig -Organization $Organization
+        $Cred   = Get-RemoteCredentials -Organization $Organization
+
     }
 
     Process {
-        $mbx = @(Get-TenantMailbox -TenantName $TenantName -Name $Name)
+        
+        if ($Config.ExchangeServer -ne "null") {
 
-        if ($mbx.Count -eq 0) {
-            Write-Error "'$Name' was not found."
-        }
-        elseif ($mbx.Count -gt 1) {
-            Write-Error "Ambiguous parameter Name '$Name'."
-        }
-    
-        $mbx = $mbx[0]
+            Import-Module (New-ExchangeProxyModule -Organization $Organization -Command Get-Mailbox, Set-Mailbox)
 
-        if ($SetAsPrimary) {
-            $mbx.EmailAddresses.Add("SMTP:$EmailAddress") | Out-Null
+            try {
+                Set-Mailbox -Identity $Name -EmailAddresses @{Add=$EmailAddress}
+            }
+            catch {
+                throw $_
+            }
+
+
         }
         else {
-            $mbx.EmailAddresses.Add("smtp:$EmailAddress") | Out-Null
-        }
 
-        $mbx | Set-Mailbox -EmailAddresses $mbx.EmailAddresses -EmailAddressPolicyEnabled $false
+            $User = Get-ADUser ($Name -split '@')[0] -Credential $Cred -Server $Config.DomainFQDN -Properties Proxyaddresses
+            $Proxy = $User.Proxyaddresses
 
-        if ($SetAsPrimary) {
-            $mbx | Set-Mailbox -UserPrincipalName $EmailAddress
+            if ($SetAsPrimary) {
+
+                $Proxy = $User.Proxyaddresses
+
+                foreach ($i in $proxy) {
+                    if ($i -clike "SMTP:*") {
+                        $OldPrimaryProxy = $i -creplace "SMTP:", "smtp:"
+                        Set-ADUser $user -Remove @{Proxyaddresses="$i"}
+                        Set-ADUser $user -Add @{Proxyaddresses="$OldPrimaryProxy"}
+                    }
+                }
+
+                Set-ADUser $User -Add @{Proxyaddresses="SMTP:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+            }
+            else {
+                Set-ADUser $User -Add @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+            }
+
+            if ($Config.AADsynced -eq 'true') {
+                Start-Dirsync -Organization $Organization
+                Write-Output "Directory sync has been initiated, because the customer has Office365."
+            }
+
         }
+    
     }
 }

@@ -7,23 +7,28 @@
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]$Password,
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string]$CopyFrom,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [bool]$PasswordNeverExpires,
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName="User")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]$PrimarySmtpAddress,
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName="User")]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string]$FirstName,
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName, ParameterSetName="User")]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string]$LastName,
 
-        [Parameter(ValueFromPipelineByPropertyName, ParameterSetName="User")]
-        [bool]$TestUser
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [bool]$TestUser,
+        
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [string]$Displayname,
+
+        [switch]$SharedMailbox
     )
 
     Begin {
@@ -65,54 +70,132 @@
 
         Write-Verbose "SAMAccountName: $SAMAccountName"
 
-        $ADinstance = Get-ADUser $CopyFrom -Credential $Cred -Server $Config.DomainFQDN -Properties accountExpires,assistant,codePage,countryCode,c,division,employeeType,homeDirectory,homeDrive,memberOf,localeID,logonHours,logonWorkstation,manager,postalAddress,postalCode,postOfficeBox,profilePath,scriptPath,street,co,title
+        if(-not $SharedMailbox) {
+
+            $ADinstance = Get-ADUser ($CopyFrom -split '@')[0] -Credential $Cred -Server $Config.DomainFQDN -Properties accountExpires,assistant,codePage,countryCode,c,division,employeeType,homeDirectory,homeDrive,memberOf,localeID,logonHours,logonWorkstation,manager,postalAddress,postalCode,postOfficeBox,profilePath,scriptPath,street,co,title
                                                                                                     
-        $newUserParams = @{
-            Name              = "$FirstName $LastName"
-            Enabled           = $true
-            SamAccountName    = $SAMAccountName
-            DisplayName       = "$FirstName $LastName"
-            AccountPassword   = (ConvertTo-SecureString -String $Password -AsPlainText -Force) 
-            Path              = $ADinstance.DistinguishedName -replace '^cn=.+?(?<!\\),'
-            UserPrincipalName = $PrimarySmtpAddress
-            GivenName         = $FirstName
-            Surname           = $LastName
-            Server            = $Config.DomainFQDN
-            PassThru          = $null
-        }
+            $newUserParams = @{
+                Name              = "$FirstName $LastName"
+                Enabled           = $true
+                SamAccountName    = $SAMAccountName
+                DisplayName       = "$FirstName $LastName"
+                AccountPassword   = (ConvertTo-SecureString -String $Password -AsPlainText -Force) 
+                Path              = $ADinstance.DistinguishedName -replace '^cn=.+?(?<!\\),'
+                UserPrincipalName = $PrimarySmtpAddress
+                EmailAddress      = $PrimarySmtpAddress
+                GivenName         = $FirstName
+                Surname           = $LastName
+                Server            = $Config.DomainFQDN
+                PassThru          = $null
+            }
+
+            if ($PasswordNeverExpires) {
+                $newUserParams.Add("PasswordNeverExpires", $true)
+            }
+
+            $newUser = New-ADUser @newUserParams -Credential $Cred -Instance $ADinstance
 
 
-        if ($PasswordNeverExpires) {
-            $newUserParams.Add("PasswordNeverExpires", $true)
-        }
+            if ($Config.ExchangeServer -ne "null") {
 
-        $newUser = New-ADUser @newUserParams -Credential $Cred -Instance $ADinstance
+                Import-Module (New-ExchangeProxyModule -Organization $Organization -Command 'Get-Mailbox', 'Enable-Mailbox')
 
-        $Memberof   = Get-ADPrincipalGroupMembership -Identity $ADinstance
-        foreach($i in $Memberof){
-            if($TestUser){
-                if(!($i.name -eq "Domain Users" -or $i.name -eq "G_FullUsers" -or $i.name -eq "G_LightUsers")){
-                   Add-ADGroupMember -Identity $i.distinguishedName -Members $newUser -Credential $Cred -Server $Config.DomainFQDN
+                try {
+                    Enable-Mailbox -Identity $SAMAccountName -PrimarySmtpAddress $PrimarySmtpAddress
+                }
+                catch {
+                    throw "Mailbox creation failed with: $_"
                 }
             }
-            else{
-                if(!($i.name -eq "Domain Users")){
-                   Add-ADGroupMember -Identity $i.distinguishedName -Members $newUser -Credential $Cred -Server $Config.DomainFQDN
+            else {
+                Set-ADUser $newUser -Add @{Proxyaddresses="SMTP:$PrimarySmtpAddress"} -Server $Config.DomainFQDN -Credential $Cred
+            }
+
+            ## Try to create the userhome manually..
+            if ($ADinstance.HomeDirectory -notlike $null) {
+
+                ## Get UserHome path from existing user
+                $DFSPath = ($ADinstance.HomeDirectory).Replace($($ADinstance.SamAccountName), '')
+
+                    $scriptblock = {
+                        param($SAMAccountName, $Config, $DFSPath)
+                        $rule_parameters = @(
+                            "$($Config.Domain)\$SAMAccountName"
+                            "FullControl"
+                                ,@(
+                                    "ContainerInherit"
+                                    "ObjectInherit"
+                                    )
+                            "None"
+                            "Allow"
+                            )
+
+                            $path = ($DFSPath + $SAMAccountName)
+                            New-Item -Path $DFSPath -Name $SAMAccountName -ItemType Directory
+
+                            $acl = (Get-Item $path).GetAccessControl('Access')
+
+                            $rule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $rule_parameters
+
+                            $acl.SetAccessRule($rule)
+
+                            $acl | Set-Acl $path
+                    }
+
+                Invoke-Command -ComputerName $Config.DomainDC -ScriptBlock $scriptblock -Credential $Cred -ArgumentList $SAMAccountName, $Config, $DFSPath
+
+            }
+
+            $Memberof   = Get-ADPrincipalGroupMembership -Identity $ADinstance
+            foreach($i in $Memberof){
+                if($TestUser){
+                    if(!($i.name -eq "Domain Users" -or $i.name -eq "G_FullUsers" -or $i.name -eq "G_LightUsers")){
+                       Add-ADGroupMember -Identity $i.distinguishedName -Members $newUser -Credential $Cred -Server $Config.DomainFQDN
+                    }
+                }
+                else{
+                    if(!($i.name -eq "Domain Users")){
+                       Add-ADGroupMember -Identity $i.distinguishedName -Members $newUser -Credential $Cred -Server $Config.DomainFQDN
+                    }
                 }
             }
-        }
         
-        if($ADinstance.HomeDirectory -notlike $null){
-        Set-ADUser -Identity $newUser -HomeDirectory ($ADinstance.HomeDirectory -replace $ADinstance.SamAccountName, $newUser.SamAccountName) -Credential $Cred -Server $Config.DomainFQDN
+            if($ADinstance.HomeDirectory -notlike $null){
+            Set-ADUser -Identity $newUser -HomeDirectory ($ADinstance.HomeDirectory -replace $ADinstance.SamAccountName, $newUser.SamAccountName) -Credential $Cred -Server $Config.DomainFQDN
+            }
+
+            if($ADinstance.ProfilePath -notlike $null){
+            Set-ADUser -Identity $newUser -ProfilePath ($ADinstance.ProfilePath -replace $ADinstance.SamAccountName, $newUser.SamAccountName) -Credential $Cred -Server $Config.DomainFQDN
+            }
+
+            if ($TestUser) {
+            Set-ADUser -Identity $newUser -Add @{Description = 'TESTUSER'}
+            }
+        Get-PSSession | Remove-PSSession
         }
 
-        if($ADinstance.ProfilePath -notlike $null){
-        Set-ADUser -Identity $newUser -ProfilePath ($ADinstance.ProfilePath -replace $ADinstance.SamAccountName, $newUser.SamAccountName) -Credential $Cred -Server $Config.DomainFQDN
+        elseif ($SharedMailbox) {
+            $newUserParams = @{
+                Name              = "$DisplayName"
+                Enabled           = $true
+                SamAccountName    = $SAMAccountName
+                DisplayName       = "$DisplayName"
+                AccountPassword   = (ConvertTo-SecureString -String $Password -AsPlainText -Force) 
+                Path              = $Config.CustomerOUDN
+                UserPrincipalName = $PrimarySmtpAddress
+                EmailAddress      = $PrimarySmtpAddress
+                Server            = $Config.DomainFQDN
+                PasswordNeverExpires = $true
+                PassThru          = $null
+            }
+
+            $newUser = New-ADUser @newUserParams -Credential $Cred
         }
 
-        if ($TestUser) {
-        Set-ADUser -Identity $newUser -Add @{extensionAttribute2 = 'TESTUSER'}
+        if ($Config.AADsynced -eq 'true') {
+            Start-Dirsync -Organization $Organization
+            Write-Output "Directory sync has been initiated, because the customer has Office365."
         }
-
     }
+        
 }

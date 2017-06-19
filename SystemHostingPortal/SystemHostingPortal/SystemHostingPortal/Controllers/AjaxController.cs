@@ -210,6 +210,38 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        public string GetCALMailbox(string organization, string name)
+        {
+            try
+            {
+                List<AjaxMailbox> calmailboxes = new List<AjaxMailbox>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetMailbox(organization, name);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject mailbox in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(mailbox);
+                        calmailboxes.Add(new AjaxMailbox()
+                        {
+                            Name = properties["Name"].ToString(),
+                            UserPrincipalName = properties["UserPrincipalName"].ToString(),
+                            RecipientTypeDetails = properties["RecipientTypeDetails"].ToString(),
+                            EmailAddresses = properties["EmailAddresses"].ToString().Split(' ')
+                        });
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(calmailboxes);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
         public class AjaxMailForward
         {
             public string Organization { get; set; }
@@ -369,28 +401,61 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
-        // Function for getting accepted domain as select list..
-        public class AjaxAcceptedDomain
+        // Function for getting domain as select list..
+        public class AjaxDomain
         {
             public string DomainName { get; set; }
+            public string Status { get; set; }
+            public string IsDefault { get; set; }
         }
-        public string GetAcceptedDomain(string organization)
+        public string GetDomain(string organization)
         {
             try
             {
-                List<AjaxAcceptedDomain> domains = new List<AjaxAcceptedDomain>();
+                List<AjaxDomain> domains = new List<AjaxDomain>();
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.GetAcceptedDomain(organization);
+                    ps.GetDomain(organization);
                     IEnumerable<PSObject> result = ps.Invoke();
 
                     foreach (PSObject domain in result)
                     {
                         Dictionary<string, object> properties = Common.GetPSObjectProperties(domain);
-                        domains.Add(new AjaxAcceptedDomain()
+                        domains.Add(new AjaxDomain()
                         {
                             DomainName = properties["DomainName"].ToString(),
+                        });
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(domains);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+        public string GetO365Domain(string organization)
+        {
+            try
+            {
+                List<AjaxDomain> domains = new List<AjaxDomain>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetO365Domain(organization);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject domain in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(domain);
+                        domains.Add(new AjaxDomain()
+                        {
+                            DomainName = properties["DomainName"].ToString(),
+                            Status = properties["Status"].ToString(),
+                            IsDefault = properties["IsDefault"].ToString(),
                         });
                     }
                 }
@@ -449,9 +514,10 @@ namespace SystemHostingPortal.Controllers
             public string Name { get; set; }
             public string DistinguishedName { get; set; }
             public string UserPrincipalName { get; set; }
+            public string[] proxyAddresses { get; set; }
             public string Enabled { get; set; }
         }
-        public string GetADUsersList(string organization)
+        public string GetADUsersList(string organization, string userprincipalname)
         {
             try
             {
@@ -459,7 +525,7 @@ namespace SystemHostingPortal.Controllers
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.GetADUsers(organization);
+                    ps.GetADUsers(organization, userprincipalname);
                     IEnumerable<PSObject> result = ps.Invoke();
 
                     foreach (PSObject User in result)
@@ -470,6 +536,7 @@ namespace SystemHostingPortal.Controllers
                             Name = properties["Name"].ToString(),
                             DistinguishedName = properties["DistinguishedName"].ToString(),
                             UserPrincipalName = properties["UserPrincipalName"].ToString(),
+                            proxyAddresses = properties["proxyAddresses"].ToString().Split(','),
                             Enabled = properties["Enabled"].ToString(),
                         });
                     }
@@ -484,11 +551,47 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        // Function for getting AD users as select list..
+        public class AjaxADUserProxy
+        {
+            public string[] proxyAddresses { get; set; }
+        }
+        public string GetADUsersProxy(string organization, string userprincipalname)
+        {
+            try
+            {
+                List<AjaxADUser> users = new List<AjaxADUser>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetADUsers(organization, userprincipalname);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject User in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(User);
+                        users.Add(new AjaxADUser()
+                        {
+                            proxyAddresses = properties["proxyAddresses"].ToString().Split(','),
+                        });
+                    }
+
+                }
+
+                return new JavaScriptSerializer().Serialize(users);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+
         // Function for getting VMServers as select list..
         public class AjaxVMServers
         {
             public string Name { get; set; }
-            public string ID { get; set; }
+            public string VMID { get; set; }
 
         }
         public string GetVMServers()
@@ -508,7 +611,7 @@ namespace SystemHostingPortal.Controllers
                         servers.Add(new AjaxVMServers()
                         {
                             Name = properties["Name"].ToString(),
-                            ID = properties["ID"].ToString(),
+                            VMID = properties["VMID"].ToString(),
                         });
                     }
 
@@ -523,14 +626,54 @@ namespace SystemHostingPortal.Controllers
             }
         }
 
+        // Function for getting VMServers as select list..
+        public class AjaxVMServerslvl25
+        {
+            public string Name { get; set; }
+            public string VMID { get; set; }
+
+        }
+        public string GetVMServerslvl25()
+        {
+            try
+            {
+                List<AjaxVMServers> servers = new List<AjaxVMServers>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetVMServerslvl25();
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject Server in result)
+                    {
+                        Dictionary<string, object> properties = Common.GetPSObjectProperties(Server);
+                        servers.Add(new AjaxVMServers()
+                        {
+                            Name = properties["Name"].ToString(),
+                            VMID = properties["VMID"].ToString(),
+                        });
+                    }
+
+                }
+
+
+                return new JavaScriptSerializer().Serialize(servers);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+
         public class AjaxVMVHDs
         {
             public string Name { get; set; }
-            public string ID { get; set; }
+            public string VHDID { get; set; }
             public string Size { get; set; }
 
         }
-        public string GetVMVHDs(string vhdid)
+        public string GetVMVHDs(string vmid)
         {
             try
             {
@@ -538,7 +681,7 @@ namespace SystemHostingPortal.Controllers
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.GetVMVHDs(vhdid);
+                    ps.GetVMVHDs(vmid);
                     IEnumerable<PSObject> result = ps.Invoke();
 
                     foreach (PSObject VHD in result)
@@ -547,7 +690,7 @@ namespace SystemHostingPortal.Controllers
                         vhds.Add(new AjaxVMVHDs()
                         {
                             Name = properties["Name"].ToString(),
-                            ID = properties["ID"].ToString(),
+                            VHDID = properties["VHDID"].ToString(),
                             Size = properties["Size"].ToString(),
                         });
                     }

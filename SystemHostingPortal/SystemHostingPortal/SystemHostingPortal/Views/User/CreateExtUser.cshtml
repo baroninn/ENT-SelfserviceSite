@@ -1,0 +1,108 @@
+﻿@model SystemHostingPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > CreateExtUser";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetDomainSelect();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=domainname]").html('<option>loading...</option>');
+
+                GetDomainSelect();
+
+            });
+
+            jQuery.datetimepicker.setLocale('da');
+            jQuery('#datetime').datetimepicker({
+                theme: 'default',
+                timepicker: false,
+                dayOfWeekStart: 1,
+                format: 'Y-m-d',
+                inline: false,
+                weeks: true
+
+            });
+        });
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new external user account.</p>
+<br />
+
+@using (Html.BeginForm("CreateExtUser", "User"))
+{
+    <fieldset>
+        <legend>Create EXT. user</legend>
+        <table>
+            <tr>
+                <td colspan="2">@if (Model.Message != null)
+                { <div class="message">@Model.Message</div> }</td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CreateExtUser.Organization) { @: selected="selected"
+                                                                            } }>
+                                @organization
+                                                                        </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">DisplayName</td>
+                <td class="middletd">
+                    <input name="displayname" placeholder="John - Visma" @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.DisplayName"
+                                                                                                                } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Description</td>
+                <td class="middletd">
+                    <input name="description" placeholder="Used for Navision etc." @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.Description"
+                                                                                                                } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">UserPrincipalName</td>
+                <td class="lefttdaccepteddomain">
+                    <input name="username" placeholder="john.doe" @if (Model.ActionFailed) { @: value="@Model.CreateExtUser.UserName"
+                                                                                                               } />
+                </td>
+                <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">@@</td>
+                <td class="righttdaccepteddomain">
+                    <select name="domainname"><option>loading...</option></select>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd"><span>Expiration Date<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="datetime" name="datetime" placeholder="YYYY-MM-DD" type="text" @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.ExpirationDate"
+                                                                                                                                                                                                } />
+                    <span class="mandatory">*</span>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

@@ -1,7 +1,0 @@
-﻿12/7/2016 11:29:45 AM :: CORP\adminjst :: has run Organization/RemoveCustomer() to remove customer 'T06'
-12/7/2016 11:29:39 AM :: CORP\adminjst :: Exception: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Unable to locate Microsoft Dynamics NAV ServerInstance: (ServerInstance=MicrosoftDynamicsNavServer$T08)
-12/7/2016 11:29:20 AM :: CORP\adminjst :: has run Organization/RemoveCustomer() to remove customer 'T08'
-12/7/2016 11:29:09 AM :: CORP\adminjst :: Exception: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Unable to locate Microsoft Dynamics NAV ServerInstance: (ServerInstance=MicrosoftDynamicsNavServer$T09)
-12/7/2016 11:28:33 AM :: CORP\adminjst :: has run Organization/RemoveCustomer() to remove customer 'T09'
-12/7/2016 11:27:02 AM :: CORP\adminjst :: Exception: The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Service 'Microsoft Dynamics NAV Server [T06] (MicrosoftDynamicsNavServer$T06)' cannot be started due to the following error: Cannot start service MicrosoftDynamicsNavServer$T06 on computer 'CPO-NST-05.hosting.capto.dk'.
-12/7/2016 11:25:43 AM :: CORP\adminjst :: has run Organization/Create() to create T06

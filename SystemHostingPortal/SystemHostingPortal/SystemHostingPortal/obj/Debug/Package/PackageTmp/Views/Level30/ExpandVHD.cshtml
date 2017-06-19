@@ -8,7 +8,9 @@
         $(document).ready(function () {
 
             GetVMServers();
-            $("select[name=id]").html('<option>loading, this could take some time, (VMM is sooo slow)......</option>').change(function () {
+
+            $("select[name=vmid]").html('<option>loading, this could take some time, (VMM is sooo slow)......</option>').change(function () {
+
                 GetVMVHDs();
                 $("select[name=vhdid]").html('<option>loading, this could take some time......</option>');
             });
@@ -24,12 +26,38 @@
 
         });
 
+        $('#gb').on('paste input', function () {
+            var number = $(this).val()
+            if (isNaN(number)) {
+                $.alert({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: 'Enter only numbers!',
+                });
+                $(this).val('');
+            }
+
+            if (number > 100) {
+                $.alert({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: 'For expansions over 100 GB, please be 100% sure..',
+                });
+                $(this).val(number);
+            }
+        });
+
         
     </script>
 }
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to expand a VM disk..</p>
+<br />
 
 @using (Html.BeginForm("ExpandVHD", "Level30"))
 {
@@ -61,14 +89,16 @@
 
             <tr>
                 <td class="lefttd"><span>VMServers<i class="material-icons infoicon"></i></span></td>
-                <td class="righttd">
-                    <select name="id"><option>loading...</option></select>
+                <td class="middletd">
+                    <select name="vmid"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd"><span>VHDs<i class="material-icons infoicon"></i></span></td>
-                <td class="righttd">
+                <td class="middletd">
                     <select name="vhdid"><option>Waiting...</option></select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
            
@@ -77,39 +107,51 @@
 
             <tr>
                 <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
-                <td class="righttd">
+                <td class="middletd">
                     <input id="datetime" name="datetime" placeholder="YYYY-MM-DD 00:00" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.DateTime"
                                                                                                                                                                      } />
-
+                    <span class="mandatory">*</span>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
-
+            <tr>
+                <td class="lefttd"><span>Opgave nr<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="taskid" name="taskid" placeholder="109000" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.TaskID"
+                                                                                                                                                                                            } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter TaskID (Opgave nr.) from Navision..
+                        </p>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td class="lefttd tooltip"><span>GB to expand with<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input name="gb" placeholder="ex 10" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.GB"
+                <td class="middletd">
+                    <input name="gb" placeholder="ex 10" min="1" max="100" class="gbwarning" type="number" id="gb"
+                           @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.GB"
                                                                                                                                                                      } />
+                    <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter GB in whole number. ex. 10
                         </p>
                     </div>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     <input name="email" placeholder="xxx@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.Email"
                                                                                                                                                                                                 } />
+                    <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter the email which will be notified when task is complete.
                         </p>
                     </div>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
         </table>  
 

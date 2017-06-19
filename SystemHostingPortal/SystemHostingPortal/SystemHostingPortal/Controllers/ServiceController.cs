@@ -72,16 +72,16 @@ namespace SystemHostingPortal.Controllers
 
                 string retStr = "<pre>";
 
-                retStr += string.Format("<table><tr><td>Disk usage:</td><td>{0}</td></tr><tr><td>Disk quota:</td><td>{1}</td></tr><tr><td>Exchange usage:</td><td>{2} GB</td></tr><tr><td>Exchange quota:</td><td>{3:0.00} GB</td></tr><tr><td>Total disk usage:</td><td>{5} GB</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></table>", model.CustomerReport.TotalUsage, model.CustomerReport.ExchangefUsage, model.CustomerReport.ExchangefQuota, model.CustomerReport.DiskTotal);
+                retStr += string.Format("<table><tr><td>FileServer usage:</td><td>{0}</td></tr><tr><td>FileServer Free:</td><td>{1}</td></tr><tr><td>FileServer Total:</td><td>{2} GB</td></tr><tr><td>&nbsp;</td></tr><tr><td>Total disk usage:</td><td>{3} GB</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></table>", model.CustomerReport.FileServerfUsed, model.CustomerReport.FileServerfFree, model.CustomerReport.FileServerfTotal, model.CustomerReport.TotalfUsage);
 
-                retStr += "<table><tr><td>Name</td><td>Email</td><td>Usage</td><td>Quota</td></tr>";
+                retStr += "<table><tr><td>Name</td><td>Email</td></tr>";
                 foreach (ADUser user in model.CustomerReport.ADUsers)
                 {
-                    retStr += string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>", user.Name, user.Email);
+                    retStr += string.Format("<tr><td>{0}</td><td>{1}</td></tr>", user.Name, user.Email);
                 }
                 retStr += "</table>";
 
-                retStr += "<table><tr><td>&nbsp;</td></tr><tr><td>Windows Licenses (" + model.CustomerReport.Licenses.FullUser.Count + ")</td></tr>";
+                retStr += "<table><tr><td>&nbsp;</td></tr><tr><td>Full Users (" + model.CustomerReport.Licenses.FullUser.Count + ")</td></tr>";
                 foreach (string user in model.CustomerReport.Licenses.FullUser)
                 {
                     retStr += "<tr><td>" + user + "</td></tr>";
@@ -96,7 +96,11 @@ namespace SystemHostingPortal.Controllers
                 retStr += "</table>";
 
                 retStr += "<table><tr><td>&nbsp;</td></tr><tr><td>Office 365 information: </td></tr>";
-                retStr += "<tr><td>Office 365 Tenant ID: (" + model.CustomerReport.TenantID + ")</td><tr><td>Office 365 Partnername: (" + model.CustomerReport.PartnerName + ")</td></tr><tr><td>Office 365 License: (" + model.CustomerReport.License + ")</td></tr></tr>";
+                retStr += "<table><tr><td>&nbsp;</td></tr><tr><td>PartnerName </td><td>License </td><td>ActiveUnits </td><td>ConsumedUnits </td><td>FreeUnits </td></tr>";
+                foreach (Info365 info in model.CustomerReport.Info365s)
+                {
+                    retStr += string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>", info.PartnerName, info.License, info.ActiveUnits, info.ConsumedUnits, info.FreeUnits);
+                }
                 retStr += "</table>";
 
 
@@ -197,6 +201,7 @@ namespace SystemHostingPortal.Controllers
 
                 foreach (PSObject info in info365s)
                 {
+
                     model.CustomerReport.Info365s.Add(new Info365
                     {
                         License = info.Properties["License"].Value.ToString(),
@@ -212,250 +217,7 @@ namespace SystemHostingPortal.Controllers
                 //throw new Exception(mailbox.Properties["TotalAllocated"].Value.ToString());
             }
         }
-        /*
-                private void CustomerReportGenerate()
-                {
-                    using (SqlConnection sqlConnection = new SqlConnection("Data Source=DMZ027C1B\\SQLEXPRESS;Initial Catalog=CustomerReport;User ID=CustomerReport;Password=Systemhosting Customer Report SQL Password"))
-                    {
-                        sqlConnection.Open();
 
-                        //model.MessageList.Add("SPLA");
-                        #region SPLA
-                        using (SqlCommand command = new SqlCommand("SELECT u.name AS Name, t.[description] AS Type FROM users AS u, splatypes AS t, spla AS s WHERE s.orgid = (SELECT id FROM organization WHERE name = @Organization) AND u.id = s.userid AND s.typeid = t.id", sqlConnection))
-                        {
-                            command.Parameters.Add("@Organization", SqlDbType.VarChar, 250).Value = model.CustomerReport.Organization;
-
-                            SqlDataReader sqlReader = command.ExecuteReader();
-
-                            while (sqlReader.Read())
-                            {
-                                string name = sqlReader["Name"].ToString();
-                                string type = sqlReader["Type"].ToString();
-
-                                switch (type)
-                                {
-                                    case "Windows License":
-                                        model.CustomerReport.Licenses.Windows.Add(name);
-                                        break;
-                                    case "Office Standard":
-                                        model.CustomerReport.Licenses.OfficeStandard.Add(name);
-                                        break;
-                                    case "Office Professional":
-                                        model.CustomerReport.Licenses.OfficeProfessional.Add(name);
-                                        break;
-                                    case "Outlook":
-                                        model.CustomerReport.Licenses.Outlook.Add(name);
-                                        break;
-                                    default:
-                                        model.CustomerReport.Licenses.Unknown.Add(name);
-                                        break;
-                                }
-                            }
-
-                            sqlReader.Close();
-                        }
-                        #endregion
-
-                        //model.MessageList.Add("Exchange");
-                        #region Exchange
-                        using (SqlCommand command = new SqlCommand("SELECT name, primarysmtp, exchusage, exchquota FROM users WHERE orgid = (SELECT id FROM organization WHERE name = @Organization)", sqlConnection))
-                        {
-                            command.Parameters.Add("@Organization", SqlDbType.VarChar, 250).Value = model.CustomerReport.Organization;
-
-                            SqlDataReader sqlReader = command.ExecuteReader();
-
-                            while (sqlReader.Read())
-                            {
-                                string name = sqlReader["name"].ToString();
-                                string email = sqlReader["primarysmtp"].ToString();
-                                string quota = sqlReader["exchquota"].ToString().Replace('.', ','); // doubleingpoint conversion is fucked up due to localization hi!~
-                                string usage = sqlReader["exchusage"].ToString().Replace('.', ',');
-
-                                try {
-                                    usage = string.Format("{0:0.00} {1}", double.Parse(usage.Split(' ')[0]), usage.Split(' ')[1]);
-                                }
-                                catch { }
-
-                                try
-                                {
-                                    double fQuota = double.Parse(quota.Split(' ')[0]);
-                                    switch (quota.Split(' ')[1])
-                                    {
-                                        case "GB":
-                                            // gb is good
-                                            break;
-                                        case "MB":
-                                            fQuota = fQuota / 1024; // upgrade to gb
-                                            break;
-                                        case "KB":
-                                            fQuota = fQuota / (1024 * 1024); // upgrade to gb
-                                            break;
-                                        case "B":
-                                            fQuota = 0;
-                                            break;
-                                    }
-
-                                    model.CustomerReport.ExchangefQuota += fQuota;
-
-                                    double fUsage = double.Parse(usage.Split(' ')[0]);
-                                    switch (usage.Split(' ')[1])
-                                    {
-                                        case "GB":
-                                            // gb is good
-                                            break;
-                                        case "MB":
-                                            fUsage = fUsage / 1024;
-                                            break;
-                                        case "KB":
-                                            fUsage = fUsage / (1024 * 1024);
-                                            break;
-                                        case "B":
-                                            fUsage = 0;
-                                            break;
-                                    }
-
-                                    model.CustomerReport.ExchangefUsage += fUsage;
-                                }
-                                catch (Exception exc)
-                                {
-                                    model.MessageList.Add("Exception : " + exc.Message);
-                                }
-
-                                model.CustomerReport.ExchangeUsers.Add(new ExchangeUser() { Name = name, Quota = quota, Usage = usage, Email = email });
-                            }
-
-                            //convert to int for pretty, instead of 123,18327481414141 GB
-                            model.CustomerReport.ExchangeQuota = model.CustomerReport.ExchangefQuota.ToString() + " GB";
-
-                            sqlReader.Close();
-                        }
-                        #endregion
-
-                        //model.MessageList.Add("Disk");
-                        #region Disk
-                        using (SqlCommand command = new SqlCommand("SELECT usage, quota FROM [disk] WHERE orgid = (SELECT id FROM organization WHERE name = @Organization)", sqlConnection))
-                        {
-                            command.Parameters.Add("@Organization", SqlDbType.VarChar, 250).Value = model.CustomerReport.Organization;
-
-                            SqlDataReader sqlReader = command.ExecuteReader();
-
-                            while (sqlReader.Read())
-                            {
-                                string quota = sqlReader["quota"].ToString();
-                                string usage = sqlReader["usage"].ToString();
-
-                                // disk usage and quota has , as doubleing point seperator instead of . so it needs replacing before it can be parsed properly
-                                model.CustomerReport.TotalQuota = quota;
-                                model.CustomerReport.TotalUsage = usage;
-
-                                double fQuota = 0;
-                                double.TryParse(model.CustomerReport.TotalQuota.Split(' ')[0], out fQuota);
-                                switch (model.CustomerReport.TotalQuota.Split(' ')[1])
-                                {
-                                    case "GB":
-                                        // gb is good
-                                        break;
-                                    case "MB":
-                                        fQuota = fQuota / 1024; // upgrade to gb
-                                        break;
-                                    case "KB":
-                                        fQuota = fQuota / (1024 * 1024); // upgrade to gb
-                                        break;
-                                    case "B":
-                                        fQuota = 0;
-                                        break;
-                                    default:
-                                        fQuota = 0;
-                                        break;
-                                }
-
-                                double fUsage = 0;
-                                double.TryParse(model.CustomerReport.TotalUsage.Split(' ')[0], out fUsage);
-                                switch (model.CustomerReport.TotalUsage.Split(' ')[1])
-                                {
-                                    case "GB":
-                                        // gb is good
-                                        break;
-                                    case "MB":
-                                        fUsage = fUsage / 1024;
-                                        break;
-                                    case "KB":
-                                        fUsage = fUsage / (1024 * 1024);
-                                        break;
-                                    case "B":
-                                        fUsage = 0;
-                                        break;
-                                    default:
-                                        fUsage = 0;
-                                        break;
-                                }
-
-                                //model.MessageList.Add(string.Format("Quota: {0} Usage: {1}", model.CustomerReport2.DiskQuota, model.CustomerReport2.DiskUsage));
-
-                                model.CustomerReport.TotalfUsage = fUsage;
-                                model.CustomerReport.TotalfQuota = fQuota;
-                            }
-
-                            sqlReader.Close();
-                        }
-                        #endregion
-
-                        //model.MessageList.Add("Servers");
-                        #region Servers
-                        using (SqlCommand command = new SqlCommand("SELECT id, name FROM servers WHERE orgid = (SELECT id FROM organization WHERE name = @Organization)", sqlConnection))
-                        {
-                            command.Parameters.Add("@Organization", SqlDbType.VarChar, 250).Value = model.CustomerReport.Organization;
-
-                            SqlDataReader sqlReader = command.ExecuteReader();
-
-                            while (sqlReader.Read())
-                            {
-
-                                string name = sqlReader["name"].ToString();
-                                int id = (int)sqlReader["id"];
-                                //model.MessageList.Add(string.Format("id: {0} name: {1}", id, name));
-
-                                Server s = new Server() { Name = name, Id = id };
-
-                                model.CustomerReport.Servers.Add(s);
-
-                            }
-
-                            sqlReader.Close();
-                        }
-
-                        foreach (Server s in model.CustomerReport.Servers)
-                        {
-                            using (SqlCommand command = new SqlCommand("SELECT deviceid, size FROM serverdisks WHERE serverid = @ServerID", sqlConnection))
-                            {
-                                command.Parameters.Add("@ServerID", SqlDbType.Int).Value = s.Id;
-
-                                SqlDataReader sqlReader = command.ExecuteReader();
-
-                                while (sqlReader.Read())
-                                {
-                                    string deviceid = sqlReader["deviceid"].ToString();
-                                    string size = sqlReader["size"].ToString();
-                                    //model.MessageList.Add(string.Format("id: {0} size: {1}", deviceid, size));
-
-                                    s.Disks.Add(new ServerDisk() { DeviceID = deviceid, Size = size });
-                                }
-
-                                sqlReader.Close();
-                            }
-                        }
-                        #endregion
-
-
-                        // and now to make pretty the numbers
-                        model.CustomerReport.ExchangefQuota = Math.Round(model.CustomerReport.ExchangefQuota, 2);
-                        model.CustomerReport.ExchangefUsage = Math.Round(model.CustomerReport.ExchangefUsage, 2);
-
-                        model.CustomerReport.TotalfUsage = Math.Round(model.CustomerReport.TotalfUsage, 2);
-                        model.CustomerReport.TotalfQuota = Math.Round(model.CustomerReport.TotalfQuota, 2);
-                    }
-                }
-                */
         public ActionResult CustomerReportPieChartDisk(string iUsage, string iQuota)
                 {
                     //iUsage = iUsage.Replace(',', '.');
@@ -475,5 +237,199 @@ namespace SystemHostingPortal.Controllers
 
                     return null;
                 }
+
+        // Display Expand view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandVHD()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
+
+        // Post VHD changes and return view
+        [HttpPost]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandVHD(FormCollection _POST)
+        {
+            try
+            {
+                // Expand VHD and create View.
+                CustomExpandVHD ExpandVHD = new CustomExpandVHD()
+                {
+                    TaskID = _POST["taskid"],
+                    VMID = _POST["vmid"].ToUpper(),
+                    VHDID = _POST["vhdid"],
+                    DateTime = _POST["datetime"].ToString(),
+                    GB = _POST["gb"],
+                    Email = _POST["email"]
+                };
+
+                var GB = Convert.ToInt32(ExpandVHD.GB);
+
+                if (GB > 50)
+                {
+                    throw new ArgumentException("For more than 50 GB, please contact Drift..");
+                }
+
+                if (ExpandVHD.TaskID.Length == 0)
+                {
+                    throw new ArgumentException("Please enter a task id");
+                }
+
+                if (ExpandVHD.TaskID.Length < 6 || ExpandVHD.TaskID.Length > 6)
+                {
+                    throw new ArgumentException("The taskid must be 6 characters long.");
+                }
+
+                Common.Log(string.Format("has run Service/ExpandVHD() to Expand VHD on {0} at date {1}, with TaskID {2}. The VHD has been scheduled for {3} GB more..", ExpandVHD.VMID, ExpandVHD.DateTime, ExpandVHD.TaskID, ExpandVHD.GB));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.ExpandVHD(ExpandVHD.VMID, ExpandVHD.VHDID, ExpandVHD.DateTime, ExpandVHD.GB, ExpandVHD.Email);
+                    var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("The VM has been scheduled for expansion on {0}, with {1} GB", ExpandVHD.DateTime, ExpandVHD.GB));
+                    }
+                    else
+                    {
+                        model.OKMessage.Add(string.Format("VM has been expanded with following info:"));
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                            Common.Log(string.Format("Has run Service/ExpandVHD() with info: {1}", ExpandVHD.TaskID, message.ToString()));
+                        }
+                    }
+                }
+
+                Common.Stats("Service/ExpandVHD");
+
+                return View("ExpandVHD", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+
+
+        // Display Expand CPU view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandCPURAM()
+        {
+              
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
+
+        // Post CPU changes and return view
+        [HttpPost]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ExpandCPURAM(FormCollection _POST)
+        {
+            try
+            {
+                // Expand CPU and create View.
+                CustomExpandCPURAM ExpandCPURAM = new CustomExpandCPURAM()
+                {
+                    
+                    TaskID = _POST["taskid"],
+                    VMID = _POST["vmid"].ToUpper(),
+                    DateTime = _POST["datetime"].ToString(),
+                    CPU = _POST["cpu"].ToString(),
+                    RAM = _POST["ram"].ToString(),
+                    Email = _POST["email"]
+                };
+
+                var CPU = Convert.ToInt32(ExpandCPURAM.CPU);
+                var RAM = Convert.ToInt32(ExpandCPURAM.RAM);
+
+                if (CPU > 4)
+                {
+                    throw new ArgumentException("For core numbers over 4, please contact Drift..");
+                }
+
+                if (RAM > 24)
+                {
+                    throw new ArgumentException("For RAM configurations over 24, please contact Drift..");
+                }
+
+                if (ExpandCPURAM.TaskID.Length == 0)
+                {
+                    throw new ArgumentException("Please enter a task id");
+                }
+
+                if (ExpandCPURAM.TaskID.Length < 6 || ExpandCPURAM.TaskID.Length > 6)
+                {
+                    throw new ArgumentException("The taskid must be 6 characters long.");
+                }
+
+
+                Common.Log(string.Format("has run Service/ExpandVHD() to Expand CPU/RAM on server {0}, at date {1}, with TaskID {2}", ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.TaskID));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.ExpandCPURAM(ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.CPU, ExpandCPURAM.RAM, ExpandCPURAM.Email);
+                    var result = ps.Invoke();
+                }
+
+                model.OKMessage.Add(string.Format("The VM has been scheduled for expansion on {0}. CPU/RAM will be set to: {1} Cores, and {2} GB RAM.", ExpandCPURAM.DateTime, ExpandCPURAM.CPU, ExpandCPURAM.RAM));
+
+                Common.Stats("Service/ExpandCPURAM");
+
+                return View("ExpandCPURAM", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+        /// <summary>
+        /// Ajax function for aquiring CPU and RAM for VMs
+        /// </summary>
+        /// <param name="VMID"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string GetVMInfo(string vmid)
+        {
+            string returnstr = "<table>";
+
+            using (MyPowerShell ps = new MyPowerShell())
+            {
+                ps.GetVMInfo(vmid);
+                var result = ps.Invoke();
+
+                // Returns string with properties..
+                foreach (var item in result)
+                {
+                    returnstr += "<tr><td><b>Current CPU Count : </b></td><td class='lefttd'>" + item.Members["CPUCount"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td><b>Current Memory Count : </b></td><td>" + item.Members["Memory"].Value.ToString() + "</td></tr>";
+                    returnstr += "<tr><td><b>DynamicMemoryEnabled : </b></td><td>" + item.Members["DynamicMemoryEnabled"].Value.ToString() + "</td></tr>";
+                }
+            }
+
+            returnstr += "</table>";
+
+            return returnstr;
+        }
+
     }
 }

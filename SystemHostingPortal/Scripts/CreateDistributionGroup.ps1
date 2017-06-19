@@ -1,4 +1,4 @@
-[Cmdletbinding()]
+﻿[Cmdletbinding()]
 param (
     [Parameter(Mandatory)]
     [string]
@@ -10,19 +10,31 @@ param (
 
     [Parameter(Mandatory)]
     [string]
-    $PrimarySmtpAddress,
+    $UserName,
 
     [Parameter(Mandatory)]
     [string]
+    $DomainName,
+
+    [string]
     $ManagedBy,
 
-    [bool]
-    $RequireSenderAuthentication=$true
+    [switch]
+    $RequireSenderAuthentication
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot "Capto")
+Import-Module (Join-Path $PSScriptRoot "Functions")
 
-New-TenantDistributionGroup -TenantName $Organization -Name $Name -PrimarySmtpAddress $PrimarySmtpAddress -ManagedBy $ManagedBy -RequireSenderAuthentication $RequireSenderAuthentication
+$PrimarySmtpAddress = ($UserName + '@' + $DomainName)
+
+$ManagedBy | out-file C:\test.txt -Append
+
+if ($RequireSenderAuthentication) {
+    New-TenantDistributionGroup -Organization $Organization -Name $Name -PrimarySmtpAddress $PrimarySmtpAddress -ManagedBy $ManagedBy -RequireSenderAuthentication
+}
+else {
+    New-TenantDistributionGroup -Organization $Organization -Name $Name -PrimarySmtpAddress $PrimarySmtpAddress -ManagedBy $ManagedBy
+}

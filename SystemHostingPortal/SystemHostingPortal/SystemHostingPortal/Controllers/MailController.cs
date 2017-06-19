@@ -74,7 +74,7 @@ namespace SystemHostingPortal.Controllers
         }
 
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult AddAcceptedDomain()
+        public ActionResult AddDomain()
         {
             try
             {
@@ -87,33 +87,46 @@ namespace SystemHostingPortal.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult AddAcceptedDomain(FormCollection _POST)
+        public ActionResult AddDomain(FormCollection _POST)
         {
             try
             {
-                CustomAcceptedDomain AddAcceptedDomain = new CustomAcceptedDomain()
+                CustomDomain AddDomain = new CustomDomain()
                 {
                     Organization = _POST["organization"],
                     Domain = _POST["domain"],
-                    SetAsUPN = _POST["setasupn"] == "on" ? true : false
+                    AddasEmail = _POST["addasemail"] == "on" ? true : false
                 };
 
-                model.AcceptedDomain = AddAcceptedDomain;
+                model.Domain = AddDomain;
 
-                Common.Log(string.Format("has run Mail/AddAcceptedDomain() for organization {0} to add domain {1}", AddAcceptedDomain.Organization, AddAcceptedDomain.Domain ));
+                Common.Log(string.Format("has run Mail/AddDomain() for organization {0} to add domain {1}", AddDomain.Organization, AddDomain.Domain));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.AddAcceptedDomain(AddAcceptedDomain.Organization, AddAcceptedDomain.Domain, AddAcceptedDomain.SetAsUPN);
+                    ps.AddDomain(AddDomain.Organization, AddDomain.Domain, AddDomain.AddasEmail);
                     var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("'{0}' added for organization '{1}'.", model.Domain.Domain, model.Domain.Organization));
+                    }
+                    else
+                    {
+                        model.OKMessage.Add(string.Format("Domain {0} has been added with following info:", AddDomain.Domain));
+                        
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                            Common.Log(string.Format("Domain {0} info: {1}", AddDomain.Domain, message.ToString()));
+                        }
+                    }
                 }
 
-                Common.Stats("Mail/AddAcceptedDomain");
+                Common.Stats("Mail/AddDomain");
 
-                model.OKMessage.Add(string.Format("'{0}' added for organization '{1}'.", model.AcceptedDomain.Domain, model.AcceptedDomain.Organization));
-
-                return View("AddAcceptedDomain", model);
+                return View("AddDomain", model);
             }
             catch (Exception exc)
             {
@@ -123,6 +136,71 @@ namespace SystemHostingPortal.Controllers
                 return View(model);
             }
         }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult RemoveDomain()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                return View("Error", exc);
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult RemoveDomain(FormCollection _POST)
+        {
+            try
+            {
+                CustomDomain RemoveDomain = new CustomDomain()
+                {
+                    Organization = _POST["organization"],
+                    Domain = _POST["domainname"],
+                    RemoveasEmail = _POST["removeasemail"] == "on" ? true : false
+                };
+
+                model.Domain = RemoveDomain;
+
+                Common.Log(string.Format("has run Mail/RemoveDomain() for organization {0} to Remove domain {1}", RemoveDomain.Organization, RemoveDomain.Domain));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.RemoveDomain(RemoveDomain.Organization, RemoveDomain.Domain, RemoveDomain.RemoveasEmail);
+                    var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("'{0}' Removed for organization '{1}'.", model.Domain.Domain, model.Domain.Organization));
+                    }
+                    else
+                    {
+                        model.OKMessage.Add(string.Format("Domain {0} has been removed with following info:", RemoveDomain.Domain));
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                            Common.Log(string.Format("Domain {0} info: {1}", RemoveDomain.Domain, message.ToString()));
+                        }
+                    }
+                }
+
+                Common.Stats("Mail/RemoveDomain");
+
+                return View("RemoveDomain", model);
+            }
+            catch (Exception exc)
+            {
+                Common.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
 
 
         [Authorize(Roles = "Access_SelfService_FullAccess")]
@@ -206,12 +284,17 @@ namespace SystemHostingPortal.Controllers
         {
             try
             {
+                var NewPassword = Common.GeneratePassword();
+
                 CustomMailbox newMailbox = new CustomMailbox()
                 {
-                    Name = _POST["name"].Trim(),
-                    UserPrincipalName = _POST["userprincipalname"].Trim(),
+                    UserName = _POST["username"].Trim(),
+                    DomainName = _POST["domainname"],
+                    DisplayName = _POST["displayname"].TrimEnd(),
                     Organization = _POST["organization"],
+                    Password = Common.GeneratePassword(),
                     Type = _POST["type"],
+
                 };
 
                 if (_POST["emailaddresses"] != null)
@@ -225,7 +308,7 @@ namespace SystemHostingPortal.Controllers
 
                 model.Mailbox = newMailbox;
 
-                Common.Log(string.Format("has run Mail/CreateMailbox() to create {0}", newMailbox.UserPrincipalName));
+                Common.Log(string.Format("has run Mail/CreateMailbox() to create {0} for {1}.", newMailbox.DisplayName, model.Mailbox.Organization));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
@@ -233,11 +316,11 @@ namespace SystemHostingPortal.Controllers
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add("Successfully created mailbox " + newMailbox.UserPrincipalName);
+                model.OKMessage.Add("Successfully created mailbox " + newMailbox.DisplayName + "for" + newMailbox.Organization);
 
                 Common.Stats("Mail/CreateMailbox");
 
-                return View("CreateMailbox", model);
+                return View("CreateMailboxSuccess", model);
             }
             catch (Exception exc)
             {
@@ -268,13 +351,14 @@ namespace SystemHostingPortal.Controllers
             {
 
                 model.DistributionGroup.Name = _POST["name"];
-                model.DistributionGroup.UserPrincipalName = _POST["primarysmtpaddress"];
+                model.DistributionGroup.UserName = _POST["username"];
+                model.DistributionGroup.DomainName = _POST["domainname"];
                 model.DistributionGroup.ManagedBy = _POST["userprincipalname"];
                 model.DistributionGroup.Organization = _POST["organization"];
                 model.DistributionGroup.RequireSenderAuthentication = _POST["allowexternalemails"] == "on" ? false : true;
 
 
-                Common.Log(string.Format("has run Mail/CreateDistributionGroup() on user {0}", model.DistributionGroup.UserPrincipalName));
+                Common.Log(string.Format("has run Mail/CreateDistributionGroup() on user {0}", model.DistributionGroup.UserName));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
@@ -283,7 +367,7 @@ namespace SystemHostingPortal.Controllers
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add("Succesfully created distribution group " + model.DistributionGroup.Name + " (" + model.DistributionGroup.UserPrincipalName + ")");
+                model.OKMessage.Add("Succesfully created distribution group " + model.DistributionGroup.Name + " (" + model.DistributionGroup.UserName + ")");
                  
                 Common.Stats("Mail/CreateDistributionGroup");
 
@@ -637,9 +721,9 @@ namespace SystemHostingPortal.Controllers
             try
             {
                 model.DistributionGroup.Organization = _POST["organization"];
-                model.DistributionGroup.PrimarySmtpAddress = _POST["primarysmtpaddress"];
+                model.DistributionGroup.DomainName = _POST["domainname"];
 
-                Common.Log(string.Format("has run Mail/DeleteDistributionGroup for contact {0}\\{1}", model.DistributionGroup.Organization, model.DistributionGroup.PrimarySmtpAddress));
+                Common.Log(string.Format("has run Mail/DeleteDistributionGroup for contact {0}\\{1}", model.DistributionGroup.Organization, model.DistributionGroup.DomainName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
@@ -678,10 +762,10 @@ namespace SystemHostingPortal.Controllers
             try
             {
                 model.DistributionGroup.Organization = _POST["organization"];
-                model.DistributionGroup.PrimarySmtpAddress = _POST["primarysmtpaddress"];
+                model.DistributionGroup.DomainName = _POST["domainname"];
                 model.DistributionGroup.ManagedBy = _POST["upnselector"];
 
-                Common.Log(string.Format("has run Mail/AddDistributionGroupManager for group {0}\\{1}", model.DistributionGroup.Organization, model.DistributionGroup.PrimarySmtpAddress));
+                Common.Log(string.Format("has run Mail/AddDistributionGroupManager for group {0}\\{1}", model.DistributionGroup.Organization, model.DistributionGroup.DomainName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
@@ -892,13 +976,13 @@ namespace SystemHostingPortal.Controllers
         /// </summary>
         /// <param name="organization"></param>
         /// <returns></returns>
-        public string GetAcceptedDomain(string organization)
+        public string GetDomain(string organization)
         {
             string returnstr = "<ul>";
 
             using (MyPowerShell ps = new MyPowerShell())
             {
-                ps.GetAcceptedDomain(organization);
+                ps.GetDomain(organization);
                 var result = ps.Invoke();
                 
                 // Returns PSObject with properties: Name, DomainName, DomainType, Default

@@ -3,7 +3,7 @@ param (
     [Parameter(Mandatory)]
     [string]$Organization,
     [Parameter(Mandatory)]
-    [string]$DistinguishedName,
+    [string]$UserPrincipalName,
     [Parameter(Mandatory)]
     [string]$Password,
     [Parameter(Mandatory)]
@@ -19,8 +19,21 @@ $Config = Get-ENTConfig -Organization $Organization -JSON
 $Cred = Get-RemoteCredentials -Organization $Organization
 
 if(-not $PasswordNeverExpires) {
-Set-ADAccountPassword -Identity $DistinguishedName -NewPassword ($Password | ConvertTo-SecureString -AsPlainText -Force) -Server ("$ORganization-dc-01.$($Config.DomainFQDN)") -Credential $Cred
+    $USer = Get-ADUser -filter {UserPrincipalName -eq $UserPrincipalName} -Server $config.DomainFQDN -Credential $Cred
+    Set-ADAccountPassword -Identity $User.DistinguishedName -NewPassword ($Password | ConvertTo-SecureString -AsPlainText -Force) -Server $Config.DomainFQDN -Credential $Cred
+    
+    if ($Config.AADsynced -eq 'true') {
+        Start-Dirsync -Organization $Organization
+        Write-Output "Directory sync has been initiated, because the customer has Office365."
+    }
+
 }else{
-Set-ADAccountPassword -Identity $DistinguishedName -NewPassword ($Password | ConvertTo-SecureString -AsPlainText -Force) -Server ("$ORganization-dc-01.$($Config.DomainFQDN)") -Credential $Cred
-Set-ADUser -Identity $DistinguishedName -Server ("$ORganization-dc-01.$($Config.DomainFQDN)") -Credential $Cred -PasswordNeverExpires $true
+    $USer = Get-ADUser -filter {UserPrincipalName -eq $UserPrincipalName} -Server $config.DomainFQDN -Credential $Cred
+    Set-ADAccountPassword -Identity $User.DistinguishedName -NewPassword ($Password | ConvertTo-SecureString -AsPlainText -Force) -Server $Config.DomainFQDN -Credential $Cred
+    Set-ADUser -Identity $User.DistinguishedName -Server $Config.DomainFQDN -Credential $Cred -PasswordNeverExpires $true
+
+    if ($Config.AADsynced -eq 'true') {
+        Start-Dirsync -Organization $Organization
+        Write-Output "Directory sync has been initiated, because the customer has Office365."
+    }
 }

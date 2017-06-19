@@ -7,13 +7,15 @@ body {
     font-family: Verdana, Tahoma;
     font-size: 14px;
     background-color: black;
-    width: 1100px;
+    width: 1150px;
     float: none;
     position: center;
     margin-left: auto;
     margin-right: auto;
-    border:solid 1px black;
-    
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
 }
 
 b {
@@ -24,6 +26,7 @@ a {
     text-decoration: none;
     border-bottom: 1px dashed white;
     color: blue;
+    cursor:pointer;
 }
 p {
     display: block;
@@ -38,6 +41,10 @@ fieldset {
     border: 1px solid black;
     margin-top: 10px;
     padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
 }
 legend {
     font-weight: bold;
@@ -47,6 +54,10 @@ legend {
 table {
     width: 100%;
     background-color: white;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
 }
     table th {
         color: white;
@@ -122,11 +133,14 @@ table {
     background-color: #ffffff;
     margin-left: auto;
     margin-right: auto;
-    width: 1100px;
+    width: 1150px;
     float: none;
     position: center;
     margin-top: 30px;
-
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
 
 }
 
@@ -136,7 +150,7 @@ table {
     margin-bottom: 1px;
     border-bottom: .5em solid black;
     background-color: #ffffff;
-    width: 1100px;
+    width: 1200px;
 }
 
 
@@ -154,8 +168,9 @@ table {
     margin-left: auto;
     margin-right: auto;
     /*width: 78em;*/
-    width: 1000px;
+    width: 1050px;
     padding-top: 20px;
+
 
     /*background-color: lightgray;*/
 }
@@ -168,6 +183,7 @@ table {
     width: 1000px;
     background-color: white;
     padding-top: 20px;
+    border-bottom: .5em solid black;
 }
 
 #leftdiv {
@@ -198,6 +214,7 @@ table {
     float: right;
     background-color: white;
     padding-bottom: 40px;
+
 }
 
 ul {
@@ -226,7 +243,7 @@ li a {
   -o-transition: font-size 0.2s ease, background-color 0.2s ease;
   transition: font-size 0.2s ease, background-color 0.2s ease;
   display: block;
-  width: 200px;
+  width: 240px;
   background-color: white
 }
 
@@ -250,6 +267,13 @@ li a:hover {
 
 .warning2 {
     color: red;
+}
+
+.copyright {
+    color: black;
+    font-family: Verdana, Tahoma;
+    font-size: 16px;
+    text-align:right;
 }
 
 .mandatory {
@@ -336,6 +360,15 @@ li a:hover {
     color: cornflowerblue;
     float: right;
 }
+
+.copyrighticon {
+    color: black;
+    float: none;
+    align-content:center;
+    font-size:24px;
+    vertical-align:bottom;
+}
+
 .button {
     /*background: url(../Images/button3.png) center;*/
     /*background-color:lightgray;*/
@@ -382,3 +415,4 @@ li a:hover {
     color: white;
     border: hidden;
 }
+

@@ -1,0 +1,163 @@
+﻿@model SystemHostingPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Service > ExpandVHD";
+}
+@section script {
+
+    <script>
+        $(document).ready(function () {
+
+            GetVMServerslvl25();
+
+            $("select[name=vmid]").html('<option>loading, this could take some time, (VMM is sooo slow)......</option>').change(function () {
+
+                GetVMVHDs();
+                $("select[name=vhdid]").html('<option>loading, this could take some time......</option>');
+            });
+            jQuery.datetimepicker.setLocale('da');
+            jQuery('#datetime').datetimepicker({
+                theme: 'default',
+                dayOfWeekStart: 1,
+                format: 'Y-m-d H:i',
+                inline: false,
+                weeks:true
+                
+            });
+
+        });
+
+        $('#gb').on('paste input', function () {
+            var number = $(this).val()
+            if (isNaN(number)) {
+                $.alert({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: 'Enter only numbers!',
+                });
+                $(this).val('');
+            }
+
+            if (number > 50) {
+                $.alert({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: 'For expansions over 50 GB, please send the task to Drift..',
+                });
+                $(this).val('50');
+            }
+        });
+
+        
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to expand a VM disk..</p>
+<br />
+
+@using (Html.BeginForm("ExpandVHD", "Service"))
+{
+    <fieldset>
+        <legend>Expand VHD</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd"><span>VMServers<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select name="vmid"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>VHDs<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select name="vhdid"><option>Waiting...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+           
+        </table>
+        <table>
+
+            <tr>
+                <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="datetime" name="datetime" placeholder="YYYY-MM-DD 00:00" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.DateTime"
+                                                                                                                                                                     } />
+                    <span class="mandatory">*</span>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Opgave nr<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="taskid" name="taskid" placeholder="109000" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.TaskID"
+                                                                                                                                                                                            } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter TaskID (Opgave nr.) from Navision..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>GB to expand with<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="gb" placeholder="MAX 50" min="1" type="number" id="gb"
+                           @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.GB"
+                                                                                                                                                                     } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter GB in whole number. ex. 10
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="email" placeholder="xxx@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.Email"
+                                                                                                                                                                                                } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Enter the email which will be notified when task is complete.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>  
+
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Expand" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

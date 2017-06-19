@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td class="lefttd">Primary email:</td>
-            <td class="righttd">@Model.UserList[0].UserPrincipalName</td>
+            <td class="righttd">@Model.UserList[0].UserName@@@Model.UserList[0].DomainName</td>
         </tr>
         <tr>
             <td class="lefttd">Password:</td>
@@ -43,6 +43,20 @@
         <tr>
             <td class="lefttd">Test user:</td>
             <td class="righttd">@Model.UserList[0].TestUser.ToString()</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td class="lefttd">Additional info:</td>
+        </tr>
+        <tr>
+            <td class="longtd">
+                @foreach (string msg in Model.OKMessage)
+                {
+                    <div>@msg</div>
+                }
+            </td>
         </tr>
     </table>
 </fieldset>

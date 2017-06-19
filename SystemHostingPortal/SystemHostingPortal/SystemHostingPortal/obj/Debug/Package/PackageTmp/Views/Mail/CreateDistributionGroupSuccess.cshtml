@@ -5,7 +5,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Successfully created distributiongroups.</p>
-
+<br />
 
 <fieldset>
     <legend>Result</legend>
@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <td class="lefttd">Group Email Address</td>
-            <td class="righttd">@Model.DistributionGroup.UserPrincipalName</td>
+            <td class="righttd">@Model.DistributionGroup.UserName@@@Model.DistributionGroup.DomainName</td>
         </tr>
         <tr>
             <td class="lefttd">Group Manager</td>

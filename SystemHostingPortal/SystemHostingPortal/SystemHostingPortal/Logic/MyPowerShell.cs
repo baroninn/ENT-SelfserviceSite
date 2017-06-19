@@ -90,7 +90,7 @@ namespace SystemHostingPortal.Logic
             ps.AddParameter("Organization", user.Organization);
             ps.AddParameter("FirstName", user.FirstName.Trim());
             ps.AddParameter("LastName", user.LastName.Trim());
-            ps.AddParameter("UserPrincipalName", user.UserPrincipalName.Trim());
+            ps.AddParameter("UserName", user.UserName.Trim());
             ps.AddParameter("Password", user.Password);
             ps.AddParameter("DomainName", user.DomainName);
             ps.AddParameter("CopyFrom", user.CopyFrom);
@@ -111,7 +111,7 @@ namespace SystemHostingPortal.Logic
 
             ps.AddCommand(psScriptPath + @"\DisableUser.ps1");
             ps.AddParameter("Organization", user.Organization);
-            ps.AddParameter("DistinguishedName", user.DistinguishedName);
+            ps.AddParameter("UserPrincipalName", user.UserPrincipalName);
             if (user.Confirm) { ps.AddParameter("Confirm"); }
 
             return this;
@@ -127,6 +127,10 @@ namespace SystemHostingPortal.Logic
             ps.AddCommand(psScriptPath + @"\RemoveUser.ps1");
             ps.AddParameter("Organization", user.Organization);
             ps.AddParameter("UserPrincipalName", user.UserPrincipalName);
+            if (user.DelData == true)
+            {
+                ps.AddParameter("DelData", user.DelData);
+            }
 
             return this;
         }
@@ -152,10 +156,24 @@ namespace SystemHostingPortal.Logic
         /// </summary>
         /// <param name="organization"></param>
         /// <returns></returns>
-        public MyPowerShell GetAcceptedDomain(string organization)
+        public MyPowerShell GetDomain(string organization)
         {
-            ps.AddCommand(psScriptPath + @"\GetAcceptedDomain.ps1")
+            ps.AddCommand(psScriptPath + @"\GetDomain.ps1")
                 .AddParameter("Organization", organization);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns list of domains for organization in Office 365
+        /// </summary>
+        /// <param name="organization"></param>
+        /// <returns></returns>
+        public MyPowerShell GetO365Domain(string organization)
+        {
+            ps.AddCommand(psScriptPath + @"\GetDomain.ps1")
+                .AddParameter("Organization", organization)
+                .AddParameter("O365", true);
 
             return this;
         }
@@ -220,8 +238,10 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\CreateMailbox.ps1");
             ps.AddParameter("Organization", newMailbox.Organization);
-            ps.AddParameter("Name", newMailbox.Name);
-            ps.AddParameter("PrimarySmtpAddress", newMailbox.UserPrincipalName);
+            ps.AddParameter("UserName", newMailbox.UserName);
+            ps.AddParameter("Password", newMailbox.Password);
+            ps.AddParameter("DisplayName", newMailbox.DisplayName);
+            ps.AddParameter("DomainName", newMailbox.DomainName);
             ps.AddParameter("Type", newMailbox.Type);
             if (newMailbox.EmailAddresses.Count > 0) { ps.AddParameter("EmailAddresses", newMailbox.EmailAddresses); }
 
@@ -239,7 +259,8 @@ namespace SystemHostingPortal.Logic
             ps.AddCommand(psScriptPath + @"\CreateDistributionGroup.ps1");
             ps.AddParameter("Organization", newDistributionGroup.Organization);
             ps.AddParameter("Name", newDistributionGroup.Name);
-            ps.AddParameter("PrimarySmtpAddress", newDistributionGroup.UserPrincipalName);
+            ps.AddParameter("UserName", newDistributionGroup.UserName);
+            ps.AddParameter("DomainName", newDistributionGroup.DomainName);
             ps.AddParameter("ManagedBy", newDistributionGroup.ManagedBy);
             ps.AddParameter("RequireSenderAuthentication", newDistributionGroup.RequireSenderAuthentication);
             return this;
@@ -249,7 +270,7 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\Add-DistributionGroupManager.ps1");
             ps.AddParameter("Organization", distributionGroup.Organization);
-            ps.AddParameter("Group", distributionGroup.PrimarySmtpAddress);
+            ps.AddParameter("Group", distributionGroup.UserName);
             ps.AddParameter("Manager", distributionGroup.ManagedBy);
             
             return this;
@@ -364,7 +385,7 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\DeleteDistributionGroup.ps1");
             ps.AddParameter("Organization", distributionGroup.Organization);
-            ps.AddParameter("PrimarySmtpAddress", distributionGroup.PrimarySmtpAddress);
+            ps.AddParameter("UserName", distributionGroup.UserName);
 
             return this;
         }
@@ -398,26 +419,36 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell SetCalendarPermissions(CustomCalendarPermssions calendarPermssions)
+        public MyPowerShell SetCalendarPermissions(CustomCalendarPermissions calendarPermissions)
         {
             ps.AddCommand(psScriptPath + @"\Set-CalendarPermissions.ps1");
-            ps.AddParameter("Organization", calendarPermssions.Organization);
-            ps.AddParameter("UserPrincipalName", calendarPermssions.UserPrincipalName);
-            ps.AddParameter("User", calendarPermssions.User);
-            ps.AddParameter("AccessRights", calendarPermssions.AccessRights);
+            ps.AddParameter("Organization", calendarPermissions.Organization);
+            ps.AddParameter("UserPrincipalName", calendarPermissions.UserPrincipalName);
+            ps.AddParameter("User", calendarPermissions.User);
+            ps.AddParameter("AccessRights", calendarPermissions.AccessRights);
 
             return this;
         }
 
-        public MyPowerShell RemoveCalendarPermissions(string organization, string userprincipalname, string[] users)
-        {
-            ps.AddCommand(psScriptPath + @"\Remove-CalendarPermissions.ps1");
-            ps.AddParameter("Organization", organization);
-            ps.AddParameter("UserPrincipalName", userprincipalname);
-            ps.AddParameter("User", users);
+         public MyPowerShell RemoveCalendarPermissions(string organization, string userprincipalname, string[] users)
+         {
+             ps.AddCommand(psScriptPath + @"\Remove-CalendarPermissions.ps1");
+             ps.AddParameter("Organization", organization);
+             ps.AddParameter("UserPrincipalName", userprincipalname);
+             ps.AddParameter("User", users);
 
-            return this;
-        }
+             return this;
+         }
+
+        /* public MyPowerShell RemoveCalendarPermissions(CustomCalendarPermissions calendarPermissions)
+         {
+             ps.AddCommand(psScriptPath + @"\Remove-CalendarPermissions.ps1");
+             ps.AddParameter("Organization", calendarPermissions.Organization);
+             ps.AddParameter("UserPrincipalName", calendarPermissions.UserPrincipalName);
+             ps.AddParameter("User", calendarPermissions.User);
+
+             return this;
+         }*/
 
         public MyPowerShell RemoveMailbox(CustomMailbox mailbox)
         {
@@ -432,7 +463,10 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\CreateExtUser.ps1");
             ps.AddParameter("Organization", extuser.Organization);
-            ps.AddParameter("Vendor", extuser.Name);
+            ps.AddParameter("UserName", extuser.UserName);
+            ps.AddParameter("DomainName", extuser.DomainName);
+            ps.AddParameter("DisplayName", extuser.DisplayName);
+            ps.AddParameter("Description", extuser.Description);
             ps.AddParameter("ExpirationDate", extuser.ExpirationDate);
             ps.AddParameter("Password", extuser.Password);
 
@@ -460,19 +494,20 @@ namespace SystemHostingPortal.Logic
         {
             ps.AddCommand(psScriptPath + @"\EnableUser.ps1");
             ps.AddParameter("Organization", enableUser.Organization);
-            ps.AddParameter("DistinguishedName", enableUser.DistinguishedName);
+            ps.AddParameter("UserPrincipalName", enableUser.UserPrincipalName);
             if (enableUser.Confirm) { ps.AddParameter("Confirm"); }
 
             return this;
         }
 
-        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string subnet, string vlan, string ipaddressrangestart, string ipaddressrangeend, bool createvmm)
+        public MyPowerShell CreateOrganization(string organization, string emaildomainname, string subnet, string vlan, string gateway, string ipaddressrangestart, string ipaddressrangeend, bool createvmm)
         {
             ps.AddCommand(psScriptPath + @"\CreateOrganization.ps1")
                 .AddParameter("Organization", organization)
                 .AddParameter("EmailDomainName", emaildomainname)
                 .AddParameter("Subnet", subnet)
                 .AddParameter("Vlan", vlan)
+                .AddParameter("Gateway", gateway)
                 .AddParameter("IPAddressRangeStart", ipaddressrangestart)
                 .AddParameter("IPAddressRangeEnd", ipaddressrangeend)
                 .AddParameter("CreateVMM", createvmm);
@@ -514,9 +549,9 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell AddUPN(string organization, string domain)
+        public MyPowerShell VerifyDomain(string organization, string domain)
         {
-            ps.AddCommand(psScriptPath + @"\AddUPNSuffix.ps1")
+            ps.AddCommand(psScriptPath + @"\ConfirmO365Domain.ps1")
               .AddParameter("Organization", organization)
               .AddParameter("Domain", domain);
             return this;
@@ -540,12 +575,21 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell AddAcceptedDomain(string organization, string domain, bool setasupn)
+        public MyPowerShell AddDomain(string organization, string domain, bool addasemail)
         {
-            ps.AddCommand(psScriptPath + @"\AddAcceptedDomain.ps1")
+            ps.AddCommand(psScriptPath + @"\AddDomain.ps1")
               .AddParameter("Organization", organization)
               .AddParameter("Domain", domain)
-              .AddParameter("SetAsUPN", setasupn);
+              .AddParameter("AddasEmail", addasemail);
+            return this;
+        }
+
+        public MyPowerShell RemoveDomain(string organization, string domain, bool removeasemail)
+        {
+            ps.AddCommand(psScriptPath + @"\RemoveDomain.ps1")
+              .AddParameter("Organization", organization)
+              .AddParameter("Domain", domain)
+              .AddParameter("RemoveAsEmail", removeasemail);
             return this;
         }
 
@@ -585,17 +629,21 @@ namespace SystemHostingPortal.Logic
               .AddParameter("UpdateAll", updateall);
             return this;
         }
-        public MyPowerShell UpdateConf(string organization, string exchangeserver, string domainfqdn, string customeroudn, string accepteddomains, string tenantid365, string adminuser365, string adminpass365)
+        public MyPowerShell UpdateConf(CustomUpdateConf UpdateConf)
         {
-            ps.AddCommand(psScriptPath + @"\UpdateConf.ps1")
-                .AddParameter("Organization", organization)
-                .AddParameter("ExchangeServer", exchangeserver)
-                .AddParameter("DomainFQDN", domainfqdn)
-                .AddParameter("CustomerOUDN", customeroudn)
-                .AddParameter("AcceptedDomains", accepteddomains)
-                .AddParameter("TenantID365", tenantid365)
-                .AddParameter("AdminUser365", adminuser365)
-                .AddParameter("AdminPass365", adminpass365);
+            ps.AddCommand(psScriptPath + @"\UpdateConf.ps1");
+            ps.AddParameter("Organization", UpdateConf.Organization);
+            ps.AddParameter("ExchangeServer", UpdateConf.ExchangeServer);
+            ps.AddParameter("DomainFQDN", UpdateConf.DomainFQDN);
+            ps.AddParameter("NETBIOS", UpdateConf.NETBIOS);
+            ps.AddParameter("CustomerOUDN", UpdateConf.CustomerOUDN);
+            ps.AddParameter("Domains", UpdateConf.Domains);
+            ps.AddParameter("TenantID365", UpdateConf.TenantID365);
+            ps.AddParameter("AdminUser365", UpdateConf.AdminUser365);
+            ps.AddParameter("AdminPass365", UpdateConf.AdminPass365);
+            ps.AddParameter("AADsynced", UpdateConf.AADsynced);
+            ps.AddParameter("ADConnectServer", UpdateConf.ADConnectServer);
+            ps.AddParameter("DomainDC", UpdateConf.DomainDC);
 
             return this;
         }
@@ -608,20 +656,24 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell SetPassword(string organization, string distinguishedname, string password, bool passwordneverexpires)
+        public MyPowerShell SetPassword(string organization, string userprincipalname, string password, bool passwordneverexpires)
         {
             ps.AddCommand(psScriptPath + @"\SetPassword.ps1")
               .AddParameter("Organization", organization)
-              .AddParameter("DistinguishedName", distinguishedname)
+              .AddParameter("UserPrincipalName", userprincipalname)
               .AddParameter("Password", password)
               .AddParameter("PasswordNeverExpires", passwordneverexpires);
             return this;
         }
 
-        public MyPowerShell GetADUsers(string organization)
+        public MyPowerShell GetADUsers(string organization, string userprincipalname)
         {
             ps.AddCommand(psScriptPath + @"\GetADUsers.ps1")
                 .AddParameter("Organization", organization);
+                if (userprincipalname != null)
+            { 
+                ps.AddParameter("UserPrincipalName", userprincipalname);
+            }
 
             return this;
         }
@@ -633,25 +685,32 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell GetVMVHDs(string vhdid)
+        public MyPowerShell GetVMServerslvl25()
+        {
+            ps.AddCommand(psScriptPath + @"\GetVMServerslvl25.ps1");
+
+            return this;
+        }
+
+        public MyPowerShell GetVMVHDs(string vmid)
         {
             ps.AddCommand(psScriptPath + @"\GetVMVHDs.ps1")
-                .AddParameter("VHDID", vhdid);
+                .AddParameter("VMID", vmid);
 
             return this;
         }
 
-        public MyPowerShell GetVMInfo(string id)
+        public MyPowerShell GetVMInfo(string vmid)
         {
             ps.AddCommand(psScriptPath + @"\GetVMInfo.ps1")
-              .AddParameter("ID", id);
+              .AddParameter("VMID", vmid);
             return this;
         }
 
-        public MyPowerShell ExpandVHD(string name, string vhdid, string datetime, string gb, string email)
+        public MyPowerShell ExpandVHD(string vmid, string vhdid, string datetime, string gb, string email)
         {
             ps.AddCommand(psScriptPath + @"\ExpandVHD.ps1")
-              .AddParameter("Name", name)
+              .AddParameter("VMID", vmid)
               .AddParameter("VHDID", vhdid)
               .AddParameter("DateTime", datetime)
               .AddParameter("GB", gb)
@@ -659,10 +718,10 @@ namespace SystemHostingPortal.Logic
             return this;
         }
 
-        public MyPowerShell ExpandCPURAM(string name, string datetime, string cpu, string ram, string email)
+        public MyPowerShell ExpandCPURAM(string vmid, string datetime, string cpu, string ram, string email)
         {
             ps.AddCommand(psScriptPath + @"\ExpandCPURAM.ps1")
-              .AddParameter("Name", name)
+              .AddParameter("VMID", vmid)
               .AddParameter("DateTime", datetime)
               .AddParameter("CPU", cpu)
               .AddParameter("RAM", ram)

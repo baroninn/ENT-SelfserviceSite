@@ -5,6 +5,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to create a data usage report</p>
+<br />
 
 @using (Html.BeginForm("CustomerReport", "Service")) {
 <fieldset>
@@ -24,7 +25,7 @@
         }
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
+            <td class="middletd"><select name="organization">
                     @foreach(string organization in Model.Organizations) 
                     {
                             <option @if(Model.ActionFailed)

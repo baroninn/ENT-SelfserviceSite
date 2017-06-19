@@ -1,9 +1,10 @@
-﻿function GetAcceptedDomain() {
+﻿
+function GetDomain() {
     var organization = $("select[name=organization]").val();
-    $("#acceptedDomain").html("loading...");
+    $("#Domain").html("loading, this could take some time...");
 
-    $.get("/Mail/GetAcceptedDomain?organization=" + organization, function (data) {
-        $("#acceptedDomain").html(data);
+    $.get("/Mail/GetDomain?organization=" + organization, function (data) {
+        $("#Domain").html(data);
     });
 }
 
@@ -41,10 +42,10 @@ function GetAliases() {
     var aliasUl = $("#existingAliases");
     aliasUl.html("loading...");
 
-    $.getJSON("/Ajax/GetMailbox", { "organization": organization, "name": userprincipalname }, function (data) {
+    $.getJSON("/Ajax/GetADUsersProxy", { "organization": organization, "userprincipalname": userprincipalname }, function (data) {
         aliasUl.html("");
 
-        $.each(data[0].EmailAddresses, function (index, obj) {
+        $.each(data[0].proxyAddresses, function (index, obj) {
             var aliasType = obj.substring(0, 4);
             var emailString = obj.substring(5);
 
@@ -146,7 +147,7 @@ function AddDomainToList(json, selectElement) {
 }
 
 // New function for getting accepted domain. This function is tied to the <Select> list function and can be used as a dropdown menu.
-function GetAcceptedDomain2(selectElement) {
+function GetDomainSelect(selectElement) {
     if (!selectElement) {
         selectElement = $("select[name=domainname]");
     }
@@ -154,7 +155,7 @@ function GetAcceptedDomain2(selectElement) {
     var organization = $("select[name=organization]").val();
     selectElement.html('<option>loading...</option>');
 
-    $.get("/Ajax/GetAcceptedDomain", { "organization": organization }, function (data) {
+    $.get("/Ajax/GetDomain", { "organization": organization }, function (data) {
         selectElement.html('');
 
         var json = JSON.parse(data);
@@ -220,13 +221,13 @@ function AddUserToList(json, selectElement) {
 
     var selected = '';
 
-    selectElement.append('<option value="' + json.DistinguishedName + '"' + selected + '>' + json.Name + ' __ ' + json.UserPrincipalName + ' __ ' + json.Enabled + '</option>');
+    selectElement.append('<option value="' + json.UserPrincipalName + '"' + selected + '>' + json.Name + ' __ ' + json.UserPrincipalName + ' __ ' + json.Enabled + '</option>');
 }
 
 // New function for getting AD Users. This function is tied to the <Select> list function and can be used as a dropdown menu.
 function GetADUsersList(selectElement) {
     if (!selectElement) {
-        selectElement = $("select[name=distinguishedname]");
+        selectElement = $("select[name=userprincipalname]");
     }
 
     var organization = $("select[name=organization]").val();
@@ -258,13 +259,13 @@ function AddVMToList(json, selectElement) {
 
     var selected = '';
 
-    selectElement.append('<option value="' + json.ID + '"' + selected + '>' + json.Name + '</option>');
+    selectElement.append('<option value="' + json.VMID + '"' + selected + '>' + json.Name + '</option>');
 }
 
 // New function for getting VMServer. This function is tied to the <Select> list function and can be used as a dropdown menu.
 function GetVMServers(selectElement) {
     if (!selectElement) {
-        selectElement = $("select[name=id]");
+        selectElement = $("select[name=vmid]");
     }
 
     selectElement.html('<option>loading, this could take some time (VMM is a little slow)...</option>');
@@ -291,11 +292,41 @@ function GetVMServers(selectElement) {
     });
 }
 
+// New function for getting VMServer. This function is tied to the <Select> list function and can be used as a dropdown menu.
+function GetVMServerslvl25(selectElement) {
+    if (!selectElement) {
+        selectElement = $("select[name=vmid]");
+    }
+
+    selectElement.html('<option>loading, this could take some time (VMM is a little slow)...</option>');
+
+    $.get("/Ajax/GetVMServerslvl25", function (data) {
+        selectElement.html('');
+
+        var json = JSON.parse(data);
+        if (json.Failure) {
+            AddError(json);
+        }
+        else {
+            selectElement.html("");
+            if (json.length == null) {
+                AddVMToList(json, selectElement);
+            }
+            else {
+                for (i = 0; i < json.length; i++) {
+                    AddVMToList(json[i], selectElement);
+                }
+            }
+        }
+        selectElement.change();
+    });
+}
+
 function AddVHDToList(json, selectElement) {
 
     var selected = '';
 
-    selectElement.append('<option value="' + json.ID + '"' + selected + '>' + json.Name + ' __ ' + json.Size + ' ' + "GB" + '</option>');
+    selectElement.append('<option value="' + json.VHDID + '"' + selected + '>' + json.Name + ' __ ' + json.Size + ' ' + "GB" + '</option>');
 }
 
 // New function for getting VHD. This function is tied to the <Select> list function and can be used as a dropdown menu.
@@ -303,11 +334,10 @@ function GetVMVHDs(selectElement) {
     if (!selectElement) {
         selectElement = $("select[name=vhdid]");
     }
-
-    var vhdid = $("select[name=id]").val();
+    var vmid = $("select[name=vmid]").val();
     selectElement.html('<option>loading, this could take some time (VMM is a little slow)...</option>');
 
-    $.get("/Ajax/GetVMVHDs",{ "vhdid": vhdid }, function (data) {
+    $.get("/Ajax/GetVMVHDs", { "vmid": vmid }, function (data) {
         selectElement.html('');
 
         var json = JSON.parse(data);
@@ -330,10 +360,47 @@ function GetVMVHDs(selectElement) {
 }
 
 function GetVMInfo() {
-    var id = $("select[name=id]").val();
+    var vmid = $("select[name=vmid]").val();
     $("#vminfo").html("Loading...");
 
-    $.get("/Level30/GetVMInfo?id=" + id, function (data) {
+    $.get("/Level30/GetVMInfo?vmid=" + vmid, function (data) {
         $("#vminfo").html(data);
+    });
+}
+
+function AddO365DomainToList(json, Status, selectElement) {
+    if (json.Status != Status) { return }
+    var selected = '';
+
+    selectElement.append('<option value="' + json.DomainName + '"' + selected + '>' + json.DomainName + '</option>');
+}
+
+function GetO365DomainSelect(Status,selectElement) {
+    if (!selectElement) {
+        selectElement = $("select[name=domainname]");
+    }
+
+    var organization = $("select[name=organization]").val();
+    selectElement.html('<option>loading...</option>');
+
+    $.get("/Ajax/GetO365Domain", { "organization": organization }, function (data) {
+        selectElement.html('');
+
+        var json = JSON.parse(data);
+        if (json.Failure) {
+            AddError(json);
+        }
+        else {
+            selectElement.html("");
+            if (json.length == null) {
+                AddO365DomainToList(json, Status, selectElement);
+            }
+            else {
+                for (i = 0; i < json.length; i++) {
+                    AddO365DomainToList(json[i], Status, selectElement);
+                }
+            }
+        }
+        selectElement.change();
     });
 }

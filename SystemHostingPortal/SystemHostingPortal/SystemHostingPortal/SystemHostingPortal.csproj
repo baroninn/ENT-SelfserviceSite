@@ -56,6 +56,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CssSpriteGenerator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CssSpriteGenerator.1.1\lib\CssSpriteGenerator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -65,13 +69,34 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -84,6 +109,9 @@
     <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions">
+      <HintPath>..\..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v4.0.30319\System.Text.RegularExpressions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DynamicData" />
@@ -189,6 +217,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery-confirm.css" />
+    <Content Include="Content\jquery-confirm.min.css">
+      <DependentUpon>jquery-confirm.css</DependentUpon>
+    </Content>
+    <Content Include="Content\jquery-confirm.minold.css" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui.structure.css" />
@@ -196,8 +229,16 @@
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\jquery.datetimepicker.css" />
+    <Content Include="Content\jquery.datetimepicker.min.css">
+      <DependentUpon>jquery.datetimepicker.css</DependentUpon>
+    </Content>
     <Content Include="Content\reset.css" />
+    <Content Include="Content\styleNEW2.css" />
+    <Content Include="Content\styleNEW.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\styleNEW2.min.css">
+      <DependentUpon>styleNEW2.css</DependentUpon>
+    </Content>
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -247,6 +288,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="App_Browsers\PageAdapter.browser" />
+    <None Include="bundleconfig.json" />
+    <None Include="Images\mysprite.sprite" />
     <None Include="Properties\PublishProfiles\CAPTO.pubxml" />
     <None Include="Properties\PublishProfiles\ENT.pubxml" />
     <None Include="Properties\PublishProfiles\Test.pubxml" />
@@ -261,9 +305,16 @@
     <Content Include="Images\Columbus.png" />
     <Content Include="Images\Columbus2.png" />
     <Content Include="Images\Columbus3.png" />
+    <Content Include="Images\CreateGuide1.png" />
     <Content Include="Images\giphy.gif" />
     <Content Include="Images\giphy2.gif" />
     <Content Include="Images\info.png" />
+    <Content Include="Images\mysprite.sprite.css">
+      <DependentUpon>mysprite.sprite</DependentUpon>
+    </Content>
+    <Content Include="Images\mysprite.sprite.png">
+      <DependentUpon>mysprite.sprite</DependentUpon>
+    </Content>
     <Content Include="Images\ui-bg_diagonals-thick_8_333333_40x40.png" />
     <Content Include="Images\ui-bg_glass_20_555555_1x400.png" />
     <Content Include="Images\ui-bg_glass_40_0078a3_1x400.png" />
@@ -308,6 +359,7 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Scripts\jquery-confirm.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
@@ -315,11 +367,17 @@
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.collapse.js" />
+    <Content Include="Scripts\jquery.collapse.min.js">
+      <DependentUpon>jquery.collapse.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.datetimepicker.min.js" />
     <Content Include="Scripts\jquery.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.min.js">
+      <DependentUpon>jquery.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -369,7 +427,7 @@
     <Content Include="Views\Mail\GetDeviceReportSuccess.cshtml" />
     <Content Include="Views\Mail\SetAllMailboxPlans.cshtml" />
     <Content Include="Views\User\Enable.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Indexold.cshtml" />
     <Content Include="Views\Organization\Create.cshtml" />
     <Content Include="Views\Service\CustomerReport.cshtml" />
     <Content Include="Views\Service\CustomerReportSuccess.cshtml" />
@@ -379,8 +437,8 @@
     <Content Include="Views\Organization\RemoveCustomer.cshtml" />
     <Content Include="Views\Organization\EnableCustomer.cshtml" />
     <Content Include="Views\Organization\DisableCustomer.cshtml" />
-    <Content Include="Views\Office365\AddDomain.cshtml" />
-    <Content Include="Views\Mail\AddAcceptedDomain.cshtml" />
+    <Content Include="Views\Office365\VerifyDomain.cshtml" />
+    <Content Include="Views\Mail\AddDomain.cshtml" />
     <Content Include="Views\Mail\GetItemsReport.cshtml" />
     <Content Include="Views\Mail\EnableSikkerMail.cshtml" />
     <Content Include="Views\Mail\GetCalendarPermissions.cshtml" />
@@ -388,6 +446,14 @@
     <Content Include="Views\User\ResetPWD.cshtml" />
     <Content Include="Views\Level30\ExpandVHD.cshtml" />
     <Content Include="Views\Level30\ExpandCPURAM.cshtml" />
+    <Content Include="Views\Service\ExpandCPURAM.cshtml" />
+    <Content Include="Views\Service\ExpandVHD.cshtml" />
+    <Content Include="Views\Mail\RemoveDomain.cshtml" />
+    <Content Include="Views\User\CreateExtUser.cshtml" />
+    <Content Include="Views\User\CreateExtUserSuccess.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Mail\CreateMailboxSuccess.cshtml" />
+    <Content Include="Views\Home\AzureLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

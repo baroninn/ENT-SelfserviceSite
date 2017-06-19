@@ -5,6 +5,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to create a data usage report</p>
+<br />
 
 @using (Html.BeginForm("CustomerReport", "Service")) {
 <fieldset>
@@ -24,7 +25,7 @@
         }
         <tr>
             <td class="lefttd">Organization</td>
-            <td>
+            <td class="middletd">
                 <select name="organization">
                     @foreach(string organization in Model.Organizations) 
                     {
@@ -43,23 +44,23 @@
     <legend>Customer Report</legend>
     
     <fieldset>
-        <legend>Overview</legend>
+        <legend class="sublegend">Overview</legend>
         <a href="~/Service/CustomerReportCSV?organization=@Model.CustomerReport.Organization">View Excelformat</a>
 
         <table>
             <tr>
-                <td>
+                <td class="lefttd">
                     <center>
                         <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.FileServerfUsed&iQuota=@Model.CustomerReport.FileServerfTotal" /><br />
                         <small>Fig 1. File Server usage</small>
                     </center>
                 </td>
-                <td valign="middle">
+                <td class="middletd">
                     <p>FileServer Used: @Model.CustomerReport.FileServerUsed</p>
                     <p>FileServer Total: @Model.CustomerReport.FileServerTotal</p>
                     <p>FileServer Free: @Model.CustomerReport.FileServerFree</p>
                 </td>
-                <td valign="middle">
+                <td class="righttd">
 
                     <p>AD Users: @Model.CustomerReport.ADUsersCount</p>
                     <p>Full Users: @Model.CustomerReport.ADFullUsersCount</p>
@@ -73,51 +74,50 @@
     </fieldset>
 
     <fieldset>
-        <legend>AD users</legend>
+        <legend class="sublegend">AD users</legend>
         <table>
             <tr>
-                <td><b>Name</b></td>
-                <td><b>Email</b></td>
-                <td><b>Light User</b></td>
+                <td class="lefttd"><b>Name</b></td>
+                <td class="middletd"><b>Email</b></td>
+                <td class="righttd"><b>Light User</b></td>
             </tr>
             @foreach (SystemHostingPortal.Models.ADUser user in Model.CustomerReport.ADUsers)
             {
                 <tr>
-                    <td>@user.Name</td>
-                    <td>@user.Email</td>
-                    <td>@user.LightUser</td>
+                    <td class="lefttd">@user.Name</td>
+                    <td class="middletd">@user.Email</td>
+                    <td class="righttd">@user.LightUser</td>
                 </tr>
             }
         </table>
     </fieldset>
 
     <fieldset>
-        <legend>Servers</legend>
+        <legend class="sublegend">Servers</legend>
         <table>
             <tr>
-                <td><b>Name</b></td>
+                <td class="lefttd"><b>Name</b></td>
                 <td><b>CPU</b></td>
-                <td style="padding-left:30px"><b>RAM</b></td>
-                <td style="text-align:right"><b>Operating System</b></td>
+                <td><b>RAM</b></td>
+                <td style="width:400px; padding-left:40px; text-align:right"><b>Operating System</b></td>
             </tr>
             @foreach (SystemHostingPortal.Models.ENTServer ent in Model.CustomerReport.ENTServers)
             {
                 <tr>
-                    <td>@ent.Name</td>
+                    <td class="lefttd">@ent.Name</td>
                     <td>@ent.CPU</td>
-                    <td style="padding-left:30px">@ent.RAM</td>
-                    <td style="text-align:right">@ent.OS</td>
+                    <td>@ent.RAM</td>
+                    <td style="width:400px; padding-left:40px; text-align:right">@ent.OS</td>
                 </tr>
             }
         </table>
     </fieldset>
-
     <fieldset>
-        <legend>Office365 billing</legend>
+        <legend class="sublegend">Office365 billing</legend>
         <table>
             <tr>
-                <td><b>PartnerName</b></td>
-                <td><b>License</b></td>
+                <td class="lefttd"><b>PartnerName</b></td>
+                <td class="lefttd"><b>License</b></td>
                 <td><b>Gyldig</b></td>
                 <td><b>Tildelt</b></td>
                 <td><b>Ledige</b></td>
@@ -125,8 +125,8 @@
             @foreach (SystemHostingPortal.Models.Info365 info in Model.CustomerReport.Info365s)
             {
                 <tr>
-                    <td>@info.PartnerName</td>
-                    <td>@info.License</td>
+                    <td class="lefttd">@info.PartnerName</td>
+                    <td class="lefttd">@info.License</td>
                     <td>@info.ActiveUnits</td>
                     <td>@info.ConsumedUnits</td>
                     <td>@info.FreeUnits</td>
@@ -134,9 +134,8 @@
             }
         </table>
     </fieldset>
-    
     <fieldset>
-        <legend>SPLA Licenses:</legend>
+        <legend class="sublegend">SPLA Licenses:</legend>
         <table>
             <tr>
                 <td><b>Full Users: @Model.CustomerReport.Licenses.FullUser.Count</b></td>

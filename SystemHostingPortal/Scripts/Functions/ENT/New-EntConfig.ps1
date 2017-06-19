@@ -15,7 +15,7 @@
                 UserContainer  = "null"
                 ExchangeServer = "null"
                 DomainFQDN     = "null"
-                Domain         = 'CORP'
+                NETBIOS        = $Organization
                 CustomerOUDN   = "null"
                 EmailDomains   = [pscustomobject]@{
                     DomainName   = "null"
@@ -25,6 +25,9 @@
                     AdminUser  = "null"
                     AdminPass  = "null"
                 }
+                AADsynced      = "false"
+                ADConnectServer = "null"
+                DomainDC       = "null"
         }
         try{
             Get-Item "C:\ENTConfig\$Organization"

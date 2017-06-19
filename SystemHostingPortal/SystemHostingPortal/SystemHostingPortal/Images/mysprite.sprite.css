@@ -1,0 +1,233 @@
+/*
+This is an example of how to use the image sprite in your own CSS files
+*/
+.mysprite {
+	background-image: url('mysprite.sprite.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+.mysprite.1 {
+	width: 310px;
+	height: 216px;
+	background-position: -10px -10px;
+}
+.mysprite.2 {
+	width: 243px;
+	height: 211px;
+	background-position: -10px -236px;
+}
+.mysprite.3.1 {
+	width: 73px;
+	height: 214px;
+	background-position: -10px -457px;
+}
+.mysprite.3 {
+	width: 78px;
+	height: 209px;
+	background-position: -10px -681px;
+}
+.mysprite.4 {
+	width: 340px;
+	height: 218px;
+	background-position: -10px -900px;
+}
+.mysprite.5 {
+	width: 340px;
+	height: 230px;
+	background-position: -10px -1128px;
+}
+.mysprite.6 {
+	width: 340px;
+	height: 219px;
+	background-position: -10px -1368px;
+}
+.mysprite.captologo-copy {
+	width: 89px;
+	height: 37px;
+	background-position: -10px -1597px;
+}
+.mysprite.columbus {
+	width: 197px;
+	height: 58px;
+	background-position: -10px -1644px;
+}
+.mysprite.columbus2 {
+	width: 1000px;
+	height: 58px;
+	background-position: -10px -1712px;
+}
+.mysprite.columbus3 {
+	width: 1000px;
+	height: 58px;
+	background-position: -10px -1780px;
+}
+.mysprite.createguide1 {
+	width: 994px;
+	height: 544px;
+	background-position: -10px -1848px;
+}
+.mysprite.giphy {
+	width: 220px;
+	height: 122px;
+	background-position: -10px -2402px;
+}
+.mysprite.giphy2 {
+	width: 480px;
+	height: 360px;
+	background-position: -10px -2534px;
+}
+.mysprite.info {
+	width: 256px;
+	height: 256px;
+	background-position: -10px -2904px;
+}
+.mysprite.logo_2 {
+	width: 411px;
+	height: 85px;
+	background-position: -10px -3170px;
+}
+.mysprite.ui-bg_diagonals-thick_8_333333_40x40 {
+	width: 40px;
+	height: 40px;
+	background-position: -10px -3265px;
+}
+.mysprite.ui-bg_glass_20_555555_1x400 {
+	width: 1px;
+	height: 400px;
+	background-position: -10px -3315px;
+}
+.mysprite.ui-bg_glass_40_0078a3_1x400 {
+	width: 1px;
+	height: 400px;
+	background-position: -10px -3725px;
+}
+.mysprite.ui-bg_glass_40_111111_1x400 {
+	width: 1px;
+	height: 400px;
+	background-position: -10px -4135px;
+}
+.mysprite.ui-bg_glass_40_ffc73d_1x400 {
+	width: 1px;
+	height: 400px;
+	background-position: -10px -4545px;
+}
+.mysprite.ui-bg_glass_55_1c1c1c_1x400 {
+	width: 1px;
+	height: 400px;
+	background-position: -10px -4955px;
+}
+.mysprite.ui-bg_gloss-wave_25_333333_500x100 {
+	width: 500px;
+	height: 100px;
+	background-position: -10px -5365px;
+}
+.mysprite.ui-bg_highlight-hard_100_f9f9f9_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -5475px;
+}
+.mysprite.ui-bg_highlight-hard_20_0972a5_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -5585px;
+}
+.mysprite.ui-bg_highlight-hard_40_aaaaaa_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -5695px;
+}
+.mysprite.ui-bg_highlight-soft_33_003147_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -5805px;
+}
+.mysprite.ui-bg_highlight-soft_35_222222_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -5915px;
+}
+.mysprite.ui-bg_highlight-soft_44_444444_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6025px;
+}
+.mysprite.ui-bg_highlight-soft_50_aaaaaa_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6135px;
+}
+.mysprite.ui-bg_highlight-soft_80_eeeeee_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6245px;
+}
+.mysprite.ui-bg_inset-hard_45_cd0a0a_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6355px;
+}
+.mysprite.ui-bg_inset-hard_55_ffeb80_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6465px;
+}
+.mysprite.ui-bg_inset-soft_25_000000_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6575px;
+}
+.mysprite.ui-bg_inset-soft_30_f58400_1x100 {
+	width: 1px;
+	height: 100px;
+	background-position: -10px -6685px;
+}
+.mysprite.ui-bg_loop_25_000000_21x21 {
+	width: 21px;
+	height: 21px;
+	background-position: -10px -6795px;
+}
+.mysprite.ui-icons_222222_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -6826px;
+}
+.mysprite.ui-icons_4b8e0b_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -7076px;
+}
+.mysprite.ui-icons_4ca300_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -7326px;
+}
+.mysprite.ui-icons_a83300_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -7576px;
+}
+.mysprite.ui-icons_bbbbbb_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -7826px;
+}
+.mysprite.ui-icons_cccccc_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -8076px;
+}
+.mysprite.ui-icons_ededed_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -8326px;
+}
+.mysprite.ui-icons_ffcf29_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -8576px;
+}
+.mysprite.ui-icons_ffffff_256x240 {
+	width: 256px;
+	height: 240px;
+	background-position: -10px -8826px;
+}

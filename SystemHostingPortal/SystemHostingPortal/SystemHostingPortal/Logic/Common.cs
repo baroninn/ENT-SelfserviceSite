@@ -18,6 +18,10 @@ namespace SystemHostingPortal.Logic
         static int LOGSIZE = int.Parse(WebConfigurationManager.AppSettings["LogSize"].ToString());
         static bool DEBUG = bool.Parse(WebConfigurationManager.AppSettings["Debug"]);
 
+        //Azure log
+        static string AZURELOGPATH = WebConfigurationManager.AppSettings["AzureLogPath"].ToString();
+        static string AZURELOGFILE = string.Format(@"{0}\AzureWebLog.txt", AZURELOGPATH);
+
         public static bool DebugMode
         {
             get
@@ -38,6 +42,15 @@ namespace SystemHostingPortal.Logic
             // Read LOGSIZE entries and return
             return File.ReadAllLines(LOGFILE).ToList<string>();
         }
+
+        public static List<string> GetAzureLog()
+        {
+            // Check/create logfile
+            if (!File.Exists(AZURELOGFILE)) { File.Create(AZURELOGFILE).Close(); }
+
+            // Read LOGSIZE entries and return
+            return File.ReadAllLines(AZURELOGFILE).ToList<string>();
+        }
         private static void SaveLog(List<string> log)
         {
             // Check/create logfile
@@ -53,7 +66,7 @@ namespace SystemHostingPortal.Logic
             {
                 // Insert new entry on top of log
                 List<string> log = GetLog();
-                log.Insert(0, DateTime.Now + " :: " + HttpContext.Current.User.Identity.Name + " :: " + entry);
+                log.Insert(0, DateTime.Now.ToString() + " :: " + HttpContext.Current.User.Identity.Name + " :: " + entry);
                 SaveLog(log);
             }
             catch (Exception exc)
@@ -61,7 +74,7 @@ namespace SystemHostingPortal.Logic
                 throw new Exception("Command failed to execute - Failed to write to the logfile: " + exc.Message);
             }
         }
-
+        
         public static void Log(string entry, FormCollection data)
         {
             // Generates string "a - b - c - d"

@@ -5,27 +5,27 @@
 @section script {
 
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
+            
         $("select[name=organization]").change(function () {
             $("#currentConf").html("Loading, this could take some time...");
+            $("#Domain").html("Loading, this could take some time...");
             GetCurrentConf();
-            GetConf();
+            GetDomain();
         });
 
         $("#currentConf").html("Loading, this could take some time...");
+        $("#Domain").html("Loading, this could take some time...");
         GetCurrentConf();
-        GetConf();
+        GetDomain();
     });
-    function GetConf() {
-        GetConf('organization');
-    };
 
     </script>
 }
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to update the Conf file for a given customer.</p>
-
+<br />
 
 @using (Html.BeginForm("UpdateConf", "Level30"))
 {
@@ -57,7 +57,7 @@
 
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
-                <td>
+                <td class="middletd">
                     <select name="organization">
                         @foreach (string organization in Model.Organizations)
                         {
@@ -67,12 +67,13 @@
                             </option>
                         }
                     </select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Exchange Server (FQDN)<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input name="exchangeserver" placeholder="XXX-exch-01.corp.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
+                <td class="middletd">
+                    <input name="exchangeserver"  placeholder="XXX-exch-01.XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
                                                                                                                                                               } />
 
                     <div class="description">
@@ -84,8 +85,8 @@
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Domain FQDN<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input name="domainfqdn" placeholder="CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
+                <td class="middletd">
+                    <input name="domainfqdn" placeholder="XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
                                                                                                                                                       } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -93,41 +94,57 @@
                         </p>
                     </div>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
-
             <tr>
-                <td class="lefttd tooltip"><span>Customer OU DN<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input name="customeroudn" placeholder="CORP.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
-                                                                                                                                                                             } />
+                <td class="lefttd tooltip"><span>Domain NETBIOS<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="netbios" placeholder="CORP" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NETBIOS"
+                                                                                                                                                                                 } />
                     <div class="description">
                         <p class="descriptiontext">
                             This is mandatory..
                         </p>
                     </div>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
 
             <tr>
-                <td class="lefttd tooltip"><span>Accepted Domains<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input name="accepteddomains" placeholder="XXX.dk, YYY.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AcceptedDomains"
+                <td class="lefttd tooltip"><span>Customer OU DN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="customeroudn" placeholder="OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
                                                                                                                                                                              } />
                     <div class="description">
                         <p class="descriptiontext">
-                            This is mandatory. ALL the customers accepteddomains must be added to this list..
+                            The Distinguishedname
                         </p>
                     </div>
                 </td>
-                <td class="mandatory">*</td>
             </tr>
+
+            <tr>
+                <td class="lefttd tooltip"><span>Domains<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @if (Model.ActionFailed)
+                {
+                    <textarea name="domains" rows="5" placeholder="Write one domain per line">@string.Join("\r\n", Model.UpdateConf.Domains)</textarea>
+                }
+                else
+                {
+                    <textarea name="domains" rows="5" placeholder="Write one domain per line"></textarea>
+                }
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the FULL list of domains available for the customer. Therefore, always fill out this field will all domains, not just the domain you wish to add to conf.
+                        </p>
+                    </div>
+            </td>
+        </tr>
             <tr>
                 <td class="lefttd tooltip"><span>365 TenantID<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     <input name="tenantid365" placeholder="43eea929-d726-4742-83a9-603c12a0d195" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.TenantID365"
-                                                                                                                                                                                     } />
+                                                                          } />
                     <div class="description">
                         <p class="descriptiontext">
                             TenantID from CSP partner portal..
@@ -137,16 +154,37 @@
             </tr>
             <tr>
                 <td class="lefttd">365 Admin User</td>
-                <td>
+                <td class="middletd">
                     <input name="adminuser365" placeholder="admin@XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminUser365"
-                                                                                                                                                                                     } />
+                                                                             } />
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">365 Admin Pass</td>
-                <td>
+                <td class="middletd">
                     <input name="adminpass365" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminPass365"
-                                                                                                                                                                                     } />
+                                                                             } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">AADSynced</td>
+                <td class="middletd">
+                    <input name="aadsynced" placeholder="True" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AADsynced"
+                                                                                } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">ADConnect Server</td>
+                <td class="middletd">
+                    <input name="adconnectserver" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ADConnectServer"
+                                                                                      } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">AD Server</td>
+                <td class="middletd">
+                    <input name="domaindc" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainDC"
+                                                                                      } />
                 </td>
             </tr>
 
@@ -159,31 +197,21 @@
         <legend>Current configuration</legend>
         <table>
             <tr>
-                <td class="righttd">
+                <td class="middletd">
                     <div id="currentConf"></div>
                 </td>
             </tr>
         </table>
-    </fieldset>
-    /*
-    <fieldset>
-        <legend>Current configuration</legend>
-        <table>
-            <tr>
-                <td><b>Domain FQDN: </b></td>
-                <td>@(Model.GetConf.DomainFQDN)</td>
-            </tr>
-            <tr>
-                <td><b>Exchange Server:</b></td>
-                <td>@(Model.GetConf.ExchangeServer)</td>
-            </tr>
-            <tr>
-                <td><b>Update button:</b></td>
-                <td>
-                <input type="button" class="button" class:hover="button:hover" value="Update" onclick="GetConf()" />
-                </td>
-            </tr>
-        </table>
-    </fieldset>
-    */
+        <fieldset>
+            <legend>Domains</legend>
+            <table>
+                <tr>
+                    <td>
+                        <div style="text-align:left; align-items:center" id="Domain"></div>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+
+   </fieldset>
 }

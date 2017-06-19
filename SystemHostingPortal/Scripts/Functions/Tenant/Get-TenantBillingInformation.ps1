@@ -93,9 +93,13 @@ function Get-TenantBillingInformation {
 
     Begin {
         $ErrorActionPreference = 'Stop'
-        Set-StrictMode -Version 2.0
-        Import-Module virtualmachinemanager
-        $VMMHost = 'vmm-a.corp.systemhosting.dk'
+        Set-StrictMode -Version 2
+
+        $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine", "Get-SCCloud")
+        $Server= 'vmm-a.corp.systemhosting.dk'
+        $Cred = Get-RemoteCredentials -SSS
+        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+        $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
         
     }
 
@@ -104,18 +108,18 @@ function Get-TenantBillingInformation {
         $Config = Get-EntConfig -Organization $Organization -JSON
 
         ## Get server information
-        $Scriptblock = {
-        param($VMMHost, $Organization)
-        Import-Module virtualmachinemanager
-        $Cloud = Get-SCCloud -VMMServer $VMMHost | where{$_.Name -like "$Organization*"}
-        Get-SCVirtualMachine -VMMServer $VMMHost -Cloud $Cloud | where {$_.CostCenter -eq $Organization -and $_.Status -eq "Running"} | sort Name | select Name, OperatingSystem, Memory, CPUCount, DynamicMemoryMaximumMB, DynamicMemoryEnabled
-        }
-        $vms = Invoke-Command -ComputerName $VMMHost -ScriptBlock $Scriptblock -ArgumentList $VMMHost, $Organization
-        
-        
+        $Cloud = Get-SCCloud -VMMServer $SCVMMServer | where{$_.Name -like "$Organization*"}
+        $vms  = Get-SCVirtualMachine -VMMServer $SCVMMServer -Cloud $Cloud | where {$_.CostCenter -eq $Organization -and $_.Status -eq "Running"} | sort Name | select Name, OperatingSystem, Memory, CPUCount, DynamicMemoryMaximumMB, DynamicMemoryEnabled
         $Cred  = Get-RemoteCredentials -Organization $Organization
 
         $stats = New-BillingObject
+
+        if ($vms -ne $null) {
+            Write-Verbose "Servers found, continuing.."
+        }
+        else {
+            throw "No servers found.. Are the VMM servers 'cost center' filled out with $Organization ?"
+        }
         
         ## All Storage stats
         $TotalStorage=@()
@@ -133,7 +137,10 @@ function Get-TenantBillingInformation {
             $stats.Server.Servers += ($newServer)
                 
                 try{
-                    $session = New-CimSession -ComputerName "$($server.name).$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred -Name $server.Name
+                
+                    Write-Verbose "Trying CIMSession on $($server.name)"
+                    "Trying CIMSession on $($server.name)" | Out-File C:\test.txt -Append -Force
+                    $session = New-CimSession -ComputerName "$($server.name).$($Config.DomainFQDN)" -Credential $Cred -Name $server.Name
 
                     $volumes = Get-CimInstance -CimSession $session -Query "SELECT * FROM Win32_Volume" | 
                                 where{$_.Capacity -notlike $null -and 
@@ -165,9 +172,12 @@ function Get-TenantBillingInformation {
         ## File server specific info
         $FileServerStorage=@()
         try{
-            if($Organization -eq "ASG"){$session = New-CimSession -ComputerName "$Organization-file01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred}
+            if($Organization -eq "ASG") {
+                $session = New-CimSession -ComputerName "$Organization-file01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred
+            }
             else{
-            $session = New-CimSession -ComputerName "$Organization-file-01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred}
+                $session = New-CimSession -ComputerName "$Organization-file-01.$($Config.DomainFQDN)" -Authentication Negotiate -Credential $Cred
+            }
 
             $volumes = Get-CimInstance -CimSession $session -Query "SELECT * FROM Win32_Volume" | 
                         where{$_.Capacity -notlike $null -and 
@@ -197,15 +207,13 @@ function Get-TenantBillingInformation {
         ## ADuser stats..
         Write-Verbose "Finding AD users.."
 
-        Import-Module ActiveDirectory
-        if($Organization -eq "ASG") {$adserver = "$Organization-DC01.$($Config.DomainFQDN)"}
-        else{$adserver = "$Organization-DC-01.$($Config.DomainFQDN)"}
+        Import-Module ActiveDirectory -Cmdlet "Get-ADGroupMember", "Get-ADUser"
 
-        $FullUsers  = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_FullUsers
-        $LightUsers = Get-ADGroupMember -AuthType Negotiate -Credential $Cred -Server $adserver -Identity G_LightUsers
+        $FullUsers  = Get-ADGroupMember -Credential $Cred -Server $Config.DomainDC -Identity G_FullUsers
+        $LightUsers = Get-ADGroupMember -Credential $Cred -Server $Config.DomainDC -Identity G_LightUsers
 
         $FullADObjects = foreach ($i in $FullUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true}
+        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
         }
 
         foreach ($user in $FullADObjects) {
@@ -225,7 +233,7 @@ function Get-TenantBillingInformation {
         }
 
         $LightADObjects = foreach ($i in $LightUsers) {
-        Get-ADUser -AuthType Negotiate -Credential $Cred -Server $adserver -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true}
+        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
         }
 
         foreach ($user in $LightADObjects) {
@@ -354,6 +362,7 @@ function Get-TenantBillingInformation {
             }
         }
 #>
+        Get-PSSession | Remove-PSSession
         $stats
     }
 

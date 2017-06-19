@@ -1,9 +1,9 @@
-function Remove-EmailAddress {
+﻿function Remove-EmailAddress {
     [Cmdletbinding()]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
-        $TenantName,
+        $Organization,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
@@ -13,27 +13,36 @@ function Remove-EmailAddress {
         [string]
         $EmailAddress
     )
+
     Begin {
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2
 
-        Import-Module (New-ExchangeProxyModule -Command "Set-Mailbox")
+        $Config = Get-EntConfig -Organization $Organization
+        $Cred   = Get-RemoteCredentials -Organization $Organization
+
     }
 
     Process {
-        $mbx = @(Get-TenantMailbox -TenantName $TenantName -Name $Name)
 
-        if ($mbx.Count -eq 0) {
-            Write-Error "'$Name' was not found."
+        $User = Get-ADUser ($Name -split '@')[0] -Credential $Cred -Server $Config.DomainFQDN -Properties Proxyaddresses
+        $Proxy = $User.Proxyaddresses
+
+            $Proxy = $User.Proxyaddresses
+
+            foreach ($i in $proxy) {
+                if ($i -clike "SMTP:$EmailAddress") {
+                    throw "$EmailAddress is the primary. Please change this first.."
+                }
+            }
+
+        Set-ADUser $User -Remove @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+
+        if ($Config.AADsynced -eq 'true') {
+            Start-Dirsync -Organization $Organization
+            Write-Output "Directory sync has been initiated, because the customer has Office365."
         }
-        elseif ($mbx.Count -gt 1) {
-            Write-Error "Ambiguous parameter Name '$Name'."
-        }
-    
-        $mbx = $mbx[0]
 
-        $mbx.EmailAddresses.Remove("smtp:$EmailAddress") | Out-Null
-
-        $mbx | Set-Mailbox -EmailAddresses $mbx.EmailAddresses -EmailAddressPolicyEnabled $false
     }
+    
 }

@@ -9,45 +9,37 @@
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2
         $Server= 'vmm-a.corp.systemhosting.dk'
-        
+        $Cred = Get-RemoteCredentials -SSS
+        $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine")
+        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+        $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
     }
     Process {
-        $ScriptBlock = {
-            param($VMID)
-            $Server= 'vmm-a.corp.systemhosting.dk'
-            Import-Module virtualmachinemanager
-            $VM = Get-SCVirtualMachine -VMMServer $server -ID $VMID
-            $VMINFO  = @()
+        $VM = Get-SCVirtualMachine -VMMServer $SCVMMServer -ID $VMID
+        $VMINFO  = @()
 
-            if ($VM.DynamicMemoryEnabled -eq "True") {
-                $VMINFO += 
-                    [pscustomobject]@{
-                        Name                   = $VM.Name
-                        ID                     = $VM.ID.guid
-                        Memory                 = $vm.DynamicMemoryMaximumMB
-                        CPUCount               = $vm.CPUCount
-                        DynamicMemoryEnabled   = $vm.DynamicMemoryEnabled
-                    }
-            }
-            else{
-                $VMINFO += 
-                    [pscustomobject]@{
-                        Name                   = $VM.Name
-                        ID                     = $VM.ID.guid
-                        Memory                 = $vm.Memory
-                        CPUCount               = $vm.CPUCount
-                        DynamicMemoryEnabled   = $vm.DynamicMemoryEnabled
-                    }
-            }
-
-        return $VMINFO
-
+        if ($VM.DynamicMemoryEnabled -eq "True") {
+            $VMINFO += 
+                [pscustomobject]@{
+                    Name                   = $VM.Name
+                    ID                     = $VM.ID.guid
+                    Memory                 = $vm.DynamicMemoryMaximumMB / 1024
+                    CPUCount               = $vm.CPUCount
+                    DynamicMemoryEnabled   = $vm.DynamicMemoryEnabled
+                }
         }
-        $VM = Invoke-Command -ComputerName $Server -ScriptBlock $ScriptBlock -ArgumentList $VMID
+        else{
+            $VMINFO += 
+                [pscustomobject]@{
+                    Name                   = $VM.Name
+                    ID                     = $VM.ID.guid
+                    Memory                 = $vm.Memory / 1024
+                    CPUCount               = $vm.CPUCount
+                    DynamicMemoryEnabled   = $vm.DynamicMemoryEnabled
+                }
+        }
 
-        return $VM | sort Name | select Name, ID, DynamicMemoryMaximumMB, CPUCount, Memory, DynamicMemoryEnabled
-
-
+    return $VMINFO | sort Name | select Name, ID, DynamicMemoryMaximumMB, CPUCount, Memory, DynamicMemoryEnabled
  
     }
 }

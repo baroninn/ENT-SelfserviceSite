@@ -16,9 +16,9 @@ namespace SystemHostingPortal.Controllers
     {
         Office365Model model = new Office365Model();
 
-        // Display Addomain view
+        // Display Verifyomain view
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult AddDomain()
+        public ActionResult VerifyDomain()
         {
             try
             {
@@ -29,35 +29,49 @@ namespace SystemHostingPortal.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult AddDomain(FormCollection _POST)
+        public ActionResult VerifyDomain(FormCollection _POST)
         {
             try
             {
-                model.AddDomain = new CustomAddDomain()
+                model.VerifyDomain = new CustomVerifyDomain()
                 {
                     Organization = _POST["organization"],
-                    Domain = _POST["domain"]
+                    Domain = _POST["domainname"]
                 };
 
-                if (!model.Organizations.Contains(model.AddDomain.Organization))
+                if (!model.Organizations.Contains(model.VerifyDomain.Organization))
                 {
                     throw new Exception("Organization does not exist.");
                 }
 
-                Common.Log(string.Format("has run Office365/AddDomain() to add '{0}' for '{1}'", model.AddDomain.Domain, model.AddDomain.Organization));
+                Common.Log(string.Format("has run Office365/VerifyDomain() to verify '{0}' for '{1}'", model.VerifyDomain.Domain, model.VerifyDomain.Organization));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.AddUPN(model.AddDomain.Organization, model.AddDomain.Domain);
+                    ps.VerifyDomain(model.VerifyDomain.Organization, model.VerifyDomain.Domain);
                     var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("Domain {0} has been added.", model.VerifyDomain.Domain));
+                    }
+                    else
+                    {
+
+                        foreach (PSObject message in result)
+                        {
+                            Common.Log(string.Format("Domain {0} info: {1}", model.VerifyDomain.Domain, message.ToString()));
+                            throw new Exception(string.Format(message.ToString()));
+                        }
+                    }
                 }
 
-                model.OKMessage.Add(string.Format("Domain '{0}' added for organization '{1}'.", model.AddDomain.Domain, model.AddDomain.Organization));
+                model.OKMessage.Add(string.Format("Domain '{0}' added for organization '{1}'.", model.VerifyDomain.Domain, model.VerifyDomain.Organization));
 
-                Common.Stats("Office365/AddDomain");
+                Common.Stats("Office365/VerifyDomain");
 
-                return View("AddDomain", model);
+                return View("VerifyDomain", model);
             }
             catch (Exception exc)
             {

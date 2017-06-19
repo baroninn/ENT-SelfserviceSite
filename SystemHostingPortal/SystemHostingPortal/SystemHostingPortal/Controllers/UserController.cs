@@ -37,12 +37,12 @@ namespace SystemHostingPortal.Controllers
                 // set up a user account for display in view
                 CustomUser newUser = new CustomUser()
                 {
-                    CopyFrom = _POST["distinguishedname"],
+                    CopyFrom = _POST["userprincipalname"],
                     FirstName = _POST["firstname"],
                     LastName = _POST["lastname"],
                     Organization = _POST["organization"],
                     Password = _POST["password"],
-                    UserPrincipalName = _POST["userprincipalname"],
+                    UserName = _POST["username"],
                     DomainName = _POST["domainname"],
                     TestUser = _POST["testuser"] == "on" ? true : false,
                     PasswordNeverExpires = _POST["passwordneverexpires"] == "on" ? true : false,
@@ -50,13 +50,22 @@ namespace SystemHostingPortal.Controllers
 
                 model.UserList.Add(newUser);
 
-                Common.Log(string.Format("has run User/CreateUser() to create {0}", newUser.UserPrincipalName));
+                Common.Log(string.Format("has run User/CreateUser() to create {0}", newUser.UserName));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
                     ps.CreateUser(newUser);
                     var result = ps.Invoke();
+
+                    if (result.Count() > 0)
+                    {
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                        }
+
+                    }
                 }
 
                 Common.Stats("User/Create");
@@ -88,28 +97,43 @@ namespace SystemHostingPortal.Controllers
         [Authorize(Roles = "Access_SelfService_FullAccess")]
         public ActionResult Disable(FormCollection _POST)
         {
+
             try
             {
                 CustomUser disableUser = new CustomUser()
                 {
-                    DistinguishedName = _POST["distinguishedname"],
+                    UserPrincipalName = _POST["userprincipalname"],
                     Organization = _POST["organization"],
                     Confirm = _POST["confirm"] == "on" ? true : false
                 };
 
                 model.DisableUser = disableUser;
 
-                Common.Log(string.Format("has run User/DisableUser(confirm={1}, for user {0}", disableUser.DistinguishedName, disableUser.Confirm));
+                if (!model.DisableUser.Confirm)
+                {
+                    throw new Exception("You must confirm the action.");
+                }
+
+                Common.Log(string.Format("has run User/DisableUser(confirm={1}, for user {0}", disableUser.UserPrincipalName, disableUser.Confirm));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
                     ps.DisableUser(disableUser);
                     var result = ps.Invoke();
-                }
 
-                if (model.DisableUser.Confirm)
-                {
-                    model.OKMessage.Add("User disabled, and hidden in addressbook (if mailbox)..");
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add("User successfully disabled.");
+                    }
+                    else
+                    {
+                        model.OKMessage.Add("User disabled with following info.");
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                        }
+                    }
                 }
 
                 Common.Stats("User/Disable");
@@ -144,12 +168,13 @@ namespace SystemHostingPortal.Controllers
                 {
                     UserPrincipalName = _POST["userprincipalname"],
                     Organization = _POST["organization"],
-                    Remove = _POST["confirm"] == "on" ? true : false
+                    DelData = _POST["deldata"] == "on" ? true : false,
+                    Confirm = _POST["confirm"] == "on" ? true : false
                 };
 
                 model.RemoveUser = removeUser;
 
-                if (!model.RemoveUser.Remove)
+                if (!model.RemoveUser.Confirm)
                 {
                     throw new Exception("You must confirm the action.");
                 }
@@ -311,21 +336,20 @@ namespace SystemHostingPortal.Controllers
             try
             {
                 model.CreateExtUser.Organization = _POST["organization"];
-                model.CreateExtUser.Name = _POST["name"];
-                
-                model.CreateExtUser.Password = Common.GeneratePassword();
-                model.CreateExtUser.ExpirationDate = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd");
+                model.CreateExtUser.UserName = _POST["username"];
+                model.CreateExtUser.Description = _POST["description"];
+                model.CreateExtUser.DisplayName = _POST["displayname"];
+                model.CreateExtUser.DomainName = _POST["domainname"];
 
-                Common.Log(string.Format("has run User/CreateExtUser() to create ext user {0}_ext_{1}", model.CreateExtUser.Organization, model.CreateExtUser.Name));
+                model.CreateExtUser.Password = Common.GeneratePassword();
+                model.CreateExtUser.ExpirationDate = _POST["datetime"];
+
+                Common.Log(string.Format("has run User/CreateExtUser() to create ext user {0}_ext_{1}", model.CreateExtUser.Organization, model.CreateExtUser.UserName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
                     ps.CreateExtUser(model.CreateExtUser).Invoke();
                 }
-
-                string defaultDomain = Common.GetDefaultAcceptedDomain(model.CreateExtUser.Organization);
-
-                model.CreateExtUser.UserPrincipalName = string.Format("{0}_ext_{1}@{2}", model.CreateExtUser.Organization, model.CreateExtUser.Name, defaultDomain);
 
                 Common.Stats("User/CreateExtUser");
 
@@ -363,28 +387,37 @@ namespace SystemHostingPortal.Controllers
             {
                 // property is disable but means enable
                 model.EnableUser.Organization = _POST["organization"];
-                model.EnableUser.DistinguishedName = _POST["distinguishedname"];
+                model.EnableUser.UserPrincipalName = _POST["userprincipalname"];
                 model.EnableUser.Confirm = _POST["confirm"] == "on" ? true : false;
 
                 if (!model.EnableUser.Confirm)
                 {
-                    model.OKMessage.Add("No changes, please confirm");
-                    return View("Enable", model);
+                    throw new Exception("You must confirm the action.");
                 }
 
-                Common.Log(string.Format("has run User/Enable(Confirmed: {0}) on user {1}", model.EnableUser.Confirm, model.EnableUser.DistinguishedName));
+                Common.Log(string.Format("has run User/Enable(Confirmed: {0}) on user {1}", model.EnableUser.Confirm, model.EnableUser.UserPrincipalName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
                     ps.EnableUser(model.EnableUser).Invoke();
+                    var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add("User successfully enabled.");
+                    }
+                    else
+                    {
+                        model.OKMessage.Add("User enabled with following info:");
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                        }
+                    }
                 }
 
                 Common.Stats("User/EnableUser");
-
-                if (model.EnableUser.Confirm)
-                {
-                    model.OKMessage.Add("User enabled, and shown in addressbook (if mailbox)..");
-                }
 
                 return View("Enable", model);
 
@@ -441,21 +474,33 @@ namespace SystemHostingPortal.Controllers
             try
             {
                 model.ResetPWD.Organization = _POST["organization"];
-                model.ResetPWD.Name = _POST["name"];
-                model.ResetPWD.DistinguishedName = _POST["distinguishedname"];
+                model.ResetPWD.UserPrincipalName = _POST["userprincipalname"];
                 model.ResetPWD.Password = _POST["password"];
                 model.ResetPWD.PasswordNeverExpires = _POST["passwordneverexpires"] == "on" ? true : false;
 
-                Common.Log(string.Format("has run User/ResetPWD() for {0}, to reset password for user {1}", model.ResetPWD.Organization, model.ResetPWD.Name));
+                Common.Log(string.Format("has run User/ResetPWD() for {0}, to reset password for user {1}", model.ResetPWD.Organization, model.ResetPWD.UserPrincipalName));
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.SetPassword(model.ResetPWD.Organization, model.ResetPWD.DistinguishedName, model.ResetPWD.Password, model.ResetPWD.PasswordNeverExpires);
+                    ps.SetPassword(model.ResetPWD.Organization, model.ResetPWD.UserPrincipalName, model.ResetPWD.Password, model.ResetPWD.PasswordNeverExpires);
                     var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("Reset password success for '{1}', from Organization : '{0}' ", model.ResetPWD.Organization, model.ResetPWD.UserPrincipalName));
+                    }
+                    else
+                    {
+                        model.OKMessage.Add(string.Format("Reset password success for '{1}', from Organization : '{0}' ", model.ResetPWD.Organization, model.ResetPWD.UserPrincipalName));
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(message.ToString());
+                        }
+                    }
                 }
 
                 Common.Stats("User/ResetPWD");
-                model.OKMessage.Add(string.Format("Reset password for '{1}', from Organization : '{0}' ", model.ResetPWD.Organization, model.ResetPWD.DistinguishedName));
 
                 return View("ResetPWD", model);
             }

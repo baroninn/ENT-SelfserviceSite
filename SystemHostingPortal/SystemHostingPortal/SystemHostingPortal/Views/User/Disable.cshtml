@@ -10,7 +10,7 @@
             GetADUsersList();
 
             $("select[name=organization]").change(function () {
-                $("select[name=distinguishedname]").html('<option>loading...</option>');
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
 
                 GetADUsersList();
 
@@ -19,10 +19,23 @@
 
         function Confirm() {
             if ($("input[name=confirm]").prop('checked')) {
-                var result = confirm("WARNING: THIS WILL DISABLE THE USER!\n\nRemember, you can easily enable the user again.")
-                if (!result) {
-                    $("input[name=confirm]").prop("checked", false);
-                }
+                $.confirm({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: '<b>THIS WILL DISABLE THE USER!</b>' +
+                             '<p>Remember, you can easily enable the user again...' +
+                             '<p><br />',
+                    buttons: {
+                        confirm: function () {
+                            $("input[name=confirm]").prop("checked", true);
+                        },
+                        cancel: function () {
+                            $("input[name=confirm]").prop("checked", false);
+                        },
+                    }
+                });
             }
         }
     </script>
@@ -30,6 +43,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to disable AD users and hide users on the exchange address lists</p>
+<br />
 
 @using(Html.BeginForm("Disable", "User")) {
 <fieldset>
@@ -60,7 +74,7 @@
 
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
+            <td class="middletd"><select name="organization">
                     @foreach(string organization in Model.Organizations) 
                     {
                             <option @if(Model.ActionFailed)
@@ -70,12 +84,15 @@
                                         }
                                     }>@organization</option>
                     }
-                </select></td>
+                </select>
+                <span class="mandatory">*</span>
+            </td>
         </tr>
         <tr>
             <td class="lefttd">AD User</td>
-            <td>
-                <select name="distinguishedname"><option>loading...</option></select>
+            <td class="middletd">
+                <select name="userprincipalname"><option>loading...</option></select>
+                <span class="mandatory">*</span>
             </td>
         </tr>
         <tr>

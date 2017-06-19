@@ -1,30 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-        <title>@ViewBag.Title - SystemHosting Portal</title>
-        
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <title>@ViewBag.Title - Columbus Selfservice Portal</title>
 
-        @Styles.Render("~/Content/reset.css")
-        @Styles.Render("~/Content/style.css")
-        <link href="@Url.Content("~/Content/jquery-ui.css")" rel="stylesheet" type="text/css" />
-        <!--<link href="@Url.Content("~/Content/jquery-ui.theme.css")" rel="stylesheet" type="text/css" />
-        <link href="@Url.Content("~/Content/jquery-ui.theme.min.css")" rel="stylesheet" type="text/css" />-->
-        <link href="@Url.Content("~/Content/jquery.datetimepicker.css")" rel="stylesheet" type="text/css" />
-        <script src="@Url.Content("~/Scripts/moment.min.js")" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.datetimepicker.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.datetimepicker.full.min.js")" type="text/javascript"></script>
-
-        @Scripts.Render("~/Scripts/jquery.collapse.js")
-        @Scripts.Render("~/Scripts/shtfunctions.js")
-        <script>
+    @Styles.Render("~/Content/reset.css")
+    @Styles.Render("~/Content/styleNEW2.css")
+    <link href="@Url.Content("~/Content/jquery-ui.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/jquery.datetimepicker.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/jquery-confirm.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/moment.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.datetimepicker.full.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-confirm.min.js")" type="text/javascript"></script>
+    @Scripts.Render("~/Scripts/jquery.collapse.js")
+    @Scripts.Render("~/Scripts/shtfunctions.js")
+    <script>
             $.ajaxSetup({
                 cache: false
             });
@@ -34,8 +32,8 @@
                     $(this).siblings("td").children(".description").toggle(100);
                 })
             });
-        </script>
-        <script>
+    </script>
+    <script>
             $.ajaxSetup({
                 cache: false
             });
@@ -44,107 +42,200 @@
                 $(".helptooltip").click(function () {
                     $(this).siblings("td").children(".infohelp").toggle(100);
                 })
+                // Sort all lists..
+                $("#usersort").html(
+                    $("#usersort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#mailsort").html(
+                    $("#mailsort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#o365sort").html(
+                    $("#o365sort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#orgsort").html(
+                    $("#orgsort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#servicesort").html(
+                    $("#servicesort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#lvl30sort").html(
+                    $("#lvl30sort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
             });
-        </script>
 
-        @RenderSection("style", required: false)
-    </head>
-    <body>
-        <div id="topdiv">
-            @if (SystemHostingPortal.Logic.Common.DebugMode)
+    </script>
+
+    @RenderSection("style", required: false)
+</head>
+<body>
+    <div id="topdiv">
+        @if (SystemHostingPortal.Logic.Common.DebugMode)
             {
-                 <script>
-                     $("#topdiv").css("background-color", "green");
-                 </script>
-
-                 <div style="text-align: center; font-weight: bold; font-size: x-large">ENTERPRISE TEST!!  <img align="middle" src="~/Images/giphy.gif" />  ENTERPRISE TEST!!</div>
-
-                //<div id="topdivtext"><img src="~/Images/Columbus.png" /><img src="~/Images/captologo.png" /></div>
-            }
-            else
-            {
-                <div id="topdivtext"><img src="~/Images/Columbus3.png" /></div>
-            }
-        </div>
-        <table>
-            <tr>
-                <td>
-                    <div id="bodydiv">
-                        <div id="leftdiv">
-                            <ul class="navi">
-
-                                <li><a href="~//">Home</a></li>
-                                <li><a href="~//Home/Log">SelfService Log</a></li>
-
-                                <li>User</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//User/Create">Create user</a></li>
-                                        <li><a href="~//User/ResetPWD">Reset Password</a></li>
-                                        <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li> -->
-                                        <li><a href="~//User/Disable">Disable user</a></li>
-                                        <li><a href="~//User/Enable">Enable user</a></li>
-                                        <!--    <li><a href="~//User/Remove">Remove user</a></li> -->
-                                    </ul><br />
-                                </li>
-                                <!--  <li>Mail</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Mail/AddAcceptedDomain">Add AcceptedDomain</a></li>
-                                        <li><a href="~//Mail/AddAlias">Add Alias</a></li>
-                                        <li><a href="~//Mail/AddMailboxPermission">Add Mailbox Permission</a></li>
-                                        <li><a href="~//Mail/CreateDistributionGroup">Create DistributionGroup</a></li>
-                                        <li><a href="~//Mail/GetCalendarPermissions">Get CalendarPermissions</a></li>
-                                        <li><a href="~//Mail/GetDeviceReport">Get Device Report</a></li>
-                                        <li><a href="~//Mail/GetItemsReport">Get Mail Items Report</a></li>
-                                        <li><a href="~//Mail/SetMailForward">Set Mailforward</a></li>
-                                        <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
-                                    </ul><br />
-                                </li>-->
-                                <li>Organization</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Organization/Create">Create organization</a></li>
-                                        <!--<li><a href="~//Organization/DisableCustomer">Disable Customer</a></li>
-                                    <li><a href="~//Organization/EnableCustomer">Enable Customer</a></li>
-                                    <li><a class="warning2" href="~//Organization/RemoveCustomer">Remove Customer</a></li>-->
-
-                                    </ul><br />
-                                </li>
-                                <li>Service</li>
-                                <li>
-                                    <ul class="navisub">
-                                        <li><a href="~//Service/CustomerReport">Customer Report</a></li>
-
-                                    </ul><br />
-                                </li>
-                            </ul>
-                            @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
-                            {<ul class="navi">
-                    <li>Level30 stuff</li>
-                    <li>
-                        <ul class="navisub">
-                            <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
-                                <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
-                                <li><a href="~//Level30/ExpandCPURAM">Expand CPU/RAM</a></li>
-                        </ul>
-
-                    </li>
-                </ul>
-                            }
-                        </div>
-                        <div id="maindiv">
-                            @RenderBody()
-                        </div>
-
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-            @RenderSection("script", required: false)
-
             <script>
+                     $("#topdiv").css("background-color", "green");
+            </script>
+
+                <div style="text-align: center; font-weight: bold; font-size: x-large">ENTERPRISE TEST!!  <img align="middle" src="~/Images/giphy.gif" />  ENTERPRISE TEST!!</div>
+
+            //<div id="topdivtext"><img src="~/Images/Columbus.png" /><img src="~/Images/captologo.png" /></div>
+        }
+        else
+        {
+            <div id="topdivtext"><img src="~/Images/Columbus3.png" /></div>
+        }
+    </div>
+
+    <br />
+    <table>
+        <tr>
+            <td>
+                <div>
+    <nav id="nav" role="navigation">
+        <ul class="clearfix">
+            <li><a href="~//">Home</a></li>
+            <li>
+                <a><span>User</span></a>
+                <ul id="usersort">
+                    <li><a href="~//User/Create">Create user</a></li>
+                    <li><a href="~//User/ResetPWD">Reset Password</a></li>
+                    <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li> -->
+                    <li><a href="~//User/Disable">Disable user</a></li>
+                    <li><a href="~//User/Enable">Enable user</a></li>
+                    <li><a href="~//User/Remove">Remove user</a></li>
+                    <li><a href="~//User/CreateExtUser">Create EXT. User</a></li>
+                </ul>
+
+            </li>
+            <li>
+                <a><span>Mail</span></a>
+                <ul id="mailsort">
+                    <li><a href="~//Mail/AddDomain">Add Domain</a></li>
+                    <li><a href="~//Mail/RemoveDomain">Remove Domain</a></li>
+                    <li><a href="~//Mail/AddAlias">Add Alias</a></li>
+                    <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
+                    <li><a href="~//Mail/CreateMailbox">Create Mailbox</a></li>
+                    <li><a href="~//Mail/CreateDistributionGroup">Create Dist. Group</a></li>
+                    <li><a href="~//Mail/GetCalendarPermissions">Calendar Permissions</a></li>
+                   @if (SystemHostingPortal.Logic.Common.DebugMode)
+                   {
+                     
+                     
+                   }
+                     
+                  <!--   <li><a href="~//Mail/GetDeviceReport">Get Device Report</a></li>
+                         <li><a href="~//Mail/GetItemsReport">Get Mail Items Report</a></li>
+                         <li><a href="~//Mail/SetMailForward">Set Mailforward</a></li>-->
+
+                </ul>
+            </li>
+            <li>
+                <a><span>Office 365</span></a>
+                <ul id="o365sort">
+                    <li><a href="~//Office365/VerifyDomain">Verify Domain</a></li>
+                </ul>
+            </li>
+            <li>
+                <a><span>Organization</span></a>
+                <ul id="orgsort">
+                    <li><a href="~//Organization/Create">Create organization</a></li>
+                </ul>
+            </li>
+            <li>
+                <a><span>Service</span></a>
+                <ul id="servicesort">
+                    <li><a href="~//Service/CustomerReport">Customer Report</a></li>
+                    <li><a href="~//Service/ExpandVHD">Expand VHD</a></li>
+                    <li><a href="~//Service/ExpandCPURAM">Expand CPU/RAM</a></li>
+
+                </ul>
+            </li>
+            @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
+            {
+                <li>
+                    <a>Level 30</a>
+                    <ul id="lvl30sort">
+                        <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
+                        <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
+                        <li><a href="~//Level30/ExpandCPURAM">Expand CPU/RAM</a></li>
+                    </ul>
+                </li>
+            }
+            <li>
+                <a><span>Log</span></a>
+                <ul id="Logsort">
+                    <li><a href="~//Home/Log">Log</a></li>
+                    <li><a href="~//Home/AzureLog">AzureLog</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+    </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="bodydiv">
+
+                    <div id="maindiv">
+                        @RenderBody()
+                        <br />
+                        <hr />
+                        <br />
+                        <footer>
+                            <table>
+                                <tr>
+                                    <td style="width:30px; text-align:center; vertical-align:middle">
+                                        <span style="vertical-align:middle" class="mandatory">*</span>
+                                    </td>
+                                    <td style="vertical-align:middle">
+                                        <span> =  Mandatory</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30px; text-align:center; vertical-align:middle">
+                                        <span><i style="vertical-align:middle" class="material-icons infoicon">info</i></span>
+                                    </td>
+                                    <td style="vertical-align:middle">
+                                        <span> =  Info button for help on input</span>
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <hr />
+                            <br />
+                            <p class="copyright"><i style="float:none; text-align:center; align-content:center" class="material-icons copyrighticon">copyright</i> @DateTime.Now.Year - Columbus NSC</p>
+
+                        </footer>
+                    </div>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    @RenderSection("script", required: false)
+
+    <script>
                 $(document).ready(function () {
                     $(".collapsed").collapse();
                 });
@@ -162,6 +253,6 @@
                 function ClearMessages() {
                     $('#okMessageDiv').html("");
                 }
-            </script>
+    </script>
 </body>
 </html>

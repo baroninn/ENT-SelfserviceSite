@@ -23,6 +23,7 @@ namespace SystemHostingPortal.Models
         public string EmailDomainName { get; set; }
         public string Subnet { get; set; }
         public string Vlan { get; set; }
+        public string Gateway { get; set; }
         public string IPAddressRangeStart { get; set; }
         public string IPAddressRangeEnd { get; set; }
         public bool CreateVMM { get; set; }

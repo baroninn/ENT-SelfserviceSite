@@ -43,6 +43,7 @@ namespace SystemHostingPortal.Controllers
                     EmailDomainName = _POST["emaildomainname"].ToLower(),
                     Subnet = _POST["subnet"],
                     Vlan = _POST["vlan"],
+                    Gateway = _POST["gateway"],
                     IPAddressRangeStart = _POST["ipaddressrangestart"],
                     IPAddressRangeEnd = _POST["ipaddressrangeend"],
                     CreateVMM = _POST["createvmm"] == "on" ? true : false
@@ -70,7 +71,7 @@ namespace SystemHostingPortal.Controllers
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.CreateOrganization(organization.Name, organization.EmailDomainName, organization.Subnet, organization.Vlan, organization.IPAddressRangeStart, organization.IPAddressRangeEnd, organization.CreateVMM);
+                    ps.CreateOrganization(organization.Name, organization.EmailDomainName, organization.Subnet, organization.Vlan, organization.Gateway, organization.IPAddressRangeStart, organization.IPAddressRangeEnd, organization.CreateVMM);
                     var result = ps.Invoke();
                 }
 

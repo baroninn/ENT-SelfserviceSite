@@ -12,6 +12,9 @@
 
         [Parameter(Mandatory)]
         [string]$Vlan,
+
+        [Parameter(Mandatory)]
+        [string]$GateWay,
         
         [Parameter(Mandatory)]
         [string]$IPAddressRangeStart,
@@ -26,6 +29,8 @@
         Set-StrictMode -Version 2.0
         
         $Server= 'vmm-a.corp.systemhosting.dk'
+
+        $CredSSP = Get-RemoteCredentials -SSS
     }
 
 
@@ -35,7 +40,8 @@
             param($Organization, 
                   $EmailDomainName, 
                   $Subnet, 
-                  $Vlan, 
+                  $Vlan,
+                  $GateWay, 
                   $IPAddressRangeStart, 
                   $IPAddressRangeEnd
                   )
@@ -92,18 +98,66 @@
             # WINS servers
             $allWinsServers = @()
 
-            New-SCStaticIPAddressPool -Name "$($Organization) - $Vlan" -LogicalNetworkDefinition $logicalNetworkDefinition -Subnet $Subnet -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd -DNSServer $IPAddressRangeStart -DNSSuffix "" -DNSSearchSuffix $allDnsSuffixes -NetworkRoute $allNetworkRoutes -RunAsynchronously -VMMServer $Server
+            $DefaultGateway = New-SCDefaultGateway -IPAddress $GateWay
+            New-SCStaticIPAddressPool -Name "$($Organization) - $Vlan" -LogicalNetworkDefinition $logicalNetworkDefinition -Subnet $Subnet -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd -DNSServer $IPAddressRangeStart -DNSSuffix "" -DefaultGateway $DefaultGateway -DNSSearchSuffix $allDnsSuffixes -NetworkRoute $allNetworkRoutes -RunAsynchronously -VMMServer $Server
+
+            ###### Create Unattend Templates ######
+            try {
+                New-Item -ItemType Directory -Path "\\file-01.corp.systemhosting.dk\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\XMLs\$Organization" | Out-Null
+            }
+            catch {
+                throw "New-item failed with $($_.Exception)"
+            }
+
+            ## Import
+            $templatepath = "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\XMLs\Template"
+            $customerpath = "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\XMLs\$Organization"
+
+            $exch_Unattend  = Get-Content (Join-Path $templatepath "Template_2012R2_Exchange_Unattend.xml")
+            $file_Unattend  = Get-Content (Join-Path $templatepath "Template_2012R2_Fileserver_Unattend.xml")
+            $nav_Unattend   = Get-Content (Join-Path $templatepath "Template_2012R2_Nav_Unattend.xml")
+            $other_Unattend = Get-Content (Join-Path $templatepath "Template_2012R2_Other_Unattend.xml")
+            $rdgw_Unattend  = Get-Content (Join-Path $templatepath "Template_2012R2_RDGW_Unattend.xml")
+            $rds_Unattend   = Get-Content (Join-Path $templatepath "Template_2012R2_RDS_Unattend.xml")
+            $sql_Unattend   = Get-Content (Join-Path $templatepath "Template_2012R2_SQL_Unattend.xml")
+
+            ## update and output..
+            $exch_Unattend  -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_Exchange_Unattend.xml") -Force
+            $file_Unattend  -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_Fileserver_Unattend.xml")
+            $nav_Unattend   -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_Nav_Unattend.xml")
+            $other_Unattend -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_Other_Unattend.xml")
+            $rdgw_Unattend  -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_RDGW_Unattend.xml")
+            $rds_Unattend   -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_RDS_Unattend.xml")
+            $sql_Unattend   -replace 'template', ($Organization + ',DC=' + ($EmailDomainName).Split('.')[0] + ',DC=' + ($EmailDomainName).Split('.')[1]) | Out-File -FilePath (Join-Path $customerpath "$($Organization)_2012R2_SQL_Unattend.xml")
+
 
             ###### Import service template ######
 
-            $package = Get-SCTemplatePackage -Path "C:\ENT - ServiceTemplateImport.xml"
+            $scmaster = Get-Content "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\TemplateMaster\ENT - ServiceTemplateImport.xml" -Encoding UTF8
+            $templatefrommaster = $scmaster -replace 'XXX', $Organization.ToUpper()
+            $templatefrommaster = $templatefrommaster -replace 'Template_2012R2', "$($Organization)_2012R2"
+            $templatefrommaster = $templatefrommaster -replace 'XMLs\\Template', "XMLs\$($Organization)"
+
+            ## export new master
+            $templatefrommaster | Out-File "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\TemplateMaster\$Organization.xml" -Encoding utf8
+
+
+            $package = Get-SCTemplatePackage -Path "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\TemplateMaster\$Organization.xml" 
             $allMappings = New-SCPackageMapping -TemplatePackage $package
 
-            $template = Import-SCTemplate -TemplatePackage $package -Name "Ent Cust - corp.$EmailDomainName" -PackageMapping $allMappings -Release "1.0" -SettingsIncludePrivate
+            $template = Import-SCTemplate -TemplatePackage $package -Name "Ent Cust - $Organization.$EmailDomainName" -PackageMapping $allMappings -Release "1.0" -SettingsIncludePrivate
+            Set-SCServiceTemplate $template -Description "$($Organization) auto created Service Template"
+
+            try {
+                Remove-Item "\\file-01\VMM-A-Library\ApplicationFrameworks\Enterprise Customer\TemplateMaster\$Organization.xml" -Force | Out-Null
+            }
+            catch {
+                throw "Remove-item failed with $($_.Exception)"
+            }
 
             #$template = Get-SCServiceTemplate "Ent Cust - corp.test1.dk"
             $password = "DIPPEzipper20!5" | ConvertTo-SecureString -asPlainText -Force
-            $username = "corp\administrator"
+            $username = "$Organization\administrator"
             $credential = New-Object System.Management.Automation.PSCredential($username,$password)
             $runAsAccount = New-SCRunAsAccount -Credential $credential -Name "Ent Cust - $Organization Domain Admin Account" -Description "" -NoValidation
 
@@ -114,9 +168,9 @@
             $SafeModeAdminPassword = Get-SCServiceSetting -ServiceTemplate $template -Name SafeModeAdminPassword
             $VMNetworksetting = Get-SCServiceSetting -ServiceTemplate $template -Name vmnetwork
 
-            Set-SCServiceSetting -ServiceSetting $kunde -Value $Organization
-            Set-SCServiceSetting -ServiceSetting $kundeFQDN -Value "corp.$EmailDomainName"
-            Set-SCServiceSetting -ServiceSetting $kundeNetBios -Value "corp"
+            Set-SCServiceSetting -ServiceSetting $kunde -Value "$Organization"
+            Set-SCServiceSetting -ServiceSetting $kundeFQDN -Value "$Organization.$EmailDomainName"
+            Set-SCServiceSetting -ServiceSetting $kundeNetBios -Value "$Organization"
             Set-SCServiceSetting -ServiceSetting $KundeDomainAdmin -Value $runAsAccount
             Set-SCServiceSetting -ServiceSetting $SafeModeAdminPassword -IsEncrypted $false
             Set-SCServiceSetting -ServiceSetting $SafeModeAdminPassword -Value "DIPPEzipper20!5"
@@ -127,7 +181,8 @@
             New-SCService -ServiceConfiguration $SCServiceConfiguration -RunAsynchronously
         }
 
-    Invoke-Command -ComputerName $Server -ScriptBlock $ScriptBlock -ArgumentList $Organization, $EmailDomainName, $Subnet, $Vlan, $IPAddressRangeStart, $IPAddressRangeEnd
+    ## Create VMM specific settings.
+    Invoke-Command -ComputerName $Server -ScriptBlock $ScriptBlock -ArgumentList $Organization, $EmailDomainName, $Subnet, $Vlan, $GateWay, $IPAddressRangeStart, $IPAddressRangeEnd -Authentication Credssp -Credential $CredSSP
 
     }
 }

@@ -7,30 +7,45 @@
         $(document).ready(function () {
             if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
-            GetMailbox("UserMailbox");
+            GetADUsersList();
 
             $("select[name=organization]").change(function () {
                 $("select[name=userprincipalname]").html('<option>loading...</option>');
 
-                GetMailbox("UserMailbox");
-            });
+                GetADUsersList();
 
-            $("input[name=confirm]").click(function () {
-                if ($("input[name=confirm]").prop("checked")) {
-                    if (!confirm("DANGER DANGER DANGER\r\nThis action is permanent, which will delete the user, the users mailbox, files and folders and user profile disk.\r\nProceed at your own risk! The cake is not a lie.")) {
-                        $(this).prop("checked", false);
-                    }
-                }
             });
         });
+
+        function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                $.confirm({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: '<b>THIS WILL DELETE THE USER!</b>' +
+                        '<p>This can only bo un-done with Recycle Bin restore, or a backup..' +
+                        '<p><br />',
+                    buttons: {
+                        confirm: function () {
+                            $("input[name=confirm]").prop("checked", true);
+                        },
+                        cancel: function () {
+                            $("input[name=confirm]").prop("checked", false);
+                        },
+                    }
+                });
+            }
+        }
     </script>
 }
-
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to remove a user.</p>
+<br />
 @using(Html.BeginForm("Remove", "User")) {
     <fieldset>
         <legend>@ViewBag.Title</legend>
-        <p>Use this form to remove a user.</p>
-
         <table>
             <tr>
                 <td colspan="2">
@@ -56,25 +71,38 @@
             </tr>
             <tr>
                 <td class="lefttd">Organization</td>
-                <td>
+                <td class="middletd">
                     <select name="organization">
                         @foreach (string organization in Model.Organizations)
                         {
-                            <option selected="@(Model.RemoveUser.Remove != null && Model.RemoveUser.Organization == organization)">@organization</option>
+                            <option @if (Model.ActionFailed) { if (organization == Model.RemoveUser.Organization) { @: selected="selected"
+                                                                            } }>
+                                @organization
+                                                                        </option>
                         }
                     </select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
+
             <tr>
-                <td class="lefttd">Mailbox</td>
-                <td>
+                <td class="lefttd">AD User</td>
+                <td class="middletd">
                     <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
-                <td class="lefttd">Confirm:</td>
+                <td class="lefttd">Delete UserHome Data:</td>
                 <td>
-                    <input id="confirm" type="checkbox" name="confirm" />
+                    <input id="deldata" type="checkbox" name="deldata" />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Confirm<br /></td>
+                <td>
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.RemoveUser.Confirm) { @: checked="checked"
+                                                                                                                                                                        } } onclick="Confirm()" />
                 </td>
             </tr>
         </table>

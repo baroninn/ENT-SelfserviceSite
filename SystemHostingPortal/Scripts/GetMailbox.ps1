@@ -9,13 +9,13 @@ param (
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot Capto)
+Import-Module (Join-Path $PSScriptRoot "Functions")
 
 $params = @{
-    TenantName = $Organization
+    Organization = $Organization
 }
 if ($Name) {
-    $params.Add("Name", $Name)
+    $params.Add("Name", ($name -split '@')[0])
 }
 
 Get-TenantMailbox @params | Sort RecipientTypeDetails,Name | Select Name, UserPrincipalName, RecipientTypeDetails, EmailAddresses

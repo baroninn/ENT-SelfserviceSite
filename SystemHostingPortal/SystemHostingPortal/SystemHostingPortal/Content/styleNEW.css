@@ -1,0 +1,500 @@
+﻿/*
+    CSS copyright (c) 2013 SystemHosting
+    
+ */
+
+body {
+    font-family: Verdana, Tahoma;
+    font-size: 14px;
+    background-color: black;
+    width: 1150px;
+    float: none;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
+}
+
+b {
+    font-weight: bold;
+}
+
+p {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+small {
+    font-size: small;
+}
+
+fieldset {
+    border: 1px solid black;
+    margin-top: 10px;
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+legend {
+    font-weight: bold;
+    font-size: 80%;
+}
+
+table {
+    width: 100%;
+    background-color: white;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
+}
+    table th {
+        color: white;
+        font-weight: bold;
+        padding: 5px;
+    }
+    table td {
+        padding: 5px;
+        text-align: left;
+        vertical-align: top;
+    }
+    table .headertd {
+        font-weight: bold;
+    }
+    table .headertdhelp {
+        font-weight: bold;
+    }
+    table .middletd {
+        vertical-align: middle;
+    }
+    table .middletdhelp {
+        vertical-align: middle;
+    }
+    table .lefttdtop {
+        width: 30%;
+        vertical-align: top;
+        text-align: left;
+    }
+    table .lefttdtophelp {
+        width: 30%;
+        vertical-align: top;
+        text-align: left;
+    }
+    table .lefttd {
+        width: 30%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .lefttdaccepteddomain {
+        width: 37%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .lefttdhelp {
+        width: 30%;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .righttd {
+        padding: 5px;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table .righttdhelp {
+        padding: 5px;
+        vertical-align: middle;
+        text-align: left;
+    }
+    table input, textarea, select {
+        width: 95%;
+        padding: 5px;
+    }
+        table input[type=checkbox] {
+            width: auto !important;
+            margin: 5px;
+        }
+
+#topdiv {
+    padding-top: 20px;
+    padding-bottom: 3em;
+    margin-bottom: 4px;
+    border-bottom: .5em solid black;
+    background-color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1150px;
+    float: none;
+    position: center;
+    margin-top: 30px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 0px solid black;
+
+}
+
+#topdivtest {
+    padding-top: 3em;
+    padding-bottom: 1px;
+    margin-bottom: 1px;
+    border-bottom: .5em solid black;
+    background-color: #ffffff;
+    width: 1200px;
+}
+
+
+#helpdiv {
+    border: 1px solid black;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+#bodydiv {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+    padding-top: 20px;
+    position:center;
+}
+
+#topdivtext {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+    background-color: white;
+    padding-top: 20px;
+    border-bottom: .5em solid black;
+}
+
+
+#maindiv {
+    text-align: left;
+    width: 900px;
+    float: none;
+    background-color: white;
+    padding-bottom: 40px;
+    position: center;
+}
+
+
+
+.title {
+    font-weight: bold;
+}
+
+.warning {
+    font-weight: bold;
+    color: red;
+}
+
+.warning2 {
+    color: red;
+}
+
+.copyright {
+    color: black;
+    font-family: Verdana, Tahoma;
+    font-size: 16px;
+    text-align:right;
+}
+
+.mandatory {
+    color: red;
+    text-align: left;
+    position: center;
+    vertical-align: middle;
+}
+.message, .okmessage {
+    border: 1px solid black;
+    background-color: #f88;
+    color: black;
+    padding: 10px;
+    margin: 10px 5px 10px 5px;
+}
+.message h3, .okmessage h3 {
+    font-size: large;
+    font-weight: bold;
+}
+.okmessage {
+    background-color: #8f8;
+}
+
+
+.error {
+    background-color: #c33;
+    color: white;
+}
+.error a {
+    color: white;
+}
+
+.collapsed p {
+    margin-top: 20px;
+}
+.collapsed h2 {
+    font-weight: bold;
+}
+
+.strike {
+    text-decoration: line-through;
+}
+
+.description {
+    border: 1px solid black;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+.descriptiontext {
+    font-size: 12px;
+    margin: 5px;
+    line-height: 150%;
+}
+
+.infohelp {
+    border: none;
+    display: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 40px;
+    background-color: ghostwhite;
+}
+
+.infohelptext {
+    font-size: 14px;
+    margin: 5px;
+    line-height: 120%;
+}
+
+.tooltip {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.helptooltip {
+    cursor: pointer;
+}
+
+.infoicon {
+    color: cornflowerblue;
+    float: right;
+}
+
+.copyrighticon {
+    color: black;
+    float: none;
+    align-content:center;
+    font-size:24px;
+    vertical-align:bottom;
+}
+
+.button {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid;
+    width: auto;
+    height: auto;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius:10px;
+    -webkit-transition: font-size 0.2s ease, background-color 0.2s ease;
+    -moz-transition: font-size 0.2s ease, background-color 0.2s ease;
+    -o-transition: font-size 0.2s ease, background-color 0.2s ease;
+    transition: font-size 0.2s ease, background-color 0.2s ease;
+    background-color: white;
+}
+
+.button:hover {
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border: 1px solid;
+    width: auto;
+    height: auto;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius:10px;
+    background-color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.buttontest2 {
+    background: url(../Images/button4.png) center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: auto;
+    height: 36px;
+    color: white;
+    border: hidden;
+}
+
+
+
+
+.wrap {
+  display: inline-block;
+  -webkit-box-shadow: 0 0 15px #fff;
+  -moz-box-shadow: 0 0 15px #fff;
+  box-shadow: 0 0 15px #fff;
+  margin-top: 40px;
+  float: none;
+  border: 0px solid black;
+  position: center;
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* a little "umph" */
+.decor {
+  background: #0066ff;
+  background: -webkit-linear-gradient(left, #0066ff 50%, #0066ff 50%);
+  background: -moz-linear-gradient(left, #0066ff 50%, #0066ff 50%);
+  background: -o-linear-gradient(left, #0066ff 50%, #0066ff 50%);
+  background: linear-gradient(left, white 50%, #0066ff 50%);
+  background-size: 100px 50%;
+  padding: 1px;
+  display: block;
+  width: 970px;
+  position: center;
+  margin-left: 82px;
+  margin-right: 70px;
+  border: 0px solid black;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+}
+
+ul {
+  list-style: none;
+  position: center;
+  text-align: left;
+  padding-left: 70px;
+  padding-right: 60px;
+}
+
+li {
+  float: left;
+
+}
+
+/* clear'n floats */
+ul:after {
+  clear: both;
+}
+
+ul:before,
+ul:after {
+    content: " ";
+    display: table;
+}
+
+nav {
+  position: relative;
+  background: #000000;
+  background-image: -webkit-linear-gradient(bottom, #404040 7%, #000000 100%);
+  background-image: -moz-linear-gradient(bottom, #404040 7%, #000000 100%);
+  background-image: -o-linear-gradient(bottom, #404040 7%, #000000 100%);
+  background-image: linear-gradient(bottom, #404040 7%, #000000 100%);
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 1px #0E0E0E;
+  -webkit-box-shadow: 2px 2px 3px #888;
+  -moz-box-shadow: 2px 2px 3px #888;
+  box-shadow: 2px 2px 3px #888;
+  border-radius: 15px;
+  width: 1000px;
+  margin-left: 70px;
+  margin-right: 50px;
+  
+}
+
+/* prime */
+ul.primary li a {
+  display: block;
+  font-weight: bold;
+  padding: 20px 20px;
+  border-right: 1px solid #3D3D3D;
+}
+
+ul.primary li:last-child a {
+  border-right: none;
+}
+
+ul.primary li a:hover {
+  color: #000;
+  font-weight: bold;
+}
+
+/* subs TEST */
+ul.sub {
+  position: absolute;
+  z-index: auto;
+  box-shadow: 2px 2px 0 #BEBEBE;
+  display:none;
+  width:250px;
+}
+
+ul.sub li {
+  float: none;
+  margin: 0;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+ul.sub li a {
+  border-bottom: 1px dotted #ccc;
+  border-right: none;
+  color: #000;
+  position: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+ul.sub li:last-child a {
+  border-bottom: none;
+}
+
+ul.sub li a:hover {
+  color: #000;
+  background: #eeeeee;
+
+}
+
+/* sub display*/
+ul.primary li:hover ul {
+  display: block;
+  background: #fff;
+}
+
+/* keeps the tab background white */
+ul.primary li:hover a {
+  background: #fff;
+  color: #666;
+  text-shadow: none;
+}
+
+ul.primary li:hover > a{
+  color: #000;
+} 

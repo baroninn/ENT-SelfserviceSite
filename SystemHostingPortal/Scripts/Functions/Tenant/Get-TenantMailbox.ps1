@@ -1,8 +1,8 @@
-function Get-TenantMailbox {
+﻿function Get-TenantMailbox {
     [Cmdletbinding()]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string]$TenantName,
+        [string]$Organization,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
@@ -16,16 +16,11 @@ function Get-TenantMailbox {
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2.0
 
-        Import-Module (New-ExchangeProxyModule -Command "Get-Mailbox")
+        Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Get-Mailbox") -Global
     }
     Process {
         $params = @{
-            Filter      = "CustomAttribute1 -eq '$TenantName'"
             ErrorAction = "Stop"
-        }
-
-        if ($Name) {
-            $params.Add("Identity", $Name)
         }
 
         if ($Single) {
@@ -34,20 +29,11 @@ function Get-TenantMailbox {
             }
         }
 
-        $result = @(Get-Mailbox @params)
-        foreach ($mbx in $result) {
-            if ($mbx.CustomAttribute10 -ne "") {
-                try {
-                    $mbx | Add-Member -NotePropertyName ShtProperties -NotePropertyValue (ConvertFrom-Json -InputObject $mbx.CustomAttribute10)
-                }
-                catch {
-                    Write-Error "Error parsing ShtProperties on $($mbx.DisplayName)"
-                }
-            }
-            else {
-                $mbx | Add-Member -NotePropertyName ShtProperties -NotePropertyValue ([pscustomobject]@{})
-                Write-Warning "ShtProperties was not found on $($mbx.DisplayName)"
-            }
+        if ($Name) {
+            $result = @(Get-Mailbox -filter "UserPrincipalName -eq '$Name'")
+        }
+        else {
+            $result = @(Get-Mailbox @params)
         }
         
         if ($Single) {
@@ -64,7 +50,9 @@ function Get-TenantMailbox {
         else {
             return $result
         }
+        Get-PSSession | Remove-PSSession -Confirm:$false
     }
+
     End {
     }
 }

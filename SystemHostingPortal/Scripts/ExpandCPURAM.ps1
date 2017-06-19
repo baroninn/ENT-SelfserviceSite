@@ -1,7 +1,7 @@
 ﻿[Cmdletbinding()]
 param (
     [Parameter(Mandatory)]
-    [string]$Name,
+    [string]$VMID,
 
     [Parameter(Mandatory)]
     [string]$DateTime,
@@ -21,23 +21,18 @@ Set-StrictMode -Version 2
 
 Import-Module (Join-Path $PSScriptRoot OrchestratorHook2.dll)
 Import-Module (Join-Path $PSScriptRoot Functions)
-$VMMServer= 'vmm-a.corp.systemhosting.dk'
+
+$Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine")
+
+Import-Module (Join-Path $PSScriptRoot Functions)
+$Server= 'vmm-a.corp.systemhosting.dk'
+$Cred = Get-RemoteCredentials -SSS
+Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+$SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
 
 ## Convert VMID back to name
-$ScriptBlock = {
-    param($Name)
 
-    Import-Module VirtualMachineManager
-    $VMMServer= 'vmm-a.corp.systemhosting.dk'
-
-    $VMName = Get-SCVirtualMachine -VMMServer $VMMServer -ID $Name
-
-    return $VMName
-}
-
-$VM = Invoke-Command -ComputerName $VMMServer -ScriptBlock $ScriptBlock -ArgumentList $Name
-$Name = $VM.Name
-
+$VMName = Get-SCVirtualMachine -VMMServer $SCVMMServer -ID $VMID | select -ExpandProperty Name
 
 
 $runbookIds = @{
@@ -52,7 +47,7 @@ $runbookIds.ChangeVMCPU = 'ebdc76b6-c29e-4865-ae19-ae8f2661d85e'
 $parameters = @{
     "CPUCount" = $CPU
     "RAM"      = $RAM * 1024
-    "VMName"   = "$Name"
+    "VMName"   = "$VMName"
 }
 
 

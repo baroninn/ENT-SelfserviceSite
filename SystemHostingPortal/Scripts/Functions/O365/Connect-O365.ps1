@@ -2,8 +2,7 @@
     [Cmdletbinding()]
     param (
         [Parameter(Mandatory)]
-        [string]$Organization,
-        [string]$Command
+        [string]$Organization
     )
     
     $Config = Get-EntConfig -Organization $Organization
@@ -15,18 +14,17 @@
     $Credentials = New-Object System.Management.Automation.PSCredential $Username, $password
 
     # Remove the module/session from this scope, to avoid it getting stuck in the users scope.
-    Get-Module -Name "tmp_*" -ErrorAction SilentlyContinue | Remove-Module
-    Get-PSSession -Name "Office365" -ErrorAction SilentlyContinue | Remove-PSSession
+    # Important to keep the Exchange module imported, as it will only be the session that will change.
+    #Get-PSSession -Name "Office365" -ErrorAction SilentlyContinue | Remove-PSSession
+    try {
+        Connect-MsolService –Credential $Credentials
+    }
+    catch {
+        throw $_
+    }
 
-    Connect-MsolService –Credential $Credentials | Out-Null
+    # Remove the module from this scope, to avoid it getting stuck in the users scope.
 
-    if ((Get-MsolAccountSku).AccountSkuId -like "*ENTERPRISEPACK") {
-    
-        Import-PSSession -Session (New-PSSession -ConfigurationName Microsoft.Exchange `
-                                                 -ConnectionUri "https://outlook.office365.com/powershell-liveid/" `
-                                                 -Credential $credentials `
-                                                 -Authentication "Basic" `
-                                                 -AllowRedirection) -DisableNameChecking -AllowClobber | Out-Null
-        }
+    Get-Module -Name "MSOnline" -ErrorAction SilentlyContinue | Remove-Module
 
 }

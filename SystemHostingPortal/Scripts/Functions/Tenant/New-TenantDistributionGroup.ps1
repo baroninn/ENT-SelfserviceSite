@@ -1,9 +1,9 @@
-function New-TenantDistributionGroup {
+﻿function New-TenantDistributionGroup {
     [Cmdletbinding()]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
-        $TenantName,
+        $Organization,
 
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [string]
@@ -13,42 +13,80 @@ function New-TenantDistributionGroup {
         [string]
         $PrimarySmtpAddress,
 
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [Parameter(ValueFromPipelineByPropertyName)]
         [string]
         $ManagedBy,
 
         [Parameter(ValueFromPipelineByPropertyName)]
-        [bool]
-        $RequireSenderAuthentication=$true
+        [switch]
+        $RequireSenderAuthentication
     )
 
     Begin {
-        $ErrorActionPreference = "Stop"
-        Set-StrictMode -Version 2
 
-        Import-Module (New-ExchangeProxyModule -Command "Enable-DistributionGroup", "Set-DistributionGroup")
+        $ErrorActionPreference = "Stop"
+        Import-Module ActiveDirectory
+
+        $Config = Get-EntConfig -Organization $Organization -JSON
+
+        $Cred  = Get-RemoteCredentials -Organization $Organization
     }
+
     Process {
-        $TenantName = $TenantName.ToUpper()
+
+        $Organization = $Organization.ToUpper()
         
-        $Config = Get-TenantConfig -Name $TenantName
-        
-        $manager = Get-TenantMailbox -TenantName $TenantName -Name $ManagedBy
+        if ($managedby -ne '') {
+
+            try{
+                $manager = Get-ADUser -Identity ($managedby -split '@')[0] -Server $Config.DomainFQDN -Credential $Cred
+                $distGroup = New-ADGroup -Name $Name -ManagedBy $manager -GroupCategory Distribution -GroupScope Universal -Path $Config.CustomerOUDN -Server $Config.DomainFQDN -Credential $Cred -PassThru
+            }
+            catch{
+                throw $_
+            }
+        }
+        else{
+            $distGroup = New-ADGroup -Name $Name -GroupCategory Distribution -GroupScope Universal -Path $Config.CustomerOUDN -Server $Config.DomainFQDN -Credential $Cred -PassThru
+        }
 
         Write-Verbose "Creating AD group '$Name'..."
-        $distGroup = New-ADGroup -Name $Name -GroupCategory Distribution -GroupScope Universal -Path $Config.DistributionGroupsOU -Server $Config.DomainFQDN -PassThru    
 
-        Wait-ADReplication -DistinguishedName $distGroup.DistinguishedName -DomainName $Config.DomainFQDN
+        try {
+            Set-ADGroup -Identity $distGroup.DistinguishedName -DisplayName $name -replace @{mail=$PrimarySmtpAddress} -Server $Config.DomainFQDN -Credential $Cred
+        }
+        catch {
+            throw $_
+        }
 
-        Write-Verbose "Enabling distribution group..."
-        $newDistGroup = Enable-DistributionGroup -Identity $distGroup.DistinguishedName
+        if ($Config.ExchangeServer -ne 'null') {
 
-        Write-Verbose "Setting PrimarySmtpAddress to '$PrimarySmtpAddress' and CustomAttribute1 to '$TenantName'..."
-        $newDistGroup | Set-DistributionGroup -PrimarySmtpAddress $PrimarySmtpAddress -CustomAttribute1 $TenantName -EmailAddressPolicyEnabled $false -ManagedBy $manager.DistinguishedName
+            Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Enable-DistributionGroup", "Set-DistributionGroup")
 
-        if (-not $RequireSenderAuthentication) {
-            Write-Verbose "Disabling RequireSenderAuthenticationEnabled..."
-            $newDistGroup | Set-DistributionGroup -RequireSenderAuthenticationEnabled $false
+            Write-Verbose "Enabling distribution group..."
+            $newDistGroup = Enable-DistributionGroup -Identity $distGroup.DistinguishedName
+
+            Write-Verbose "Setting PrimarySmtpAddress to '$PrimarySmtpAddress'..."
+            $newDistGroup | Set-DistributionGroup -PrimarySmtpAddress $PrimarySmtpAddress -EmailAddressPolicyEnabled $false -ManagedBy $manager.DistinguishedName
+            
+            if ($RequireSenderAuthentication) {
+                Write-Verbose "Disabling RequireSenderAuthenticationEnabled..."
+                $newDistGroup | Set-DistributionGroup -RequireSenderAuthenticationEnabled $false
+            }
+        }
+        else {
+
+            if ($RequireSenderAuthentication) {
+                Set-ADGroup -Identity $distGroup.DistinguishedName -DisplayName $name -replace @{msExchRequireAuthToSendTo=$False} -Server $Config.DomainFQDN -Credential $Cred
+            }
+            else {
+                Set-ADGroup -Identity $distGroup.DistinguishedName -DisplayName $name -replace @{msExchRequireAuthToSendTo=$True} -Server $Config.DomainFQDN -Credential $Cred
+            }
+        }
+
+        if ($Config.AADsynced -eq 'true') {
+            Start-Dirsync -Organization $Organization
+            Write-Output "Directory sync has been initiated, because the customer has Office365."
         }
     }
 }

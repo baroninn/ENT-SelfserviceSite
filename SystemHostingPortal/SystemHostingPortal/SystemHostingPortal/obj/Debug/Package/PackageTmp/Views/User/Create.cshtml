@@ -7,23 +7,43 @@
         $(document).ready(function () {
             if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
-            GetAcceptedDomain2();
+            GetDomainSelect();
             GetADUsersList();
 
             $("select[name=organization]").change(function () {
                 $("select[name=domainname]").html('<option>loading...</option>');
-                $("select[name=distinguishedname]").html('<option>loading...</option>');
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
 
-                GetAcceptedDomain2();
+                GetDomainSelect();
                 GetADUsersList();
 
             });
         });
+
+        function info() {
+                $.confirm({
+                    theme: 'light',
+                    type: 'green',
+                    typeAnimated: true,
+                    title: 'INFO:',
+                    content: 'If the customer has Office 365' +
+                             '<p>Remember to give the user a license...',
+                    buttons: {
+                        OK: function () {
+                            StartSubmitButtonMessage();
+                            document.forms[0].submit();
+                            
+                        },
+                    }
+                });
+            }
+
 </script>
 }
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to create a new user account.</p>
+<br />
 
 @using(Html.BeginForm("Create", "User")) {
 <fieldset>
@@ -34,7 +54,7 @@
         </tr>
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
+            <td class="middletd"><select name="organization">
                     @foreach(string organization in Model.Organizations) 
                     {
                             <option @if(Model.ActionFailed)
@@ -44,53 +64,58 @@
                                         }
                                     }>@organization</option>
                     }
-                </select></td>
+                </select>
+                <span class="mandatory">*</span>
+            </td>
         </tr>
         <tr>
             <td class="lefttd"><span>Copy settings from<i class="material-icons infoicon"></i></span></td>
-            <td class="righttd">
-                <select name="distinguishedname"><option>loading...</option></select>
+            <td class="middletd">
+                <select name="userprincipalname"><option>loading...</option></select>
+                <span class="mandatory">*</span>
             </td>
         </tr>
         <tr>
             <td class="lefttd">First name</td>
-            <td>
+            <td class="middletd">
                 <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].FirstName"
                                                                                      } />
+                <span class="mandatory">*</span>
             </td>
         </tr>
         <tr>
             <td class="lefttd">Last name</td>
-            <td>
+            <td class="middletd">
                 <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].LastName"
                                                                                      } />
+                <span class="mandatory">*</span>
             </td>
         </tr>
 
     </table>
     <table>
         <tr>
-            <td class="lefttd">Primary email</td>
-            <td class="lefttd"><input name="userprincipalname" placeholder="john.doe" @if (Model.ActionFailed)
+            <td class="lefttd">Primary Email</td>
+            <td class="lefttdaccepteddomain"><input name="username" placeholder="john.doe" @if (Model.ActionFailed)
                                                                                    { 
-                                                                  @:value="@Model.UserList[0].UserPrincipalName" 
+                                                                  @:value="@Model.UserList[0].UserName" 
                                                                                     }/>
             </td>
-            <td><p>@@</p></td>
-            <td class="lefttdaccepteddomain">
+            <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">@@</td>
+            <td class="righttdaccepteddomain">
                 <select name="domainname"><option>loading...</option></select>
             </td>
-
         </tr>
     </table>
     <table>
-        
         <tr>
             <td class="lefttd">Password</td>
-            <td><input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed)
+            <td class="middletd"><input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed)
                                                               { 
                                                                   @:value="@Model.UserList[0].Password" 
-                                                              }/></td>
+                                                              }/>
+                <span class="mandatory">*</span>
+            </td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
@@ -126,7 +151,7 @@
         </tr>
     </table>
     <br />
-    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); info()" />
 </fieldset>
     
 }

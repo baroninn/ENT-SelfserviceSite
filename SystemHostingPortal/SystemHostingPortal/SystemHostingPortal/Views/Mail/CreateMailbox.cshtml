@@ -5,8 +5,9 @@
 @section script { 
     <script>
         $(document).ready(function () {
+            GetDomainSelect();
             $("select[name=organization]").change(function () {
-                GetAcceptedDomain();
+                GetDomainSelect();
                 
             });
 
@@ -18,18 +19,15 @@
                     emailTextarea.val("Not available for RoomMailbox.");
                     emailTextarea.prop("disabled", true);
                 }
+                else if (mbxType == 'EquipmentMailbox') {
+                    emailTextarea.val("Not available for EquipmentMailbox.");
+                    emailTextarea.prop("disabled", true);
+                }
                 else {
                     emailTextarea.val("");
                     emailTextarea.prop("disabled", false);
                 }
             });
-           
-            @if (Model.Mailbox != null)
-            {
-            @:$("select[name=organization]").val("@Model.Mailbox.Organization");
-            }
-
-            GetAcceptedDomain();
         });
         
     </script>
@@ -37,7 +35,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to create special mailboxes (RoomMailbox, SharedMailbox)</p>
-
+<br/>
 @using(Html.BeginForm("CreateMailbox", "Mail")) {
 <fieldset>
     <legend>Create Mailbox</legend>
@@ -64,44 +62,50 @@
                 </div>
             </td>
         </tr>
-
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
-                    @foreach(string organization in Model.Organizations) 
+            <td>
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
                     {
-                            <option @if(Model.ActionFailed)
-                                    {
-                                        if(organization == Model.Mailbox.Organization) {
-                                            @:selected="selected"
-                                        }
-                                    }>@organization</option>
+                        <option selected="@(Model.Mailbox.Organization != null && Model.Mailbox.Organization == organization)">@organization</option>
                     }
-                </select></td>
-        </tr>
-        <tr>
-            <td class="lefttd">Accepted emaildomains:</td>
-            <td class="righttd">
-                <div id="acceptedDomain"></div>
+                </select>
+                <span class="mandatory">*</span>
             </td>
         </tr>
+
         <tr>
-            <td class="lefttd">Mailbox name</td>
-            <td><input name="name" placeholder="Special Mailbox - Shared" @if(Model.ActionFailed)
-                                                                                   {
-                                                                                       @:value="@Model.Mailbox.Name"
-                                                                                   }/></td>
+            <td class="lefttd tooltip"><span>DisplayName<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="displayname" placeholder="Bogholderi" @if (Model.ActionFailed) {  @: value="@Model.Mailbox.DisplayName"
+                                                                                                                    } />
+                <span class="mandatory">*</span>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Sets the displayname which will be shown in Outlook.
+                    </p>
+                </div>
+            </td>
         </tr>
-        <tr>
-            <td class="lefttd">Mailbox primary SMTP</td>
-            <td><input name="userprincipalname" placeholder="mailbox1@example.com" @if(Model.ActionFailed)
-                                                                                   {
-                                                                                       @:value="@Model.Mailbox.UserPrincipalName"
-                                                                                   }/></td>
-        </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Primary email</td>
+                <td class="lefttdaccepteddomain">
+                    <input name="username" placeholder="bogholderi" @if (Model.ActionFailed) { @: value="@Model.Mailbox.UserName"
+                                                                                                               } />
+                </td>
+                <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">@@</td>
+                <td class="righttdaccepteddomain">
+                    <select name="domainname"><option>loading...</option></select>
+                </td>
+            </tr>
+        </table>
+        <table>
         <tr>
             <td class="lefttd">Mailbox type</td>
-            <td>
+            <td class="middletd">
                 <select name="type">
                     <option @if (Model.ActionFailed)
                             {
@@ -121,7 +125,18 @@
                             }>
                         RoomMailbox
                     </option>
+                    <option @if (Model.ActionFailed)
+                            {
+                                if (Model.Mailbox.Type == "EquipmentMailbox")
+                                { 
+                                    @: selected="selected"
+                                }
+                            }>
+                        EquipmentMailbox
+                    </option>
+
                 </select>
+                <span class="mandatory">*</span>
             </td>
         </tr>
         <tr>

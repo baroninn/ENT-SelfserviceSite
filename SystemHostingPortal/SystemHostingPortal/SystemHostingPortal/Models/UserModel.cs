@@ -16,17 +16,9 @@ namespace SystemHostingPortal.Models
         public string Path { get; set; }
         public CustomServiceUser ServiceUser = new CustomServiceUser();
         public CustomUserMemberOf MemberOf = new CustomUserMemberOf();
-        public CustomNav2goUser Nav2goUser = new CustomNav2goUser();
         public CustomExtUser CreateExtUser = new CustomExtUser();
         public CustomResetPWD ResetPWD = new CustomResetPWD();
 
-    }
-
-    public class CustomNav2goUser
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool NoExpiry { get; set; }
     }
 
     public class CustomUserMemberOf
@@ -47,8 +39,7 @@ namespace SystemHostingPortal.Models
     public class CustomResetPWD
     {
         public string Organization { get; set; }
-        public string Name { get; set; }
-        public string DistinguishedName { get; set; }
+        public string UserPrincipalName { get; set; }
         public string Password { get; set; }
         public bool PasswordNeverExpires { get; set; }
     }
@@ -61,7 +52,7 @@ namespace SystemHostingPortal.Models
         public string LastName { get; set; }
         public string Organization { get; set; }
         public string UserPrincipalName { get; set; }
-        public string DistinguishedName { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
         public string DomainName { get; set; }
         public string CopyFrom { get; set; }
@@ -72,19 +63,19 @@ namespace SystemHostingPortal.Models
         public bool Remove { get; set; }
         public bool PasswordNeverExpires { get; set; }
         public bool LightUser { get; set; }
+        public bool DelData { get; set; }
     }
 
     public class CustomExtUser
     {
 
-        public string Name { get; set; }
+        public string DisplayName { get; set; }
         public string Organization { get; set; }
         public string Description { get; set; }
         public string ExpirationDate { get; set; }
         public string Password { get; set; }
-
-        public string UserPrincipalName { get; set; }
+        public string DomainName { get; set; }
+        public string UserName { get; set; }
     }
-
 
 }

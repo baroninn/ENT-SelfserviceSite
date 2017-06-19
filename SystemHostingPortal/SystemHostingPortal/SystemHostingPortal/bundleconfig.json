@@ -1,0 +1,38 @@
+[
+  {
+    "outputFileName": "Content/styleNEW2.min.css",
+    "inputFiles": [
+      "Content/styleNEW2.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery-confirm.min.css",
+    "inputFiles": [
+      "Scripts/jquery-confirm.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.collapse.min.js",
+    "inputFiles": [
+      "Scripts/jquery.collapse.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/jquery-confirm.min.css",
+    "inputFiles": [
+      "Content/jquery-confirm.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/jquery.datetimepicker.min.css",
+    "inputFiles": [
+      "Content/jquery.datetimepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.min.js",
+    "inputFiles": [
+      "Scripts/jquery.js"
+    ]
+  }
+]

@@ -1,23 +1,23 @@
-[Cmdletbinding()]
+﻿[Cmdletbinding()]
 param (
     [Parameter(Mandatory)]
     [string]
     $Organization,
 
     [Parameter(Mandatory)]
-    [string]
-    $UserPrincipalName,
+    [string]$UserPrincipalName,
 
     [Parameter(Mandatory)]
-    [string[]]
+    [string]
     $EmailAddresses
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 2
 
-Import-Module (Join-Path $PSScriptRoot "Capto")
+Import-Module (Join-Path $PSScriptRoot Functions)
 
 foreach ($alias in $EmailAddresses) {
-    Remove-EmailAddress -TenantName $Organization -Name $UserPrincipalName -EmailAddress $alias
+
+    Remove-EmailAddress -Organization $Organization -Name $UserPrincipalName -EmailAddress $alias
 }

@@ -10,7 +10,7 @@
             GetADUsersList();
 
             $("select[name=organization]").change(function () {
-                $("select[name=distinguishedname]").html('<option>loading...</option>');
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
 
                 GetADUsersList();
 
@@ -19,20 +19,34 @@
 
         function Confirm() {
             if ($("input[name=confirm]").prop('checked')) {
-                var result = confirm("WARNING: THIS WILL ENABLE THE USER!\n\nRemember, you can easily disable the user again.")
-                if (!result) {
-                    $("input[name=confirm]").prop("checked", false);
-                }
+                $.confirm({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: '<b>THIS WILL ENABLE THE USER!</b>' +
+                        '<p>Remember, you can easily disable the user again...' +
+                        '<p><br />',
+                    buttons: {
+                        confirm: function () {
+                            $("input[name=confirm]").prop("checked", true);
+                        },
+                        cancel: function () {
+                            $("input[name=confirm]").prop("checked", false);
+                        },
+                    }
+                });
             }
         }
+
     </script>
 }
-
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to enable AD users and unhide users on the exchange address lists</p>
+<br />
 @using(Html.BeginForm("Enable", "User")) {
     <fieldset>
         <legend>@ViewBag.Title</legend>
-        <p>Use this form to enable AD users and unhide users on the exchange address lists</p>
-
         <table>
             <tr>
                 <td colspan="2">
@@ -65,22 +79,25 @@
                             <option selected="@(Model.EnableUser.Organization != null && Model.EnableUser.Organization == organization)">@organization</option>
                         }
                     </select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">AD User</td>
-                <td>
-                    <select name="distinguishedname"><option>loading...</option></select>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">Confirm<br /></td>
                 <td>
-                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.DisableUser.Confirm) { @: checked="checked"
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.EnableUser.Confirm) { @: checked="checked"
                                                                                                                                              } } onclick="Confirm()" />
                 </td>
             </tr>
         </table>
+
         <br />
         <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Enable user" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>

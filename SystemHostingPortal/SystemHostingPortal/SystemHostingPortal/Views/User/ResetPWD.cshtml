@@ -10,7 +10,7 @@
             GetADUsersList();
 
             $("select[name=organization]").change(function () {
-                $("select[name=distinguishedname]").html('<option>loading...</option>');
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
 
                 GetADUsersList();
 
@@ -21,6 +21,7 @@
 
 <h1 class="title">@ViewBag.Title</h1>
 <p>Use this form to reset a user password.</p>
+<br />
 
 @using (Html.BeginForm("ResetPWD", "User"))
 {
@@ -51,7 +52,7 @@
             </tr>
             <tr>
                 <td class="lefttd">Organization</td>
-                <td>
+                <td class="middletd">
                     <select name="organization">
                         @foreach (string organization in Model.Organizations)
                         {
@@ -61,21 +62,24 @@
                                                                         </option>
                         }
                     </select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
 
             <tr>
                 <td class="lefttd"><span>AD User<i class="material-icons infoicon"></i></span></td>
-                <td class="righttd">
-                    <select name="distinguishedname"><option>loading...</option></select>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
 
             <tr>
                 <td class="lefttd">New Password</td>
-                <td>
+                <td class="middletd">
                     <input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed) {  @: value="@Model.ResetPWD.Password"
                                                                                                                 } />
+                    <span class="mandatory">*</span>
                 </td>
             </tr>
 

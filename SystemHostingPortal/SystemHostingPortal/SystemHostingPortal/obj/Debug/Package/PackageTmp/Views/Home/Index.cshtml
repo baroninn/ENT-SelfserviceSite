@@ -1,7 +1,70 @@
 ﻿@model SystemHostingPortal.Models.HomeModel
 
 @{
-    ViewBag.Title = "Home > Index";
+    ViewBag.Title = "Home > Changelog";
 }
 
-<iframe src="http://systemhosting.dk/driftsstatus/" width="100%" height="800"></iframe>
+<h1 class="title">@ViewBag.Title</h1>
+<p>A short changelog over the additions to the website.</p>
+<br />
+<fieldset>
+    <legend>Changelog</legend>
+    <table>
+        <tr>
+            <td>19-06-2017:</td>
+            <td class="middletd">Rewrote SCVMM PS code. Result is <b><span class="spanfeature">increased performance on Expand VHD/CPU/RAM!</span></b></td>
+        </tr>
+        <tr>
+            <td>16-06-2017:</td>
+            <td class="middletd">Simple design changes / bugfixes.</td>
+        </tr>
+        <tr>
+            <td>15-06-2017:</td>
+            <td class="middletd">Added <b><span class="spanfeature">Auto start Directory Sync on features.</span></b>.</td>
+        </tr>
+        <tr>
+            <td>02-06-2017:</td>
+            <td class="middletd">Added <b><span class="spanfeature">Azure Automation Log</span></b>.</td>
+        </tr>
+        <tr>
+            <td>30-05-2017:</td>
+            <td class="middletd">Simple design changes / bugfixes.</td>
+        </tr>
+        <tr>
+            <td>30-05-2017:</td>
+            <td class="middletd">Rewrote some of the code, added <b><span class="spanfeature">Calendar Permissions</span></b>.</td>
+        </tr>
+        <tr>
+            <td>29-05-2017:</td>
+            <td class="middletd">Rewrote some of the code, added <b><span class="spanfeature">Create Dist. Group.</span></b>.</td>
+        </tr>
+        <tr>
+            <td>23-05-2017:</td>
+            <td class="middletd">Bugfixes (Remove Domain).</td>
+        </tr>
+        <tr>
+            <td>23-05-2017:</td>
+            <td class="middletd">Bugfixes/Design fixes (sorting of top links).</td>
+        </tr>
+        <tr>
+            <td>22-05-2017:</td>
+            <td class="middletd">Added<b><span class="spanfeature"> Create Mailbox and Ext user.</span></b></td>
+        </tr>
+        <tr>
+            <td>10-05-2017:</td>
+            <td class="middletd">Bugfixes, styling and <b><span class="spanfeature">Remove User.</span></b></td>
+        </tr>
+        <tr>
+            <td>08-05-2017:</td>
+            <td class="middletd">Design update, to make room for new features.</td>
+        </tr>
+        <tr>
+            <td>07-05-2017:</td>
+            <td class="middletd">Feature Update <b><span class="spanfeature">(Verify Office 365 Domain).</span></b></td>
+        </tr>
+        <tr>
+            <td>02-05-2017:</td>
+            <td class="middletd">Re-wrote Exchange and O365 modules.</td>
+        </tr>
+</table>
+</fieldset>

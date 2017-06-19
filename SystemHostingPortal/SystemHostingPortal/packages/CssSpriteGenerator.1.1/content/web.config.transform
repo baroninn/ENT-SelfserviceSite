@@ -1,0 +1,36 @@
+<configuration>
+    <configSections>
+        <section name="cssSpriteGenerator" type="CssSpriteGenerator.ConfigSection" requirePermission="false"/>
+    </configSections>
+
+    <!-- 
+    By default, the package only combines .png and .gif images into sprites, 
+    and then only those whose width and height are 100px or less.
+
+    To see how to use other selection criteria for combining images, and how to
+    compress or resize images on the fly, see the links below.
+
+    Full documentation starts at 
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-1.aspx 
+
+    Features compared with Microsoft's ASP.NET Sprite and Image Optimization Library
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-1.aspx#features
+
+    Introduction to CSS Sprites
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-1.aspx#howspriteswork
+
+    Quick Start, including demo sites showcasing major features
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-1.aspx#quickstart
+
+    Configuration
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-2.aspx#configuration
+
+    Compressing and resizing images on the fly, selecting with images goes into which sprites, etc.
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-3.aspx#groups
+
+    CSS Background Images
+    http://aspnetperformance.com/post/Generate-CSS-sprites-and-thumbnail-images-on-the-fly-in-ASPNET-sites-part-3.aspx#cssBackgroundImages
+    -->
+    <cssSpriteGenerator active="Always">
+    </cssSpriteGenerator>
+</configuration>

@@ -26,12 +26,14 @@
             $Config += [pscustomobject]@{
                     ExchangeServer  = $JSONConfig.ExchangeServer
                     DomainFQDN      = $JSONConfig.DomainFQDN
-                    Domain          = $JSONConfig.Domain
+                    NETBIOS         = $JSONConfig.NETBIOS
                     CustomerOUDN    = $JSONConfig.CustomerOUDN
-                    AcceptedDomains = $JSONConfig.EmailDomains.DomainName -join ','
                     TenantID365     = $JSONConfig.Office365.TenantID
                     AdminUser365    = $JSONConfig.Office365.AdminUser
                     AdminPass365    = $JSONConfig.Office365.AdminPass
+                    AADsynced       = $JSONConfig.AADsynced
+                    ADConnectServer = $JSONConfig.ADConnectServer
+                    DomainDC        = $JSONConfig.DomainDC
             }
 
             return $Config

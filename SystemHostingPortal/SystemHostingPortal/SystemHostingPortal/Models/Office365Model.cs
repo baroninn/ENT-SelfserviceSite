@@ -9,12 +9,12 @@ namespace SystemHostingPortal.Models
     // model for View display in the 365 controller
     public class Office365Model : BaseModel
     {
-        public CustomAddDomain AddDomain = new CustomAddDomain();
+        public CustomVerifyDomain VerifyDomain = new CustomVerifyDomain();
         public CustomGetTenantInfo GetTenantInfo = new CustomGetTenantInfo();
     }
 
 
-    public class CustomAddDomain
+    public class CustomVerifyDomain
     {
         public string Organization { get; set; }
         public string Domain { get; set; }

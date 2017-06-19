@@ -9,34 +9,26 @@
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2
         $Server= 'vmm-a.corp.systemhosting.dk'
+        $Cmdlets = @("Get-SCVirtualDiskDrive", "Get-SCVirtualHardDisk", "Get-SCVMMServer", "Get-SCVirtualMachine")
+        $Cred = Get-RemoteCredentials -SSS
+        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+        $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
         
     }
     Process {
-        $ScriptBlock = {
-            param(
-                [Parameter(Mandatory)]$VMID
-            )
-            $Server = 'vmm-a.corp.systemhosting.dk'
-            Import-Module virtualmachinemanager
-            $VM = Get-SCVirtualMachine -VMMServer $Server -ID $VMID
-            $VMVHDs = Get-SCVirtualHardDisk -VMMServer $Server -VM $VM
-            $VHDlist  = @()
-            foreach ($i in $VMVHDs) {
-                $VHDlist += 
-                  [pscustomobject]@{
-                      Name = $i.Name
-                      ID   = $i.ID.guid
-                      Size = $i.MaximumSize / 1024 /1024 / 1024
-                  }
-            }
-        return $VHDlist
-
+        $VM = Get-SCVirtualMachine -VMMServer $SCVMMServer -ID $VMID
+        $VMVHDs = Get-SCVirtualHardDisk -VMMServer $SCVMMServer -VM $VM
+        $VHDlist  = @()
+        foreach ($i in $VMVHDs) {
+            $DiskID = Get-SCVirtualDiskDrive -VMMServer $SCVMMServer -VM $VM | where{$_.VirtualHardDiskId -eq $i.ID.Guid}
+            $VHDlist += 
+                [pscustomobject]@{
+                    Name = $i.Name
+                    VHDID   = $DiskID.ID.guid
+                    Size = $i.MaximumSize / 1024 /1024 / 1024
+                }
         }
-        $VHDs = Invoke-Command -ComputerName $Server -ScriptBlock $ScriptBlock -ArgumentList $VMID
-
-        return $VHDs | sort Name | select Name, ID, Size
-
-
+    return $VHDlist | sort Name | select Name, VHDID, Size
  
     }
 }

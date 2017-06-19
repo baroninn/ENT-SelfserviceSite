@@ -10,6 +10,8 @@
         [string]$Subnet,
         
         [string]$Vlan,
+
+        [string]$Gateway,
         
         [string]$IPAddressRangeStart,
         
@@ -31,10 +33,10 @@
     
         New-EntConfig -Organization $Organization
 
-        Set-EntConfig -Organization $Organization -DomainFQDN ("corp.$EmailDomainName")
+        Set-EntConfig -Organization $Organization -DomainFQDN ("$Organization.$EmailDomainName") -Domains "$EmailDomainName" -DomainDC "$Organization.DC-01.$Organization.$EmailDomainName" -CustomerOUDN "OU=CUSTOMER,DC=$Organization,DC=$($EmailDomainName.Split('.')[0]),DC=$($EmailDomainName.Split('.')[1])"
 
         if ($CreateVMM) {
-            New-PrivateCloud -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
+            New-PrivateCloud -Organization $Organization -EmailDomainName $EmailDomainName -Subnet $Subnet -Vlan $Vlan -Gateway $Gateway -IPAddressRangeStart $IPAddressRangeStart -IPAddressRangeEnd $IPAddressRangeEnd
         }
 
         #New-SCCMCollection -Organization $Organization -FQDN "corp.$($EmailDomainName)"
