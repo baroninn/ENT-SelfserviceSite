@@ -1,0 +1,55 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > Create Admin > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>A new Admin has been created</p>
+
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if (Model.Message != null)
+            { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        <tr>
+            <td class="lefttd">First Name:</td>
+            <td class="righttd">@Model.UserList[0].FirstName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Last Name:</td>
+            <td class="righttd">@Model.UserList[0].LastName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Password:</td>
+            <td class="righttd">@Model.UserList[0].Password</td>
+        </tr>
+        <tr>
+            <td class="lefttd">SamAccountName</td>
+            <td class="righttd">@Model.UserList[0].SamAccountName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">DisplayName:</td>
+            <td class="righttd">@Model.UserList[0].DisplayName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Department:</td>
+            <td class="righttd">@Model.UserList[0].Department</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td class="lefttd">Additional info:</td>
+        </tr>
+        <tr>
+            <td class="longtd">
+                @foreach (string msg in Model.OKMessage)
+                {
+                    <div>@msg</div>
+                }
+            </td>
+        </tr>
+    </table>
+</fieldset>

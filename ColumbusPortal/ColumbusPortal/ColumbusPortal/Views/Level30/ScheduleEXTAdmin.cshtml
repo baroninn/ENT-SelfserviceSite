@@ -1,0 +1,122 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > ScheduleEXTAdmin";
+}
+@section script {
+    <script>
+        var d = new Date(),
+            // ' 01:00' there has to be a space for the jquery to understand...
+        date = (d.getUTCFullYear()) + '-' + (d.getUTCMonth() + 2) + '-' + (d.getUTCDate());
+
+        jQuery.datetimepicker.setLocale('da');
+        jQuery('#datetime').datetimepicker({
+            timepicker: false,
+            theme: 'default',
+            dayOfWeekStart: 1,
+            format: 'Y-m-d',
+            inline: false,
+            weeks: true,
+            value: date
+
+        });
+    </script>
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to order a new admin user at a specific customer.</p>
+<br />
+
+@using (Html.BeginForm("ScheduleEXTAdmin", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Order customer access</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Customer</td>
+                <td class="middletd">
+                    <input name="customer" placeholder="Contoso A/S" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.Customer"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">First name</td>
+                <td class="middletd">
+                    <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.FirstName"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Last name</td>
+                <td class="middletd">
+                    <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.LastName"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Email</td>
+                <td class="middletd">
+                    <input name="email" placeholder="xxx@company.dk, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Email"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Company</td>
+                <td class="middletd">
+                    <input name="company" placeholder="Microsoft A/S, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Company"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Description</td>
+                <td class="middletd">
+                    <input name="description" placeholder="Access will be used for maintanence/development on 'Product', etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Description"
+                                                   } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Expiration Date<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="datetime" name="expiredate" placeholder="YYYY-MM-DD" type="text" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.ExpireDate"
+                                                   } />
+                    <span class="mandatory">*</span>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Order Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); this.form.submit()" />
+    </fieldset>
+
+}

@@ -1,0 +1,160 @@
+﻿@model ColumbusPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Create";
+}
+@section script {
+<script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetDomainSelect();
+            GetADUsersList();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=domainname]").html('<option>loading...</option>');
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
+
+                GetDomainSelect();
+                GetADUsersList();
+
+            });
+        });
+
+        function info() {
+                $.confirm({
+                    theme: 'light',
+                    type: 'green',
+                    typeAnimated: true,
+                    title: 'INFO:',
+                    content: 'If the customer has Office 365' +
+                             '<p>Remember to give the user a license...',
+                    buttons: {
+                        OK: function () {
+                            StartSubmitButtonMessage();
+                            document.forms[0].submit();
+                            
+                        },
+                    }
+                });
+            }
+
+</script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new user account.</p>
+<br />
+
+@using (Html.BeginForm("Create", "User"))
+{
+    @Html.AntiForgeryToken()
+<fieldset>
+    <legend>Create User</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if(Model.Message != null) { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="middletd"><select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                            <option @if(Model.ActionFailed)
+                                    {
+                                        if(organization == Model.UserList[0].Organization) {
+                                            @:selected="selected"
+                                        }
+                                    }>@organization</option>
+                    }
+                </select>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd"><span>Copy settings from<i class="material-icons infoicon"></i></span></td>
+            <td class="middletd">
+                <select name="userprincipalname"><option>loading...</option></select>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">First name</td>
+            <td class="middletd">
+                <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].FirstName"
+                                                                                     } />
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Last name</td>
+            <td class="middletd">
+                <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].LastName"
+                                                                                     } />
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+
+    </table>
+    <table>
+        <tr>
+            <td class="lefttd">Primary Email</td>
+            <td class="lefttdaccepteddomain"><input name="username" placeholder="john.doe" @if (Model.ActionFailed)
+                                                                                   { 
+                                                                  @:value="@Model.UserList[0].UserName" 
+                                                                                    }/>
+            </td>
+            <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">@@</td>
+            <td class="righttdaccepteddomain">
+                <select name="domainname"><option>loading...</option></select>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="lefttd">Password</td>
+            <td class="middletd"><input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed)
+                                                              { 
+                                                                  @:value="@Model.UserList[0].Password" 
+                                                              }/>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
+
+            <td>
+                <input name="passwordneverexpires" type="checkbox" @if (Model.ActionFailed)
+                                                                   {
+                                                                       if (Model.UserList[0].PasswordNeverExpires)
+                                                                       {
+                                                                           @:checked="checked"
+                                                                       }
+                                                                   } />
+                <div class="description">
+                    <p class="descriptiontext">
+                        Passwords will never expire if this is checked. This must be confirmed by the organization first.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Test user<i class="material-icons infoicon">info</i></span></td>
+            <td><input name="testuser" type="checkbox" @if (Model.ActionFailed)
+                                                           { 
+                                                                if(Model.UserList[0].TestUser) { 
+                                                                    @:checked="checked"
+                                                                }
+                                                            }/>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Users marked as Test User are for testing purposes, and must not be used for real users. These users does not count towards mailbox quota or SPLA's. But data left in these accounts will take up space on their file server.
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create User" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); info()" />
+</fieldset>
+    
+}

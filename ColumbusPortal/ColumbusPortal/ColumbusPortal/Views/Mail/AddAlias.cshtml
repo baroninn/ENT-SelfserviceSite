@@ -1,0 +1,124 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Add Alias";
+}
+@section script { 
+<script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            $("select[name=organization]").change(function () {
+                GetDomain();
+                GetADUsersList();
+
+                $("#existingAliases").html("");
+            });
+            $("select[name=userprincipalname]").change(function () {
+                GetAliases();
+            });
+            GetDomain();
+            GetADUsersList();
+        });
+
+</script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form add email aliases to a user account.</p>
+<br />
+
+@using (Html.BeginForm("AddAlias", "Mail"))
+{
+    @Html.AntiForgeryToken()
+<fieldset>
+    <legend>Add Alias</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="middletd"><select name="organization">
+                @foreach(string organization in Model.Organizations) 
+                {
+                    <option @if(Model.ActionFailed)
+                            {
+                                if(organization == Model.Alias.Organization) {
+                                    @:selected="selected"
+                                }
+                            }>@organization</option>
+                }
+                </select>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Emaildomains:</td>
+            <td class="middletd">
+                    <div id="Domain"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Existing aliases:</td>
+            <td class="middletd">
+                <div id="existingAliasesDiv">
+                    <ul id="existingAliases"></ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">AD User</td>
+            <td class="middletd">
+                <select name="userprincipalname"><option>loading...</option></select>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Set first alias as primary address</td>
+            <td>
+                <input name="setfirstasprimary" type="checkbox" @if (Model.ActionFailed)
+                                                           { 
+                                                                if(Model.Alias.SetFirstAsPrimary) { 
+                                                                    @:checked="checked"
+                                                                }
+                                                            }/>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">New email aliases</td>
+            <td class="middletd">@if (Model.ActionFailed)
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
+                }
+                else {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+                }
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" value="Add Alias" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

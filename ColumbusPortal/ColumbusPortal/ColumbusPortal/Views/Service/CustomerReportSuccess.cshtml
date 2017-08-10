@@ -1,0 +1,170 @@
+﻿@model ColumbusPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Service > Customer Report > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a data usage report</p>
+<br />
+
+@using (Html.BeginForm("CustomerReport", "Service"))
+{
+    @Html.AntiForgeryToken()
+<fieldset>
+    <legend>Select Organization</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if(Model.Message != null) { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        @if (Model.MessageList.Count > 0)
+        {
+            foreach (string message in Model.MessageList)
+            {
+                <tr>
+                    <td colspan="2"><div class="message">@message</div></td>
+                </tr>
+            }
+        }
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="middletd">
+                <select name="organization">
+                    @foreach(string organization in Model.Organizations) 
+                    {
+                        <option @if(organization == Model.CustomerReport.Organization) {
+                                    @:selected="selected"
+                                }>@organization</option>
+                    }
+                </select></td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" value="Create Report" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}
+<fieldset>
+    <legend>Customer Report @Model.CustomerReport.Organization</legend>
+    
+    <fieldset class="subfieldset">
+        <legend class="sublegend">Overview</legend>
+        <a href="~/Service/CustomerReportCSVSQL?organization=@Model.CustomerReport.Organization">View Excelformat</a>
+
+        <table>
+            <tr>
+                <td class="lefttd">
+                    <center>
+                        <img src="~/Service/CustomerReportPieChartDisk?iUsage=@Model.CustomerReport.FileServerfUsed&iQuota=@Model.CustomerReport.FileServerfTotal" /><br />
+                        <small>Fig 1. File Server usage</small>
+                    </center>
+                </td>
+                <td class="middletd">
+                    <p>FileServer Used: @Model.CustomerReport.FileServerUsed</p>
+                    <p>FileServer Total: @Model.CustomerReport.FileServerTotal</p>
+                    <p>FileServer Free: @Model.CustomerReport.FileServerFree</p>
+                </td>
+                <td class="righttd">
+
+                    <p>AD Users: @Model.CustomerReport.ADUsersCount</p>
+                    <p>Full Users: @Model.CustomerReport.ADFullUsersCount</p>
+                    <p>Light Users: @Model.CustomerReport.ADLightUsersCount</p>
+                    <br />
+                    <p>Server Count: @Model.CustomerReport.ENTServersCount</p>
+                    <p>All servers total storage: @Model.CustomerReport.DiskTotal GB</p>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    <fieldset class="subfieldset">
+        <legend class="sublegend">AD users</legend>
+        <table>
+            <tr>
+                <td class="lefttd"><b>Name</b></td>
+                <td class="middletd"><b>Email</b></td>
+                <td class="righttd"><b>Light User</b></td>
+            </tr>
+            @foreach (ColumbusPortal.Models.ADUser user in Model.CustomerReport.ADUsers)
+            {
+                <tr>
+                    <td class="lefttd">@user.Name</td>
+                    <td class="middletd">@user.Email</td>
+                    <td class="righttd">@user.LightUser</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+    <br />
+    <fieldset class="subfieldset">
+        <legend class="sublegend">Servers</legend>
+        <table>
+            <tr>
+                <td class="lefttd"><b>Name</b></td>
+                <td style="width:70px"><b>CPU</b></td>
+                <td style="width:70px"><b>RAM</b></td>
+                <td style="width:500px; padding-left:40px; text-align:right"><b>Operating System</b></td>
+            </tr>
+            @foreach (ColumbusPortal.Models.ENTServer ent in Model.CustomerReport.ENTServers)
+            {
+                <tr>
+                    <td class="lefttd">@ent.Name</td>
+                    <td style="width:70px">@ent.CPU</td>
+                    <td style="width:70px">@ent.RAM</td>
+                    <td style="width:500px; padding-left:40px; text-align:right">@ent.OS</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+    <br />
+    <fieldset class="subfieldset">
+        <legend class="sublegend">Office365 billing</legend>
+        <table>
+            <tr>
+                <td class="lefttd"><b>PartnerName</b></td>
+                <td class="lefttd"><b>License</b></td>
+                <td style="width:100px"><b>Gyldig</b></td>
+                <td style="width:100px"><b>Tildelt</b></td>
+                <td style="width:100px"><b>Ledige</b></td>
+            </tr>
+            @foreach (ColumbusPortal.Models.Info365 info in Model.CustomerReport.Info365s)
+            {
+                <tr>
+                    <td class="lefttd">@info.PartnerName</td>
+                    @if (info.License.Contains("TRIAL"))
+                    {
+                        <td class="lefttd"><span class="warning2">@info.License</span></td>
+                    }
+                    else
+                    {
+                        <td class="lefttd">@info.License</td>
+                    }
+                    <td style="width:100px">@info.ActiveUnits</td>
+                    <td style="width:100px">@info.ConsumedUnits</td>
+                    <td style="width:100px">@info.FreeUnits</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+    <br />
+    <fieldset class="subfieldset">
+        <legend class="sublegend">SPLA Licenses:</legend>
+        <table>
+            <tr>
+                <td><b>Full Users: @Model.CustomerReport.Licenses.FullUser.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.FullUser)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Light Users: @Model.CustomerReport.Licenses.LightUser.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CustomerReport.Licenses.LightUser)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    
+</fieldset>

@@ -1,0 +1,44 @@
+﻿@using System.Text.RegularExpressions
+@model ColumbusPortal.Models.HomeModel
+@{
+    ViewBag.Title = "Log > Log";
+}
+
+@section style {
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+
+<fieldset>
+    <legend>Latest log entries</legend>
+    <ol class="logentry">
+    @foreach (string entry in Model.Log)
+    {
+        var notnull = !String.IsNullOrWhiteSpace(entry) && entry.Length >= 5;
+        if (notnull)
+        {
+
+            if (Regex.IsMatch(entry.Substring(0, 1), "^[0-9]"))
+            {
+                if (entry.ToUpperInvariant().Contains("EXCEPTION:") || entry.ToUpperInvariant().Contains("ERROR"))
+                {
+                    <li><b>@entry.Split(new string[] { "::" }, StringSplitOptions.None)[0].ToUpper()</b> :: @entry.Split(new string[] { "::" }, StringSplitOptions.None)[1] :: <span style="color:red;">@entry.Split(new string[] { "::" }, StringSplitOptions.None)[2].ToUpper()</span></li>
+                }
+                else
+                {
+                    <li><b>@entry.Split(new string[] { "::" }, StringSplitOptions.None)[0].ToUpper()</b> :: @entry.Split(new string[] { "::" }, StringSplitOptions.None)[1] :: <span>@entry.Split(new string[] { "::" }, StringSplitOptions.None)[2]</span></li>
+                }
+
+                <!--<li><b>@entry.Substring(0, 20)<!--<li><b>@entry.Substring(0, 20).ToUpper()</b>@entry.Substring(20) </li>-->
+            }
+            else
+            {
+                <li><span>@entry</span></li>
+            }
+
+        }
+
+    }
+    </ol>
+</fieldset>

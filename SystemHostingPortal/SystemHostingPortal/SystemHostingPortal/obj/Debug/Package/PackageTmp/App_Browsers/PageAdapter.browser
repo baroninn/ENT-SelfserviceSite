@@ -1,9 +1,0 @@
-﻿<browsers>
-    <browser refID="Default">
-        <controlAdapters>
-            <adapter controlType="System.Web.UI.Page"
-               adapterType="CssSpriteGenerator.CSSSpriteGenerator_PageAdapter" />
-        </controlAdapters>
-    </browser>
-</browsers>
-

@@ -1,0 +1,313 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > UpdateConf";
+}
+@section script {
+
+    <script>
+        window.onload = function () {
+           // $('#adsync').change();
+            // Triggers the change event on page load..
+        };
+
+        $(document).ready(function () {
+            
+            $("select[name=organization]").change(function () {
+
+                document.getElementById("Name").value = 'Contacting Database, please wait';
+                document.getElementById("UserContainer").value = 'Contacting Database, please wait';
+                document.getElementById("DomainFQDN").value = 'Contacting Database, please wait';
+                document.getElementById("ExchangeServer").value = 'Contacting Database, please wait';
+                document.getElementById("NETBIOS").value = 'Contacting Database, please wait';
+                document.getElementById("CustomerOUDN").value = 'Contacting Database, please wait';
+                document.getElementById("AdminUserOUDN").value = 'Contacting Database, please wait';
+                document.getElementById("ExternalUserOUDN").value = 'Contacting Database, please wait';
+                document.getElementById("TenantID").value = 'Contacting Database, please wait';
+                document.getElementById("AdminUser").value = 'Contacting Database, please wait';
+                document.getElementById("AdminPass").value = 'Contacting Database, please wait';
+                document.getElementById("AADsynced").value = 'Contacting Database, please wait';
+                document.getElementById("ADConnectServer").value = 'Contacting Database, please wait';
+                document.getElementById("DomainDC").value = 'Contacting Database, please wait';
+                document.getElementById("NavMiddleTier").value = 'Contacting Database, please wait';
+                document.getElementById("SQLServer").value = 'Contacting Database, please wait';
+                document.getElementById("AdminRDS").value = 'Contacting Database, please wait';
+                document.getElementById("AdminRDSPort").value = 'Contacting Database, please wait';
+                document.getElementById("EmailDomains").value = 'Contacting Database, please wait';
+
+                GetCurrentConfLIST()
+                
+            });
+            GetCurrentConfLIST()
+
+            
+
+           /* $('#AADsynced').on('change', function () {
+                if ( this.value == 'True' || this.value == null)
+                    //.....................^.......
+                {
+                    $("#adsyncserver").show();
+                    $("#mandatory_syncserver").show();
+                    $("#adconnecttable").show();
+                }
+                else
+                {
+                    $("#adsyncserver").hide();
+                    $("#mandatory_syncserver").hide();
+                    $("#adconnecttable").hide();
+                }
+            });*/
+    });
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the Conf file for a given customer.</p>
+<br />
+
+@using (Html.BeginForm("UpdateConf", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Update Configuration</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd"><span>Organization</span></td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.UpdateConf.Organization) { @: selected="selected"
+                                                                                                                                            } }>
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Customer Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="name" id="Name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.Name"
+                                          } />
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Please write the full customer name etc Contoso Holding A/S..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Exchange Server (FQDN)<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="exchangeserver" id="ExchangeServer" placeholder="XXX-exch-01.XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
+                                                                                                                                                              } />
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If this is set, the conf will not look at Office365. Make sure you set this to "null" if the customer has Office365. You actually have to write null, if the customer previously has had their own exchange server..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Domain FQDN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="domainfqdn" id="DomainFQDN" placeholder="XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
+                                                                                                                                                      } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is mandatory.. It will be filled out automatically, but if it needs to be changed, you do it here..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Domain NETBIOS</span></td>
+                <td class="middletd">
+                    <input name="netbios" id="NETBIOS" placeholder="CORP" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NETBIOS"
+                                                                                                                                                                                 } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>User OU DN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="usercontainer" id="UserContainer" placeholder="OU=Users,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.UserContainer"
+                                                                               } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The Distinguishedname of the OU where users and groups exist. This is used for placement of new groups, service accounts and shared mailboxes..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Customer OU DN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="customeroudn" id="CustomerOUDN" placeholder="OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                                                                                                          } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The Distinguishedname of the parent Customer OU. This is used for placement of new groups, service accounts and shared mailboxes..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Internal Admin OU DN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="adminuseroudn" id="AdminUserOUDN" placeholder="OU=Admins,OU=SYSTEMHOSTING,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                                                                                                                                                                                                        } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The Distinguishedname of the OU where our internal Admins and groups exist. This is used when adding Internal Admins to a customer..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>External User OU DN<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="externaluseroudn" id="ExternalUserOUDN" placeholder="OU=EXTERNAL,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                                                                                                                                                                                                        } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The Distinguishedname of the OU where external admins will be placed..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>365 TenantID<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="tenantid" id="TenantID" placeholder="43eea929-d726-4742-83a9-603c12a0d195" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.TenantID"
+                                                                          } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            TenantID from CSP partner portal..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">365 Admin User</td>
+                <td class="middletd">
+                    <input name="adminuser" id="AdminUser" placeholder="admin@XXX.onmicrosoft.com" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminUser"
+                                                                             } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">365 Admin Pass</td>
+                <td class="middletd">
+                    <input name="adminpass" id="AdminPass" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminPass"
+                                                                             } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">AADSynced</td>
+                <td>
+                    <select name="aadsynced" id="AADsynced" >
+                        <option selected="@(Model.ActionFailed && Model.UpdateConf.AADsynced == "False")">False</option>
+                        <option selected="@(Model.ActionFailed && Model.UpdateConf.AADsynced == "True")">True</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="adconnecttable">
+                <td class="lefttd">ADConnect Server</td>
+                <td class="middletd">
+                    <input id="ADConnectServer" name="adconnectserver" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ADConnectServer"
+                                                                                      } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">AD Server</td>
+                <td class="middletd">
+                    <input name="domaindc" id="DomainDC" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainDC"
+                                                                                      } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Nav Middle Tier</td>
+                <td class="middletd">
+                    <input name="navmiddletier" id="NavMiddleTier" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NavMiddleTier"
+                                                                                                                 } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">SQL Server</td>
+                <td class="middletd">
+                    <input name="sqlserver" id="SQLServer" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.SQLServer"
+                                                                                                                 } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Admin RDS</td>
+                <td class="middletd">
+                    <input name="adminrds" id="AdminRDS" placeholder="xxx-AdminRDS-01.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDS"
+                                                                                                                 } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Admin RDS Port</td>
+                <td class="middletd">
+                    <input name="adminrdsport" id="AdminRDSPort" placeholder="3389" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDSPort"
+                                                                                                                 } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Domains<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @if (Model.ActionFailed)
+                    {
+                        <textarea name="emaildomains" rows="5" placeholder="Write one domain per line">@string.Join("\r\n", Model.UpdateConf.EmailDomains)</textarea>
+                    }
+                    else
+                    {
+                        <textarea name="emaildomains" rows="5" id="EmailDomains" placeholder="Write one domain per line"></textarea>
+                    }
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the FULL list of domains available for the customer. Therefore, fill out this field will all domains, not just the domain you wish to add to conf.
+                        </p>
+                        <p class="descriptiontext">
+                            <span class="warning">
+                                REMEMBER, this will only add the domain to the configuration, it will NOT really add the domain to the customer!
+                                Use "Organization/AddDomain" for that!, which in turn also will add the domains to conf.
+                            </span>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Update Configuration" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

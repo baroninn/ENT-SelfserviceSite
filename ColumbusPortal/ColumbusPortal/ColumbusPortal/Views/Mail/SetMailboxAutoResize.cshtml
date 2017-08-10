@@ -1,0 +1,94 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Set Mailbox Auto Resize";
+}
+@section script { 
+    <script>
+        function DisableButtons() {
+            $('#buttonEnable').attr('disabled', 'disabled')
+            $('#buttonDisable').attr('disabled', 'disabled')
+        }
+        function SubmitEnable() {
+            DisableButtons();
+            ClearMessages();
+            ClearErrors();
+            $('input[name=exclude]').val('false');
+            autoresize_form.submit();
+        }
+        function SubmitDisable() {
+            DisableButtons();
+            ClearMessages();
+            ClearErrors();
+            $('input[name=exclude]').val('true');
+            autoresize_form.submit();
+        }
+
+    $(document).ready(function () {
+        $("select[name=organization]").change(function () {
+            //GetAcceptedDomain();
+            //GetMailbox();
+
+            
+        });
+
+        //GetAcceptedDomain();
+        //GetMailbox();
+    });
+
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to set mailbox auto resizing.</p>
+
+@using (Html.BeginForm("SetMailboxAutoResize", "Mail", FormMethod.Post, new { id = "autoresize_form" }))
+{
+<fieldset>
+    <legend>Set Mailbox Auto Resize</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td><select name="organization">
+                @foreach (string organization in Model.Organizations)
+                {
+                    <option @if (Model.ActionFailed)
+                            {
+                                if (organization == Model.MailboxAutoResize.Organization)
+                                {
+                                    @:selected="selected"
+                                }
+                            }>@organization</option>
+                }
+                </select></td>
+        </tr>
+    </table>
+    <input type="hidden" name="exclude" value="Not Set" />
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" value="Enable Mailbox Auto Resize" id="buttonEnable" onclick="StartSubmitButtonMessage(); SubmitEnable()" />
+    <input type="submit" class="button" class:hover="button:hover" value="Disable Mailbox Auto Resize" id="buttonDisable" onclick="StartSubmitButtonMessage(); SubmitDisable()" />
+</fieldset>
+}

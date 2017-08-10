@@ -1,0 +1,363 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <title>@ViewBag.Title - Columbus Selfservice Portal</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+    <!--Loaded last otherwise it wont work-->
+    @Styles.Render("~/Content/cssjsconfirm")
+    @Scripts.Render("~/bundles/jsconfirm")
+
+
+    <script>
+            $.ajaxSetup({
+                cache: false
+            });
+
+            $(document).ready(function () {
+                $(".tooltip").click(function () {
+                    $(this).siblings("td").children(".description").toggle(100);
+                })
+            });
+    </script>
+    <script>
+            $.ajaxSetup({
+                cache: false
+            });
+
+            $(document).ready(function () {
+                $(".helptooltip").click(function () {
+                    $(this).siblings("td").children(".infohelp").toggle(100);
+                })
+                // Sort all lists..
+                $("#homesort").html(
+                    $("#homesort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#usersort").html(
+                    $("#usersort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#mailsort").html(
+                    $("#mailsort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#o365sort").html(
+                    $("#o365sort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#orgsort").html(
+                    $("#orgsort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#servicesort").html(
+                    $("#servicesort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#lvl30sort").html(
+                    $("#lvl30sort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#lvl30sort2").html(
+                    $("#lvl30sort2").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+                $("#logsort").html(
+                    $("#logsort").children("li").sort(function (a, b) {
+                        return $(a).text().toUpperCase().localeCompare(
+                        $(b).text().toUpperCase());
+                    }) // End Sort
+                );
+            });
+
+    </script>
+
+    @RenderSection("style", required: false)
+</head>
+<body>
+    <!--<div id="topdiv">
+        @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
+            {
+            <script>
+                     $("#topdiv").css("background-color", "green");
+            </script>
+
+                <div style="text-align: center; font-weight: bold; font-size: x-large">ENTERPRISE TEST!!  <img align="middle" src="~/Images/giphy.gif" />  ENTERPRISE TEST!!</div>
+
+            //<div id="topdivtext"><img src="~/Images/Columbus.png" /><img src="~/Images/captologo.png" /></div>
+        }
+        else
+        {
+            <div id="topdivtext"><img src="~/Images/1columbus_logo.png" /></div>
+        }
+    </div>-->
+
+    @if (Request.IsAuthenticated)
+    {
+
+        <div id="topdivtext">
+            <ul class="nav">
+                <li><a href="~//">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">User</a>
+                    <ul id="usersort">
+                        <li><a href="~//User/Create">Create User</a></li>
+                        <li><a href="~//User/ResetPWD">Reset Password</a></li>
+                        <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li> -->
+                        <li><a href="~//User/Disable">Disable User</a></li>
+                        <li><a href="~//User/Enable">Enable User</a></li>
+                        <li><a href="~//User/Remove">Remove User</a></li>
+                        <!--<li><a href="~//User/CreateExtUser">Create EXT. User</a></li>-->
+                        <!--
+                        <li class="dropdown">
+                            <a href="#">Game Development</a>
+                            <ul>
+                                <li><a href="#">Level 2</a></li>
+                                <li><a href="#">Level 2</a></li>
+                                <li><a href="#">Level 2</a></li>
+                                <li><a href="#">Level 2</a></li>
+                                <li class="dropdown">
+                                    <a href="#">Level 2</a>
+                                    <ul>
+                                        <li><a href="#">Level 3</a></li>
+                                        <li class="dropdown">
+                                            <a href="#">Level 3</a>
+                                            <ul>
+                                                <li><a href="#">Level 4</a></li>
+                                                <li><a href="#">Level 4</a></li>
+                                                <li><a href="#">Level 4</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Level 3</a></li>
+                                        <li><a href="#">Level 3</a></li>
+                                        <li><a href="#">Level 3</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>-->
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Mail</a>
+                    <ul id="mailsort">
+                        <li><a href="~//Mail/AddAlias">Add Alias</a></li>
+                        <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
+                        <li><a href="~//Mail/CreateMailbox">Create Mailbox</a></li>
+                        <li><a href="~//Mail/CreateDistributionGroup">Create Dist. Group</a></li>
+                        <li><a href="~//Mail/GetCalendarPermissions">Calendar Permissions</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Office 365</a>
+                    <ul id="o365sort">
+                        <li><a href="~//Office365/VerifyDomain">Verify Domain</a></li>
+                        <li><a href="~//Office365/StartDirSync">Directory Sync</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Organization</a>
+                    <ul id="orgsort">
+                        <li><a href="~//Organization/Create">Create Organization</a></li>
+                        <li><a href="~//Organization/AddDomain">Add Domain</a></li>
+                        <li><a href="~//Organization/RemoveDomain">Remove Domain</a></li>
+                        <li><a href="~//Organization/CreateALLAdmins">Create All Admins</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Service</a>
+                    <ul id="servicesort">
+                        <li><a href="~//Service/CustomerReport">Customer Report</a></li>
+                        <li><a href="~//Service/ExpandVHD">Expand VHD</a></li>
+                        <li><a href="~//Service/ExpandCPURAM">Expand CPU/RAM</a></li>
+                        <li><a href="~//Service/ScheduleReboot">Schedule VM Reboot</a></li>
+                        <li class="dropdown">
+                            <a href="#">SCOM</a>
+                            <ul>
+                                <li><a href="~//Service/ScomPendingReboot">SCOM PendingReboot</a></li>
+                                <li><a href="~//Service/ScomLatestAlerts">SCOM Latest Alerts</a></li>
+                                <li><a href="~//Service/ScomAlertFree">SCOM Freespace</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Level30</a>
+                    <ul id="lvl30sort">
+                        @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
+                        {
+                            <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
+                            <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
+                            <li><a href="~//Level30/ExpandCPURAM">Expand CPU/RAM</a></li>
+                            <li class="dropdown">
+                                <a href="#">Internal Admins</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/ResetAdminPassword">Reset Password</a></li>
+                                    <li><a href="~//Level30/CreateAdmin">Create Admin</a></li>
+                                    <li><a href="~//Level30/RemoveAdmin">Remove Admin</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">External Admins</a>
+                                <ul id="lvl30sort2">
+                                    @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
+                                    {
+                                        <li><a href="~//Level30/CreateEXTAdmin">Create EXT. Admin</a></li>
+                                        <li><a href="~//Level30/ScheduleEXTAdmin">Schedule EXT. Admin</a></li>
+                                        <li><a href="~//Level30/RemoveEXTAdmin">Remove EXT. Admin</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href="#">Under Development</a></li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">CASIT Accounts</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/RemoveCASAdmin">Remove CAS Admin</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#">Shared Customers</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/CreateSharedCustomer">Create Customer</a></li>
+                                    <li><a href="~//Level30/UpdateSharedCustomer">Update Customer</a></li>
+                                    <li><a href="~//Level30/RemoveSharedCustomer">Remove Customer</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a href="#">Not lvl30!</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Log</a>
+                    <ul id="logsort">
+                        <li><a href="~//Home/Log">Log</a></li>
+                        <li><a href="~//Home/AzureLog">AzureLog</a></li>
+                        <li><a href="~//Home/ChangeLog">ChangeLog</a></li>
+                    </ul>
+                </li>
+                @if (Request.IsAuthenticated)
+                {
+                    @Html.Partial("_LoginPartial")
+                    <li class="dropdown">
+                        <a href="#">@((User as ClaimsPrincipal).Claims.Where(c => c.Type == ClaimTypes.WindowsAccountName).Select(c => c.Value).SingleOrDefault())</a>
+                        <ul>
+                            <li><a href="~//Home/MyInfo">My Info</a></li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    </li>
+
+                }
+
+            </ul>
+        </div>
+    }
+
+    <table>
+        <tr>
+            <td>
+                <div id="bodydiv">
+
+                    <div id="maindiv">
+                        @RenderBody()
+                        <br />
+                        <hr />
+                        <br />
+                        <footer>
+                            <table>
+                                <tr>
+                                    <td style="width:10px">
+                                        <center><span class="warning spanguide">*</span></center>
+                                    </td>
+                                    <td>
+                                        <span class="spanguide"> =  Mandatory</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10px">
+                                        <center><span class="spanguideicons"><i style="float:none" class="material-icons infoicon">info</i></span></center>
+                                    </td>
+                                    <td>
+                                        <span class="spanguide"> =  Info button for help on input</span>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10px">
+                                        <center><span class="spanguideicons"><img width="20" height="10" src="~/Images/FeatureColor.jpg" /></span></center>
+                                    </td>
+                                    <td>
+                                        <span class="spanguide"> =  New Feature or other enhancements</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10px">
+                                        <center><span class="warning spanguideicons">ABC</span></center>
+                                    </td>
+                                    <td>
+                                        <span class="spanguide"> =  ATTENTION!, Please read the text before pressing anything</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <hr />
+                            <br />
+                            <p class="copyright"><i style="float:none; text-align:center; align-content:center" class="material-icons copyrighticon">copyright</i> @DateTime.Now.Year - Columbus</p>
+
+                        </footer>
+                    </div>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+    <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
+    @RenderSection("script", required: false)
+
+    <script>
+                $(document).ready(function () {
+                    $(".collapsed").collapse();
+                });
+
+                function ClearErrors() {
+                    $('#messageDiv').html("");
+                }
+
+                function AddError(json) {
+                    $('#messageDiv').append('<div class="message"><p>' + json.Message + '</p>' +
+                        (json.InnerMesssage != null ? '<p>' + json.InnerMesssage + '</p>' : '') +
+                        '<pre>' + json.Stack + '</pre><small><a href="javascript:ClearErrors()">Clear errors</a></small></div>');
+                }
+
+                function ClearMessages() {
+                    $('#okMessageDiv').html("");
+                }
+    </script>
+</body>
+</html>

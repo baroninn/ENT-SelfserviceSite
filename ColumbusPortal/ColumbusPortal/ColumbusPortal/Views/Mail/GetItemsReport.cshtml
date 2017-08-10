@@ -1,0 +1,88 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Get Items Report";
+}
+@section script {
+    <script>
+        function GetALL() {
+            if ($("input[name=getall]").prop('checked')) {
+                var result = confirm("WARNING: THIS WILL GENERATE A BIG REPORT!\n\nIf you are sure, please be patient!.")
+                if (!result) {
+                    $("input[name=getall]").prop("checked", false);
+                }
+            }
+        }
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to get a report of all big items in customers mailboxes.</p>
+
+@using (Html.BeginForm("GetItemsReport", "Mail"))
+{
+    <fieldset>
+        <legend>Items Report</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td>
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option selected="@(Model.ActionFailed && Model.ItemsReport.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Mail<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="mail" placeholder="xxx@systemhosting.dk" @if (Model.ActionFailed) { @: value="@Model.ItemsReport.Mail"
+                                                                                                                                                                                          } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This will generate an HTML based email report with mail items, and send them to the specified email address..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Get the HUGE Report!!<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="getall" type="checkbox" @if (Model.ActionFailed) { if (Model.ItemsReport.GetALL) { @: checked="checked"
+                                                                                                                      } } onclick="GetALL()" />
+                    <span class="warning">Please read the info first..</span>
+                        <div class="description">
+                        <p class="descriptiontext">
+                            If you check this, it will generate a BIG report on all customers on the platform.. It will take a long time before it will be finished, AND do some heavy lifting on both the SSS and CPO-EXCH-01...
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Get Items Report" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

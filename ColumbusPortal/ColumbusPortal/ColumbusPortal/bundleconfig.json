@@ -1,0 +1,26 @@
+[
+  {
+    "outputFileName": "Content/styleOrange.min.css",
+    "inputFiles": [
+      "Content/styleOrange.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/shtfunctions.min.js",
+    "inputFiles": [
+      "Scripts/shtfunctions.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/reset.min.css",
+    "inputFiles": [
+      "Content/reset.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/respond.min.js",
+    "inputFiles": [
+      "Scripts/respond.js"
+    ]
+  }
+]

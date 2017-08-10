@@ -1,0 +1,21 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > Schedule EXT Admin > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Your order has been recieved!</p>
+
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td class="lefttd">Your order has been recieved. </td>
+        </tr>
+        <tr>
+            <td class="lefttd">You will recieve user details at: </td>
+            <td class="righttd">@Model.EXTAdminUser.Email</td>
+        </tr>
+
+    </table>
+</fieldset>

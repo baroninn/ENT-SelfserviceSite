@@ -1,0 +1,208 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > CreateEXTAdmin";
+}
+@section script {
+<script>
+        $(document).ready(function () {
+            var password = GeneratePassword()
+            document.getElementById("password").value = password;
+
+            var status = 'Scheduled';
+
+            $("select[name=organization]").change(function () {
+                GetEXTAdminUsersLIST(status);
+
+                $("#completedAdmins").html("Contacting DB... please be patient..");
+                GetCompletedEXTAdminUsers();
+            });
+            GetEXTAdminUsersLIST(status);
+            GetCompletedEXTAdminUsers();
+
+
+
+
+            $("select[name=id]").change(function () {
+                GetEXTAdminUser(id);
+            });
+            GetEXTAdminUser(id);
+
+
+            $("#scheduledAdmins").html("Contacting DB... please be patient..");
+            GetscheduledEXTAdminUsers()
+
+            var d = new Date(),
+                // ' 01:00' there has to be a space for the jquery to understand...
+            date = (d.getUTCFullYear()) + '-' + (d.getUTCMonth() + 2) + '-' + (d.getUTCDate());
+
+            jQuery.datetimepicker.setLocale('da');
+            jQuery('#expiredate').datetimepicker({
+                timepicker: false,
+                theme: 'default',
+                dayOfWeekStart: 1,
+                format: 'd-m-Y',
+                inline: false,
+                weeks: true
+
+            });
+
+        });
+
+</script>
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new External Admin account.</p>
+<br />
+
+@using (Html.BeginForm("CreateEXTAdmin", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Create External Admin</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Organization</span></td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.ALLOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.EXTAdminUser.Organization) {
+                                    @: selected="selected"
+                                                           } }>
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">ID</td>
+                <td class="middletd">
+                    <select id="id" name="id"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Customer</td>
+                <td class="middletd">
+                    <input name="customer" id="customer" readonly />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">First name</td>
+                <td class="middletd">
+                    <input name="firstname" id="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.FirstName"
+                                            } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Last name</td>
+                <td class="middletd">
+                    <input name="lastname" id="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.LastName"
+                                             } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Company</td>
+                <td class="middletd">
+                    <input name="company" id="company" placeholder="Contoso A/S" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.Company"
+                                         } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">SamAccountName</td>
+                <td class="middletd">
+                    <input name="samaccountname" placeholder="EXTADMINXXX" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.SamAccountName"
+                                          } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Password</td>
+                <td class="middletd">
+                    <input name="password" id="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Password"
+                                                                                                                    } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Email</td>
+                <td class="middletd">
+                    <input name="email" id="email" placeholder="xxx@company.dk, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Email"
+                                              } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Description</td>
+                <td class="middletd">
+                    <input name="description" id="description" placeholder="used for bla bla, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Description"
+                                                                         } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Expiration Date<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <input id="expiredate" name="expiredate" placeholder="YYYY-MM-DD" type="text" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.ExpireDate"
+                                                                                                                                                                                                                           } />
+                    <span class="mandatory">*</span>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Create EXT Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); this.form.submit()" />
+    </fieldset>
+    <br />
+    <fieldset>
+        <legend class="sublegend">Current EXT. Admins</legend>
+        <table>
+            <tr>
+                <td class="middletd">
+                    <div class="middletd" id="completedAdmins">Loading..</div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    <fieldset>
+        <legend class="sublegend">Scheduled EXT. Admins</legend>
+        <table>
+            <tr>
+                <td class="middletd">
+                    <div class="middletd" id="scheduledAdmins">Loading..</div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+}

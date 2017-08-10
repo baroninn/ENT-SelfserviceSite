@@ -1,0 +1,45 @@
+﻿@using System.Security.Claims
+
+@{
+    ViewBag.Title = "MyInfo";
+}
+@section script {
+    <script>
+
+        function HtmlDecode(s) {
+            return $('<div>').html(s).text();
+        }
+
+        $(document).ready(function () {
+            document.getElementById("User").value = "@User.Identity.Name";
+            document.getElementById("Email").value = "@((User as ClaimsPrincipal).Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault())";
+            document.getElementById("firstname").value = HtmlDecode("@((User as ClaimsPrincipal).Claims.Where(c => c.Type == ClaimTypes.GivenName).Select(c => c.Value).SingleOrDefault())");
+            document.getElementById("lastname").value = HtmlDecode("@((User as ClaimsPrincipal).Claims.Where(c => c.Type == ClaimTypes.Surname).Select(c => c.Value).SingleOrDefault())");
+
+
+        });
+    </script>
+
+}
+
+<fieldset>
+    <legend>@((User as ClaimsPrincipal).Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()) User Info</legend>
+    <table>
+        <tr>
+            <td class="lefttd">UserName: </td>
+            <td class="righttd"><input readonly id="User" /></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Email: </td>
+            <td class="righttd"><input readonly id="Email" /></td>
+        </tr>
+        <tr>
+            <td class="lefttd">First Name: </td>
+            <td class="righttd"><input readonly id="firstname" /></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Last Name: </td>
+            <td class="righttd"><input readonly id="lastname" /></td>
+        </tr>
+    </table>
+</fieldset>

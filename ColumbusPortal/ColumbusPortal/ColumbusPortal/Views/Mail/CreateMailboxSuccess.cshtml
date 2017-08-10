@@ -1,0 +1,39 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Create > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>A new mailbox has been created</p>
+<br />
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                @if (Model.Message != null)
+            { <div class="message">@Model.Message</div> }
+        </td>
+    </tr>
+    <tr>
+        <td class="lefttd">Organization:</td>
+        <td class="righttd">@Model.Mailbox.Organization</td>
+    </tr>
+    <tr>
+        <td class="lefttd">DisplayName:</td>
+        <td class="righttd">@Model.Mailbox.DisplayName</td>
+    </tr>
+    <tr>
+        <td class="lefttd">Password:</td>
+        <td class="righttd">@Model.Mailbox.Password <span class="warning"> - Is only used for the ADUser..</span></td>
+    </tr>
+    <tr>
+        <td class="lefttd">Primary email:</td>
+        <td class="righttd">@Model.Mailbox.UserName@@@Model.Mailbox.DomainName</td>
+    </tr>
+    <tr>
+        <td class="lefttd">Mailbox Type:</td>
+        <td class="righttd">@Model.Mailbox.Type</td>
+    </tr>
+</table>
+</fieldset>

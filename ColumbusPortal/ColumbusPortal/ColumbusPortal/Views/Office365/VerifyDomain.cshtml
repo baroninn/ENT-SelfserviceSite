@@ -1,0 +1,84 @@
+﻿@model ColumbusPortal.Models.Office365Model
+@{
+    ViewBag.Title = "Office365 > Verify Domain";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            GetO365DomainSelect("Unverified");
+            $("select[name=organization]").change(function () {
+                $("select[name=domainname]").html('<option>loading...</option>');
+                GetO365DomainSelect("Unverified");
+            });
+        });
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to verify an added domain in Office365..</p>
+<br />
+
+@using (Html.BeginForm("VerifyDomain", "Office365"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Verify O365 Domain</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.VerifyDomain.Organization) { @: selected="selected"
+                                                                        } }>
+                                @organization
+                                                                    </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Unverified Domains<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <select name="domainname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This will verify a domain for the customer in Office365.
+                        </p>
+                    </div>
+
+                </td>
+            </tr>
+
+        </table>
+
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Verify Domain" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

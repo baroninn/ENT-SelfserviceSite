@@ -1,0 +1,99 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > CreateSharedCustomer";
+}
+@section script {
+
+    <script>
+        $(document).ready(function () {
+            GetCASOrganizations();
+            //$("#CasOrganizations").html("Contacting DB... please be patient..");
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create the Conf for a shared customer.</p>
+<p class="warning2">This is used for the organization list at cascpa.columbusit.com.</p>
+<br />
+
+@using (Html.BeginForm("CreateSharedCustomer", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Create Shared Customer Info</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd tooltip">Organization Initials</td>
+                <td class="middletd">
+                    <input name="organization" placeholder="XXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.Organization"
+                                                                                                                           } />
+
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Customer Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.Name"
+                                                                                                } />
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Please write the full customer name etc Contoso Holding A/S..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Nav Server</td>
+                <td class="middletd">
+                    <input name="navmiddletier" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.NavMiddleTier"
+                                                                                                                                                                       } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">SQL Server</td>
+                <td class="middletd">
+                    <input name="sqlserver" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.SQLServer"
+                                                                                                                                                                       } />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Create Shared Customer" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+    <br />
+        <fieldset>
+            <legend class="sublegend">Current Customers Added</legend>
+            <table>
+                <tr>
+                    <td class="middletd">
+                        <div class="middletd" id="CasOrganizations">Loading..</div>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+}

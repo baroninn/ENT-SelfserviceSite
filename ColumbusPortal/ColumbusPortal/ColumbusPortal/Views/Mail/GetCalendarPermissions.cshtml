@@ -1,0 +1,213 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Calendar Permissions";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetMailbox("UserMailbox");
+
+            $("select[name=organization]").change(function () {
+                GetMailbox("UserMailbox");
+                
+            });
+
+           // $("select[name=userprincipalname]").change(function () {
+           //    GetCalendarPermissions();
+           // })
+        });
+
+        function AddCalendarPermissionToList(json) {
+            
+            $("#permissions_table").append('<tr><td><input class="deleteBox" value="' + json.User + '" type="checkbox" /></td><td class="middletd" style="width:450px"><input readonly="readonly" name="user[]" value="' + json.User + '" /></td><td class="lefttd">' + GetAccessRightsSelect(json.AccessRights) + '</td></tr>');
+        }
+
+        function GetAccessRightsSelect(selected) {
+            var select = '<select name="accessrights[]">';
+            select += '<option>None</option>';
+
+            select += selected == "Reviewer"         ? '<option selected="selected">Reviewer</option>'         : '<option>Reviewer</option>';
+            select += selected == "AvailabilityOnly" ? '<option selected="selected">AvailabilityOnly</option>' : '<option>AvailabilityOnly</option>';
+            select += selected == "PublishingAuthor" ? '<option selected="selected">PublishingAuthor</option>' : '<option>PublishingAuthor</option>';
+            select += selected == "PublishingEditor" ? '<option selected="selected">PublishingEditor</option>' : '<option>PublishingEditor</option>';
+            select += selected == "Author"           ? '<option selected="selected">Author</option>'           : '<option>Author</option>';
+            select += selected == "NonEditingAuthor" ? '<option selected="selected">NonEditingAuthor</option>' : '<option>NonEditingAuthor</option>';
+            select += selected == "Contributor"      ? '<option selected="selected">Contributor</option>'      : '<option>Contributor</option>';
+            select += selected == "LimitedDetails" ? '<option selected="selected">LimitedDetails</option>' : '<option>LimitedDetails</option>';
+            select += selected == "Owner" ? '<option selected="selected">Owner</option>' : '<option>Owner</option>';
+            select += selected == "Editor" ? '<option selected="selected">Editor</option>' : '<option>Editor</option>';
+            select += '</select>';
+
+            return select;
+        }
+
+        function GetCalendarPermissions() {
+            var organization = $("select[name=organization]").val();
+            var userprincipalname = $("select[name=userprincipalname]").val();
+
+            $.get("/Ajax/GetCalendarPermissions", { "userprincipalname": userprincipalname, "organization": organization }, function (data) {
+                $("#permissions_div").html("<p>Permissions for " + userprincipalname + "</p>");
+                $("#permissions_div").append('<table id="permissions_table"><tr><td width="1"></td><td><b>User</b></td><td><b>AccessRights</b></td></tr></table>');
+
+                var json = JSON.parse(data);
+                if (json.Failure) {
+                    AddError(json);
+                }
+                else {
+
+                    if (json.length == null) {
+                        AddCalendarPermissionToList(json);
+                        changeget();
+                    }
+                    else {
+                        changeget();
+                        for (i = 0; i < json.length; i++) {
+                            AddCalendarPermissionToList(json[i]);
+                        }
+                    }
+                }
+            });
+        }
+
+        function AddRowToPermissionsTable() {
+            $("#permissions_table").append('<tr><td></td><td class="middletd" style="width:450px"><input name="user[]" placeholder="Email" /></td><td>' + GetAccessRightsSelect() + '</td></tr>');
+        }
+
+        function SubmitIfNotEmpty() {
+            if ($('#permissions_table').html() == null || $('#permissions_table').html() == '') {
+                alert('Permission table is empty');
+            }
+            else {
+                buttonSubmit.disabled = true;
+                $('#permissions_form').submit();
+            }
+        }
+
+        function RemoveSelectedEntries() {
+
+            var organization = $("select[name=organization]").val();
+            var userprincipalname = $("select[name=userprincipalname]").val();
+
+            jsonObj = [];
+
+            $('input[class=deleteBox]:checked').each(function () {
+                jsonObj.push($(this).val())
+            });
+
+            $.get("/Ajax/RemoveCalendarPermissions", { "organization" : organization, "userprincipalname" : userprincipalname, "user" : JSON.stringify(jsonObj) }, function (data) {
+                var json = JSON.parse(data);
+                if(json.Failure) {
+                    AddError(json);
+                }
+                else {
+                    setTimeout(GetCalendarPermissions, 2000);
+                    changeremove();
+                }
+            });
+        }
+
+        function changeget() // no ';' here
+        {
+            var getelem = document.getElementById("buttonget");
+            if (getelem.value == "Get Calendar Permissions") getelem.value = "Working..";
+            else getelem.value = "Get Calendar Permissions";
+        }
+
+        function changeremove() // no ';' here
+        {
+            var removeelem = document.getElementById("buttonRemove");
+            if (removeelem.value == "Remove Selected") removeelem.value = "Working..";
+            else removeelem.value = "Remove Selected";
+        }
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to view, add and remove calendar permissions</p>
+<br />
+<form method="post" id="permissions_form" action="/Mail/SetCalendarPermissions">
+    <fieldset>
+        <legend>Calendar Permissions</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CalendarPermissions.Organization) { @: selected="selected"
+                                                                                                    } }>
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="button" id="buttonget" class="button" value="Get Calendar Permissions" onclick="changeget(); GetCalendarPermissions()" />
+    </fieldset>
+
+    <fieldset>
+        <legend class="sublegend">Get Calendar Permissions</legend>
+        <div id="permissions_div">
+        </div>
+        <p><a href="javascript:AddRowToPermissionsTable()">+ Add permission</a></p>
+        <br />
+        <input type="submit" id="buttonSubmit" class="button" value="Set Calendar Permissions" onclick="ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); SubmitIfNotEmpty()" />
+        <input type="button" id="buttonRemove" class="button" value="Remove Selected" onclick="changeremove(); changeget(); RemoveSelectedEntries()" />
+    </fieldset>
+
+
+    <fieldset>
+        <legend class="sublegend">Permission options:</legend>
+        <table>
+            <tr><td class="lefttd"><b>None</b></td>             <td>FolderVisible</td></tr>
+            <tr><td class="lefttd"><b>Author</b></td>           <td>CreateItems, DeleteOwnedItems, EditOwnedItems, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>Contributor</b></td>      <td>CreateItems, FolderVisible</td></tr>
+            <tr><td class="lefttd"><b>Editor</b></td>           <td>CreateItems, DeleteAllItems, DeleteOwnedItems, EditAllItems, EditOwnedItems, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>NonEditingAuthor</b></td> <td>CreateItems, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>Owner</b></td>            <td>CreateItems, CreateSubfolders, DeleteAllItems, DeleteOwnedItems, EditAllItems, EditOwnedItems, FolderContact, FolderOwner, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>PublishingEditor</b></td> <td>CreateItems, CreateSubfolders, DeleteAllItems, DeleteOwnedItems, EditAllItems, EditOwnedItems, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>PublishingAuthor</b></td> <td>CreateItems, CreateSubfolders, DeleteOwnedItems, EditOwnedItems, FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>Reviewer</b></td>         <td>FolderVisible, ReadItems</td></tr>
+            <tr><td class="lefttd"><b>AvailabilityOnly</b></td> <td>View only availability data</td></tr>
+            <tr><td class="lefttd"><b>LimitedDetails</b></td>   <td>View availability data with subject and location</td></tr>
+        </table>
+    </fieldset>
+
+
+</form>

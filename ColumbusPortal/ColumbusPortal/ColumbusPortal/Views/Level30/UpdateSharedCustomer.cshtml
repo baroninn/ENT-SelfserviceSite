@@ -1,0 +1,129 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > UpdateSharedCustomer";
+}
+@section script {
+
+    <script>
+        window.onload = function () {
+           // $('#adsync').change();
+            // Triggers the change event on page load..
+        };
+
+        $(document).ready(function () {
+
+            $("select[name=organization]").change(function () {
+
+                document.getElementById("Name").value = 'Contacting Database, please wait';
+                document.getElementById("NavMiddleTier").value = 'Contacting Database, please wait';
+                document.getElementById("SQLServer").value = 'Contacting Database, please wait';
+
+                GetCurrentSharedCustomerConfLIST()
+
+            });
+            GetCurrentSharedCustomerConfLIST()
+
+
+
+           /* $('#AADsynced').on('change', function () {
+                if ( this.value == 'True' || this.value == null)
+                    //.....................^.......
+                {
+                    $("#adsyncserver").show();
+                    $("#mandatory_syncserver").show();
+                    $("#adconnecttable").show();
+                }
+                else
+                {
+                    $("#adsyncserver").hide();
+                    $("#mandatory_syncserver").hide();
+                    $("#adconnecttable").hide();
+                }
+            });*/
+    });
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the Conf file for a given customer.</p>
+<p class="warning2">This is used for the organization list at cascpa.columbusit.com.</p>
+<br />
+
+@using (Html.BeginForm("UpdateSharedCustomer", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Update Shared Customer</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd"><span>Organization</span></td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CASOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.UpdateSharedCustomer.Organization) { @: selected="selected"
+                                                                                                                                                                                } }>
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Customer Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="name" id="Name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.Name"
+                                                                     } />
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Please write the full customer name etc Contoso Holding A/S..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Nav Middle Tier</td>
+                <td class="middletd">
+                    <input name="navmiddletier" id="NavMiddleTier" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.NavMiddleTier"
+                                                                                                                                            } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">SQL Server</td>
+                <td class="middletd">
+                    <input name="sqlserver" id="SQLServer" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateSharedCustomer.SQLServer"
+                                                                                                                                            } />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Update Shared Customer" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

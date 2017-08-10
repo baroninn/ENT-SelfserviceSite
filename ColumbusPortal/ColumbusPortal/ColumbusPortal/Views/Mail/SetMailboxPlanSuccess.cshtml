@@ -1,0 +1,24 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Mail > Set MailboxPlan > Success";
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>The mailbox plan has been set</p>
+
+<fieldset>
+    <legend>Set MailboxPlan</legend>
+    <table>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="righttd">@Model.MailboxPlan.Organization</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Who?</td>
+            <td class="righttd">@Model.MailboxPlan.UserPrincipalName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox Plan</td>
+            <td class="righttd">@Model.MailboxPlan.MailboxPlan</td>
+        </tr>
+    </table>
+</fieldset>

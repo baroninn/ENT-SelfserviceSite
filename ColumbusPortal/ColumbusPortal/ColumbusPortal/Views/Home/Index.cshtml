@@ -1,0 +1,40 @@
+﻿@using System.Security.Claims
+@model ColumbusPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Home > SCOM latest alerts";
+}
+@section script {
+
+    <script>
+        $(document).ready(function () {
+            var alert = 'LatestAlerts'
+            GetLatestAlerts(alert);
+            $("#latestalerts").html("Contacting DB... please be patient..");
+        });
+
+    </script>
+}
+
+<h3 class="title">Welcome @User.Identity.Name</h3>
+<p>Please enjoy your stay! if not..  Eat a cookie!</p>
+<br />
+<br />
+
+@using (Html.BeginForm("ScomLatestAlerts", "Service"))
+{
+    <fieldset>
+        <legend>SCOM Latest Alerts</legend>
+        <table>
+            <tr>
+                <td>
+                    <!--style="width:900px; height:400px; overflow-y : auto; overflow-x: hidden;"-->
+                    <div id="latestalerts">Getting results..</div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Refresh Alerts" onclick="ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); GetLatestAlerts();" />
+    </fieldset>
+
+}

@@ -1,0 +1,116 @@
+﻿@model ColumbusPortal.Models.UserModel
+@{
+    ViewBag.Title = "Remove User";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            GetADUsersList();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=userprincipalname]").html('<option>loading...</option>');
+
+                GetADUsersList();
+
+            });
+        });
+
+        function Confirm() {
+            if ($("input[name=confirm]").prop('checked')) {
+                $.confirm({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'WARNING:',
+                    content: '<b>THIS WILL DELETE THE USER!</b>' +
+                        '<p>Remember to remove the Office 365 licens if applicable ..' +
+                        '<p>This can only bo un-done with Recycle Bin restore, or a backup..' +
+                        '<p><br />',
+                    buttons: {
+                        confirm: function () {
+                            $("input[name=confirm]").prop("checked", true);
+                        },
+                        cancel: function () {
+                            $("input[name=confirm]").prop("checked", false);
+                        },
+                    }
+                });
+            }
+        }
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to remove a user.</p>
+<br />
+@using (Html.BeginForm("Remove", "User"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        { 
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.RemoveUser.Organization) { @: selected="selected"
+                                                                            } }>
+                                @organization
+                                                                        </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">AD User</td>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Delete UserHome Data:</td>
+                <td>
+                    <input id="deldata" type="checkbox" name="deldata" />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Confirm<br /></td>
+                <td>
+                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.RemoveUser.Confirm) { @: checked="checked"
+                                                                                                                                                                        } } onclick="Confirm()" />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Remove User" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}
+    
