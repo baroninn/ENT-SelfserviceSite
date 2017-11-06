@@ -1,0 +1,386 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">General (Android)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### ANDROID CONFIGURATION ####################-->
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Camera</td>
+            <td class="righttdsettings">
+                <select name="cameraBlocked" id="cameraBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cameraBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cameraBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Copy and paste (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="appsBlockCopyPaste" id="appsBlockCopyPaste">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockCopyPaste == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockCopyPaste == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="righttdsettings">Clipboard sharing between apps (Samsung KNOX only)</td>
+            <td>
+                <select name="appsBlockClipboardSharing" id="appsBlockClipboardSharing">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockClipboardSharing == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockClipboardSharing == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Factory reset (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="factoryResetBlocked" id="factoryResetBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.factoryResetBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.factoryResetBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Geolocation (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="locationServicesBlocked" id="locationServicesBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.locationServicesBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.locationServicesBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Power off (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="powerOffBlocked" id="powerOffBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.powerOffBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.powerOffBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Screen capture (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="screenCaptureBlocked" id="screenCaptureBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.screenCaptureBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.screenCaptureBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Voice assistant (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="voiceAssistantBlocked" id="voiceAssistantBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceAssistantBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceAssistantBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">YouTube (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="appsBlockYouTube" id="appsBlockYouTube">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockYouTube == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockYouTube == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Shared Devices</td>
+            <td class="righttdsettings">
+                <select name="deviceSharingAllowed" id="deviceSharingAllowed">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceSharingAllowed == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceSharingAllowed == "True")" value="True">Allow</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Password (Android)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Password</td>
+            <td class="righttdsettings">
+                <select name="passwordRequired" id="passwordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequired == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordMinimumLength" name="passwordMinimumLength" placeholder="Number (4-16)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passwordMinimumLength"
+                                                                                                                    } />
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity until screen locks</td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordMinutesOfInactivityBeforeScreenTimeout" id="passwordMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == "30")" value="30">30 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout == "60")" value="60">1 Hour</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Number of sign-in failures before wiping device</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordSignInFailureCountBeforeFactoryReset" name="passwordSignInFailureCountBeforeFactoryReset" placeholder="Number (4-11)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passwordSignInFailureCountBeforeFactoryReset"
+                                                                                                                                                } />
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordExpirationDays" name="passwordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passwordExpirationDays"
+                                                                                                        } />
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordRequiredType" id="passwordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "any")" value="any">Any</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "lowSecurityBiometric")" value="lowSecurityBiometric">Low Security Biometric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "numeric")" value="numeric">At Least Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "numericComplex")" value="numericComplex">Numeric Complex</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "alphabetic")" value="alphabetic">At Least Alphabetic</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "alphanumeric")" value="alphanumeric">At Least Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordRequiredType == "alphanumericWithSymbols")" value="alphanumericWithSymbols">At Least Alphanumeric with Symbols</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Prevent reuse of previous passwords</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordPreviousPasswordBlockCount" name="passwordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passwordPreviousPasswordBlockCount"
+                                                                                                                                                                                                    } />
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Fingerprint unlock (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordBlockFingerprintUnlock" id="passwordBlockFingerprintUnlock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordBlockFingerprintUnlock == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordBlockFingerprintUnlock == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Smart Lock and other trust agents</td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordBlockTrustAgents" id="passwordBlockTrustAgents">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordBlockTrustAgents == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passwordBlockTrustAgents == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Encryption</td>
+            <td class="righttdsettings">
+                <select name="storageRequireDeviceEncryption" id="storageRequireDeviceEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireDeviceEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireDeviceEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Google Play Store (Android)</legend>
+    <!-- Google Play Store -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Google Play store (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="googlePlayStoreBlocked" id="googlePlayStoreBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.googlePlayStoreBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.googlePlayStoreBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Browser (Android)</legend>
+    <!-- Browser -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Web browser (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="webBrowserBlocked" id="webBrowserBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Autofill (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="webBrowserBlockAutofill" id="webBrowserBlockAutofill">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockAutofill == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockAutofill == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Cookies (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="webBrowserCookieSettings" id="webBrowserCookieSettings">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserCookieSettings == "browserDefault")" value="browserDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserCookieSettings == "allowAlways")" value="allowAlways">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserCookieSettings == "blockAlways")" value="blockAlways">Block All Cookies</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserCookieSettings == "allowFromWebsitesVisited")" value="allowFromWebsitesVisited">Allow Cookies From Visited Web Sites</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserCookieSettings == "allowCurrentWebSite")" value="allowCurrentWebSite">Allow Cookies From Current Web Site</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">JavaScript (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="webBrowserBlockJavaScript" id="webBrowserBlockJavaScript">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockJavaScript == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockJavaScript == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Pop-ups (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="webBrowserBlockPopups" id="webBrowserBlockPopups">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockPopups == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webBrowserBlockPopups == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Cloud and Storage (Android)</legend>
+    <!-- Cloud and Storage -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Google backup (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="storageBlockGoogleBackup" id="storageBlockGoogleBackup">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageBlockGoogleBackup == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageBlockGoogleBackup == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Google account auto sync (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="googleAccountBlockAutoSync" id="googleAccountBlockAutoSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.googleAccountBlockAutoSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.googleAccountBlockAutoSync == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Removable storage (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="storageBlockRemovableStorage" id="storageBlockRemovableStorage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageBlockRemovableStorage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageBlockRemovableStorage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Encryption on storage cards (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="storageRequireRemovableStorageEncryption" id="storageRequireRemovableStorageEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireRemovableStorageEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireRemovableStorageEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Cellular and connectivity (Android)</legend>
+    <!-- Cellular and connectivity -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Data roaming (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockDataRoaming" id="cellularBlockDataRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockDataRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockDataRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">SMS/MMS messaging (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockMessaging" id="cellularBlockMessaging">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockMessaging == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockMessaging == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Voice dialing (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="voiceDialingBlocked" id="voiceDialingBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceDialingBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceDialingBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Voice roaming (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockVoiceRoaming" id="cellularBlockVoiceRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVoiceRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVoiceRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Bluetooth (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="bluetoothBlocked" id="bluetoothBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">NFC (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="nfcBlocked" id="nfcBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.nfcBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.nfcBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Wi-Fi (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="wiFiBlocked" id="wiFiBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Wi-Fi tethering (Samsung KNOX only)</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockWiFiTethering" id="cellularBlockWiFiTethering">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockWiFiTethering == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockWiFiTethering == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>

@@ -1,0 +1,13 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Intune Overview</legend>
+    <div align="center">
+        <div class="IntuneOverviewCharts">
+            <img src="~/Azure/IntuneEnrollOverviewPieChartDisk?androidCount=@Model.IntuneOverview.androidCount&iosCount=@Model.IntuneOverview.iosCount&macOSCount=@Model.IntuneOverview.macOSCount&windowsMobileCount=@Model.IntuneOverview.windowsMobileCount&windowsCount=@Model.IntuneOverview.windowsCount&unknownCount=@Model.IntuneOverview.unknownCount" />
+        </div>
+        <div class="IntuneOverviewCharts">
+            <img src="~/Azure/IntuneComplianceOverviewPieChartDisk?compliantCount=@Model.IntuneOverview.compliantDeviceCount&NotcompliantCount=@Model.IntuneOverview.nonCompliantDeviceCount&InGracePeriod=@Model.IntuneOverview.inGracePeriodCount&DeviceNotSynced=@Model.IntuneOverview.unknownDeviceCount" />
+        </div>
+    </div>
+</fieldset>

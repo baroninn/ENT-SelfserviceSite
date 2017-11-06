@@ -10,7 +10,7 @@
             GetVMServers();
 
             var job = 'expandvhd'
-            GetScheduledJobs(job);
+            GetScheduledJobsJSON(job);
             $("#scheduledjobs").html("Loading...");
 
             var alert = 'Freespace'
@@ -44,16 +44,6 @@
 
         $('#gb').on('paste input', function () {
             var number = $(this).val()
-            if (isNaN(number)) {
-                $.alert({
-                    theme: 'light',
-                    type: 'red',
-                    typeAnimated: true,
-                    title: 'WARNING:',
-                    content: 'Enter only numbers!',
-                });
-                $(this).val('');
-            }
 
             if (number > 100) {
                 $.alert({
@@ -66,7 +56,6 @@
                 $(this).val(number);
             }
         });
-
         
     </script>
 }
@@ -103,7 +92,8 @@
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>VM Servers<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
@@ -118,11 +108,11 @@
                     <span class="mandatory">*</span>
                 </td>
             </tr>
-           
+
         </table>
         <table>
 
-            <tr>
+            <tr class="hide">
                 <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
                     <input id="datetime" name="datetime" placeholder="YYYY-MM-DD 00:00" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.DateTime"
@@ -130,48 +120,58 @@
                     <span class="mandatory">*</span>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd"><span>Opgave nr<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
-                    <input id="taskid" name="taskid" placeholder="109000" type="text" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.TaskID"
-                                                                                                                                                                                            } />
+                    @Html.EditorFor(m => m.ExpandVHD.TaskID, new { htmlAttributes = new { placeholder = "109000" } })
+
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter TaskID (Opgave nr.) from Navision..
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandVHD.TaskID, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd tooltip"><span>GB to expand with<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="gb" placeholder="ex 10" min="1" max="100" class="gbwarning" type="number" id="gb"
-                           @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.GB"
-                                                                                                                                                                     } />
+                    @Html.EditorFor(m => m.ExpandVHD.GB, new { htmlAttributes = new { id = "gb", min = "1", max = "100", placeholder = "ex 10", type = "number", @class = "gbwarning" } })
+
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter GB in whole number. ex. 10
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandVHD.GB, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="email" placeholder="xxx@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.ExpandVHD.Email"
-                                                                                                                                                                                                } />
+                    @Html.EditorFor(m => m.ExpandVHD.Email, new { htmlAttributes = new { name = "email", id = "email", placeholder = "xxx@columbusglobal.com" } })
+
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter the email which will be notified when task is complete.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandVHD.Email, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
         </table>  
-
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br />
         <input type="submit" class="button" id="buttonSubmit" value="Expand VHD" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
@@ -184,6 +184,7 @@
                 </td>
             </tr>
         </table>
+        <input type="button" name="buttonRemove" id="buttonRemove" class="button" value="Remove Selected Schedules" onclick="RemoveSelectedSchedules('expandvhd')" hidden />
     </fieldset>
     <fieldset>
         <legend class="sublegend">Current Freespace warnings</legend>

@@ -16,6 +16,13 @@ namespace ColumbusPortal.Controllers
             return View();
         }
 
+        // GET: /Account/Login
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -35,8 +42,8 @@ namespace ColumbusPortal.Controllers
 
             if (authenticationResult.IsSuccess)
             {
-                // we are in!
                 return RedirectToLocal(returnUrl);
+
             }
 
             ModelState.AddModelError("", authenticationResult.ErrorMessage);
@@ -50,6 +57,7 @@ namespace ColumbusPortal.Controllers
             {
                 return Redirect(returnUrl);
             }
+            //Default redirect:
             return RedirectToAction("Index", "Home");
         }
 
@@ -75,5 +83,8 @@ namespace ColumbusPortal.Controllers
         [AllowHtml]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public string returnUrl { get; set; }
     }
 }

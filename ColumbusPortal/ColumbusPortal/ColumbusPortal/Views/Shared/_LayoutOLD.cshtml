@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using System.Web.Helpers;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,18 +12,25 @@
 
     @Styles.Render("~/Content/reset.css")
     @Styles.Render("~/Content/styleOrange.min.css")
-    <link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/jquery.datetimepicker.min.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/jquery-confirm.min.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/Scripts/moment.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.datetimepicker.full.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery-confirm.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    @Styles.Render("~/Content/jquery-ui.min.css")
+    @Styles.Render("~/Content/jquery.datetimepicker.min.css")
+    @Styles.Render("~/Content/jquery-confirm.min.css")
+    @Scripts.Render("~/Scripts/moment.min.js")
+    @Scripts.Render("~/Scripts/jquery.min.js")
+    @Scripts.Render("~/Scripts/jquery.validate.js")
+    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.js")
+    @Scripts.Render("~/Scripts/jquery.datetimepicker.full.min.js")
+    @Scripts.Render("~/Scripts/jquery.coolfieldset.min.js")
+    @Scripts.Render("~/Scripts/modernizr-2.8.3.js")
+    @Scripts.Render("~/Scripts/jquery-ui.min.js")
+    @Scripts.Render("~/Scripts/jquery-confirm.min.js")
     @Scripts.Render("~/Scripts/jquery.collapse.js")
+    @Scripts.Render("~/Scripts/float-panel.js")
     @Scripts.Render("~/Scripts/shtfunctions.js")
+    @Scripts.Render("~/Scripts/Captofunctions.js")
+    @Scripts.Render("~/Scripts/modernizr-2.8.3.js")
+
+
     <script>
             $.ajaxSetup({
                 cache: false
@@ -33,215 +43,276 @@
             });
     </script>
     <script>
-            $.ajaxSetup({
-                cache: false
-            });
-
             $(document).ready(function () {
                 $(".helptooltip").click(function () {
                     $(this).siblings("td").children(".infohelp").toggle(100);
                 })
-                // Sort all lists..
-                $("#homesort").html(
-                    $("#homesort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#usersort").html(
-                    $("#usersort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#mailsort").html(
-                    $("#mailsort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#o365sort").html(
-                    $("#o365sort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#orgsort").html(
-                    $("#orgsort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#servicesort").html(
-                    $("#servicesort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
-                $("#lvl30sort").html(
-                    $("#lvl30sort").children("li").sort(function (a, b) {
-                        return $(a).text().toUpperCase().localeCompare(
-                        $(b).text().toUpperCase());
-                    }) // End Sort
-                );
             });
-
     </script>
 
     @RenderSection("style", required: false)
 </head>
 <body>
-    <!--<div id="topdiv">
-        @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
-            {
-            <script>
-                     $("#topdiv").css("background-color", "green");
-            </script>
+    @if (Request.IsAuthenticated)
+    {
 
-                <div style="text-align: center; font-weight: bold; font-size: x-large">ENTERPRISE TEST!!  <img align="middle" src="~/Images/giphy.gif" />  ENTERPRISE TEST!!</div>
+        <div id="topdivtext">
+            <ul class="nav">
+                <li><a href="~//">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">User</a>
+                    <ul id="usersort">
+                        <li><a href="~//User/Create">Create User</a></li>
+                        <li><a href="~//User/Disable">Disable User</a></li>
+                        <li><a href="~//User/Enable">Enable User</a></li>
+                        <li><a href="~//User/Remove">Remove User</a></li>
+                        <li><a href="~//User/ResetPWD">Reset Password</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Mail</a>
+                    <ul id="mailsort">
+                        <li><a href="~//Mail/AddAlias">Add Alias</a></li>
+                        <li><a href="~//Mail/GetCalendarPermissions">Calendar Permissions</a></li>
+                        <li><a href="~//Mail/CreateDistributionGroup">Create Dist. Group</a></li>
+                        <li><a href="~//Mail/CreateMailbox">Create Mailbox</a></li>
+                        <li class="dropdown">
+                            <a href="#">Out Of Office</a>
+                            <ul id="mailsort2">
+                                <li><a href="~//Mail/RemoveOOFMessage">Remove Out Of Office</a></li>
+                                <li><a href="~//Mail/SetOOFMessage">Set Out Of Office</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Cloud</a>
+                    <ul id="o365sort">
+                        <li class="dropdown">
+                            <a href="#">Office 365</a>
+                            <ul id="o365sort2">
+                                <li><a href="~//Office365/StartDirSync">Directory Sync</a></li>
+                                <li><a href="~//Office365/VerifyDomain">Verify Domain</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Azure</a>
+                            <ul name="o365sort2">
+                                @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
+                                {
+                                    <li class="dropdown">
+                                        <a href="#">Azure Compute (VM)</a>
+                                        <ul name="o365sort2">
+                                            <li><a href="~//Azure/CreateVM">Create VM</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Azure Intune</a>
+                                        <ul name="o365sort2">
+                                            <li><a href="~//Azure/CreateDefaultIntuneConfiguration">Create Default Intune Conf</a></li>
+                                            <li><a href="~//Azure/UpdateAzureIntuneDeviceConfiguration">Update Device Configuration</a></li>
+                                            <li><a href="~//Azure/UpdateAzureIntuneComplianceSettings">Update Device Compliance</a></li>
+                                            <li><a href="~//Azure/IntuneOverview">Overview</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Azure Network</a>
+                                        <ul name="o365sort2">
+                                            <li><a href="~//Azure/CreateAzurePIP">Create Public IP</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="~//Azure/Create">Create Organization</a></li>
+                                    <li><a href="~//Azure/AzureOverView">Live Overview</a></li>
 
-            //<div id="topdivtext"><img src="~/Images/Columbus.png" /><img src="~/Images/captologo.png" /></div>
-        }
-        else
-        {
-            <div id="topdivtext"><img src="~/Images/1columbus_logo.png" /></div>
-        }
-    </div>-->
+                                }
+                                else
+                                {
+                                    <li><a href="#">Under Development</a></li>
+                                }
 
-    <br />
-    <table>
-        <tr>
-            <td>
-                <div>
-                    <nav id="nav" role="navigation">
-                        <ul class="top-level-menu">
-                            <li>
-                                <a href="~//">Home</a>
-                                <ul id="homesort" class="second-level-menu">
-                                    <li><a href="~//Home/ChangeLog">ChangeLog</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Organization</a>
+                    <ul id="orgsort">
+                        <li><a href="~//Organization/AddDomain">Add Domain</a></li>
+                        <li><a href="~//Organization/CreateALLAdmins">Create All Admins</a></li>
+                        <li><a href="~//Organization/Create">Create Organization</a></li>
+                        <li><a href="~//Organization/RemoveDomain">Remove Domain</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Service</a>
+                    <ul id="servicesort">
+                        <li><a href="~//Service/CustomerReport">Customer Report</a></li>
+                        <li><a href="~//Service/ExpandCPURAM">Expand CPU/RAM</a></li>
+                        <li><a href="~//Service/ExpandVHD">Expand VHD</a></li>
+                        <li><a href="~//Service/ScheduleReboot">Schedule VM Reboot</a></li>
+                        <li class="dropdown">
+                            <a href="#">SCOM</a>
+                            <ul id="servicesort2">
+                                <li><a href="~//Service/ScomAlertFree">SCOM Freespace</a></li>
+                                <li><a href="~//Service/ScomLatestAlerts">SCOM Latest Alerts</a></li>
+                                <li><a href="~//Service/ScomPendingReboot">SCOM PendingReboot</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Level30</a>
+                    <ul id="lvl30sort">
+                        @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
+                        {
+                            <li><a href="~//Level30/ExpandCPURAM">Expand CPU/RAM</a></li>
+                            <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
+                            <li class="dropdown">
+                                <a href="#">CASIT Accounts</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/RemoveCASAdminALL">Remove All</a></li>
+                                    <li><a href="~//Level30/RemoveCASAdmin">Remove Single Admin</a></li>
                                 </ul>
                             </li>
-
-                            <li>
-                                <a><span>User</span></a>
-                                <ul id="usersort" class="second-level-menu">
-                                    <li><a href="~//User/Create">Create User</a></li>
-                                    <li><a href="~//User/ResetPWD">Reset Password</a></li>
-                                    <!--  <li><a href="~//User/CreateBatch">Create users (batch)</a></li> -->
-                                    <li><a href="~//User/Disable">Disable User</a></li>
-                                    <li><a href="~//User/Enable">Enable User</a></li>
-                                    <li><a href="~//User/Remove">Remove User</a></li>
-                                    <li><a href="~//User/CreateExtUser">Create EXT. User</a></li>
-                                </ul>
-
-                            </li>
-                            <li>
-                                <a><span>Mail</span></a>
-                                <ul id="mailsort" class="second-level-menu">
-                                    <li><a href="~//Mail/AddAlias">Add Alias</a></li>
-                                    <li><a href="~//Mail/RemoveAlias">Remove Alias</a></li>
-                                    <li><a href="~//Mail/CreateMailbox">Create Mailbox</a></li>
-                                    <li><a href="~//Mail/CreateDistributionGroup">Create Dist. Group</a></li>
-                                    <li><a href="~//Mail/GetCalendarPermissions">Calendar Permissions</a></li>
+                            <li class="dropdown">
+                                <a href="#">External Admins</a>
+                                <ul id="lvl30sort2">
                                     @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
                                     {
-
-
+                                        <li><a href="~//Level30/CreateEXTAdmin">Create EXT. Admin</a></li>
+                                        <li><a href="~//Level30/ScheduleEXTAdmin">Schedule EXT. Admin</a></li>
+                                        <li><a href="~//Level30/RemoveEXTAdmin">Remove EXT. Admin</a></li>
                                     }
-
-                                    <!--   <li><a href="~//Mail/GetDeviceReport">Get Device Report</a></li>
-                                    <li><a href="~//Mail/GetItemsReport">Get Mail Items Report</a></li>
-                                    <li><a href="~//Mail/SetMailForward">Set Mailforward</a></li>-->
-
-                                </ul>
-                            </li>
-                            <li>
-                                <a><span>Office 365</span></a>
-                                <ul id="o365sort" class="second-level-menu">
-                                    <li><a href="~//Office365/VerifyDomain">Verify Domain</a></li>
-                                    <li><a href="~//Office365/StartDirSync">Directory Sync</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a><span>Organization</span></a>
-                                <ul id="orgsort" class="second-level-menu">
-                                    <li><a href="~//Organization/Create">Create Organization</a></li>
-                                    <li><a href="~//Organization/AddDomain">Add Domain</a></li>
-                                    <li><a href="~//Organization/RemoveDomain">Remove Domain</a></li>
-                                    <li><a href="~//Organization/CreateALLAdmins">Create All Admins</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a><span>Service</span></a>
-                                <ul id="servicesort" class="second-level-menu">
-                                    <li><a href="~//Service/CustomerReport">Customer Report</a></li>
-                                    <li><a href="~//Service/ExpandVHD">Expand VHD</a></li>
-                                    <li><a href="~//Service/ExpandCPURAM">Expand CPU/RAM</a></li>
-                                    <li><a href="~//Service/ScheduleReboot">Schedule VM Reboot</a></li>
-                                    <li><a href="~//Service/ScomPendingReboot">SCOM PendingReboot</a></li>
-                                    <li><a href="~//Service/ScomLatestAlerts">SCOM Latest Alerts</a></li>
-                                    <li><a href="~//Service/ScomAlertFree">SCOM Freespace</a></li>
-                                    @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
+                                    else
                                     {
-
+                                        <li><a href="#">Under Development</a></li>
                                     }
-
-
                                 </ul>
                             </li>
-                            @if (Request.IsAuthenticated && User.IsInRole("Role_Level_30"))
-            {
-                                <li>
-                                    <a>Level 30</a>
-                                    <ul id="lvl30sort" class="second-level-menu">
-                                        <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
-                                        <li><a href="~//Level30/ExpandVHD">Expand VHD</a></li>
-                                        <li><a href="~//Level30/ExpandCPURAM">Expand CPU/RAM</a></li>
-                                        @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
-                                        {
-                                        }
-                                        <li><a href="~//Level30/ResetAdminPassword">Admin - Password</a></li>
-                                        <li><a href="~//Level30/CreateAdmin">Admin - Create New</a></li>
-                                        <li><a href="~//Level30/RemoveAdmin">Admin - Remove</a></li>
-                                    </ul>
-                                </li>
-                            }
-                            else
-                            {
-                                <li>
-                                    <a>Level 30</a>
-                                    <ul id="lvl30sort"></ul>
-                                </li>
-                            }
-                            <li>
-                                <a><span>Log</span></a>
-                                <ul id="Logsort">
-                                    <li><a href="~//Home/Log">Log</a></li>
-                                    <li><a href="~//Home/AzureLog">AzureLog</a></li>
+                            <li class="dropdown">
+                                <a href="#">Internal Admins</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/CreateAdmin">Create Admin</a></li>
+                                    <li><a href="~//Level30/RemoveAdmin">Remove Admin</a></li>
+                                    <li><a href="~//Level30/ResetAdminPassword">Reset Password</a></li>
                                 </ul>
                             </li>
-                            @if (ColumbusPortal.Logic.CommonCAS.DebugMode)
-                            {
-                                <li>
-                                    <a><span>Future</span></a>
-                                    <ul id="Logsort">
-                                        <li><a href="~//Future/CreateEXTAdmin">Create EXT. Admin</a></li>
-                                        <li><a href="~//Future/ScheduleEXTAdmin">Schedule EXT. Admin</a></li>
-                                        <li><a href="~//Future/RemoveEXTAdmin">Remove EXT. Admin</a></li>
-                                    </ul>
-                                </li>
-
-                            }
-                        </ul>
-
-
-
-                    </nav>
+                            <li class="dropdown">
+                                <a href="#">NAV Customers</a>
+                                <ul id="lvl30sort2">
+                                    <li><a href="~//Level30/CreateNAVCustomer">Create Customer</a></li>
+                                    <li><a href="~//Level30/UpdateNAVCustomer">Update Customer</a></li>
+                                    <li><a href="~//Level30/RemoveNAVCustomer">Remove Customer</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="~//Level30/UpdateConf">Update Conf</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="#">Not lvl30!</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Log</a>
+                    <ul id="logsort">
+                        <li><a href="~//Home/Log">Log</a></li>
+                        <li><a href="~//Home/AzureLog">AzureLog</a></li>
+                        <li><a href="~//Home/ChangeLog">ChangeLog</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Capto</a>
+                    <ul>
+                        <li class="dropdown">
+                            <a href="#">Users</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOCreateUser">Create user</a></li>
+                                <li><a href="~//Capto/CPOCreateUserBatch">Create users (batch)</a></li>
+                                <li><a href="~//Capto/CPODisableUser">Disable user</a></li>
+                                <li><a href="~//Capto/CPOEnableUser">Enable user</a></li>
+                                <li><a href="~//Capto/CPORemoveUser">Remove user</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Mail</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOAddAcceptedDomain">Add AcceptedDomain</a></li>
+                                <li><a href="~//Capto/CPOAddAlias">Add Alias</a></li>
+                                <li><a href="~//Capto/CPOAddMailboxPermission">Add Mailbox Permission</a></li>
+                                <li><a href="~//Capto/CPOCreateMailbox">Create Mailbox</a></li>
+                                <li><a href="~//Capto/CPOCreateDistributionGroup">Create DistributionGroup</a></li>
+                                <li><a href="~//Capto/CPOEnableSikkerMail">Enable Sikkermail</a></li>
+                                <li><a href="~//Capto/CPOGetCalendarPermissions">Get CalendarPermissions</a></li>
+                                <li><a href="~//Capto/CPOGetDeviceReport">Get Device Report</a></li>
+                                <li><a href="~//Capto/CPOGetItemsReport">Get Mail Items Report</a></li>
+                                <li><a href="~//Capto/CPORemoveAlias">Remove Alias</a></li>
+                                <li><a href="~//Capto/CPOSetMailForward">Set Mailforward</a></li>
+                                <li><a href="~//Capto/CPOSetMailboxPlan">Set MailboxPlan</a></li>
+                                <li><a href="~//Capto/CPOSetAllMailboxPlans">Set All MailboxPlans</a></li>
+                                <li><a href="~//Capto/CPOSetMailboxAutoResize">Set Mailbox Auto Resize</a></li>
+                                <li><a href="~//Capto/CPOSetOOFMessage">Set Out Of Office</a></li>
+                                <li><a href="~//Capto/CPORemoveOOFMessage">Remove Out Of Office</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Organization</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOCreate">Create organization</a></li>
+                                <li><a href="~//Capto/CPOSetNavCompanyName">Set NAV CompanyName</a></li>
+                                <li><a href="~//Capto/CPOCreateAccount">Add Account / Company</a></li>
+                                <li><a href="~//Capto/CPORemoveDummyDomain">Remove Dummy Domain</a></li>
+                                <li><a href="~//Capto/CPODisableCustomer">Disable Customer</a></li>
+                                <li><a href="~//Capto/CPOEnableCustomer">Enable Customer</a></li>
+                                <li><a href="~//Capto/CPOConvertCustomer">Convert Customer</a></li>
+                                <li><a href="~//Capto/CPORemoveCustomer">Remove Customer</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Office365</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOEnable365Customer">Enable 365</a></li>
+                                <li><a href="~//Capto/CPOAddDomain">Add Domain</a></li>
+                                <li><a href="~//Capto/CPOEnableFederation">Enable Federation</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Service</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOCustomerReport">Customer Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#">Level30 stuff</a>
+                            <ul>
+                                <li><a href="~//Capto/CPOUpdateVersionConf">Update Legal Version Conf</a></li>
+                                <li><a href="~//Capto/CPOCreateGoldenVM">CTX - Create Golden VM</a></li>
+                                <li><a href="~//Capto/CPOMCSUpdateImage">CTX - Update MCS Checkpoint</a></li>
+                                <li><a href="~//Capto/CPOMCSCreateCatalog">CTX - Create MCS Catalog</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="~//Home/CPOLog">Capto Log</a></li>
+                    </ul>
+                </li>
+                @if (Request.IsAuthenticated)
+                {
                     @Html.Partial("_LoginPartial")
-                </div>
+                    <li class="dropdown">
 
-            </td>
-        </tr>
+                        <a href="#">@User.Identity.Name.ToString()</a>
+                        <ul>
+                            <li><a href="~//Home/MyInfo">My Info</a></li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    </li>
+
+                }
+
+            </ul>
+        </div>
+    }
+    <table>
         <tr>
             <td>
                 <div id="bodydiv">
@@ -299,7 +370,7 @@
             </td>
         </tr>
     </table>
-
+    <div id="backtop">&#9650;</div>
     @RenderSection("script", required: false)
 
     <script>

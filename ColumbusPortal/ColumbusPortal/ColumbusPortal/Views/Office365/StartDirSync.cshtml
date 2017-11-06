@@ -42,14 +42,16 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
                     <select name="organization">
-                        @foreach (string organization in Model.Organizations)
+                        @foreach (string organization in Model.Office365Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.StartDirSync.Organization) { @: selected="selected"
-                                                                                                            } }>
+                                                                                                                                                } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -59,7 +61,7 @@
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Policy<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     <select name="policy">
                         <option selected="@(Model.ActionFailed && Model.StartDirSync.Policy.ToUpper() == "delta")">Delta</option>
                         <option selected="@(Model.ActionFailed && Model.StartDirSync.Policy.ToUpper() == "Initial")">Initial</option>
@@ -72,7 +74,18 @@
                     </div>
                 </td>
             </tr>
-
+            <tr class="hide">
+                <td class="lefttd tooltip">Force<i class="material-icons infoicon">info</i></td>
+                <td class="middletd">
+                    <input name="force" id="force" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.StartDirSync.Force) { @: checked="checked"
+                                 } } /> <label for="force" class="lbl"></label>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If you force the sync, we will try to close all AD Connect gui's open, and also restart the service. So be sure no one is actively working in the gui..
+                        </p>
+                    </div>
+                </td>
+            </tr>
         </table>
 
         <br />

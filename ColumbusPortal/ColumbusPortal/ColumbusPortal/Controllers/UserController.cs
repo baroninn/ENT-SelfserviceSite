@@ -193,7 +193,7 @@ namespace ColumbusPortal.Controllers
                     }
                     else
                     {
-                        model.OKMessage.Add("User deleted with warnings."); 
+                        model.OKMessage.Add("User deleted with info."); 
 
                         foreach (PSObject message in result)
                         {

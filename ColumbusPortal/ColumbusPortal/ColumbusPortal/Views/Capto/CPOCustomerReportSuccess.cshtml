@@ -1,0 +1,181 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Service > Customer Report > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a data usage report</p>
+
+@using (Html.BeginForm("CPOCustomerReport", "Capto"))
+{
+    <fieldset>
+        <legend>Select Organization</legend>
+        <table>
+            <tr>
+                <td colspan="2">@if (Model.Message != null)
+                { <div class="message">@Model.Message</div> }</td>
+            </tr>
+            @if (Model.MessageList.Count > 0)
+            {
+                foreach (string message in Model.MessageList)
+                {
+                    <tr>
+                        <td colspan="2"><div class="message">@message</div></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (organization == Model.CPOCustomerReport.Organization) { @: selected="selected"
+                                                                    }>
+                                @organization
+                                                                </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" value="Create report" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}
+<fieldset>
+    <legend>Customer Report</legend>
+
+    <fieldset>
+        <legend>Overview</legend>
+        <a href="~/Capto/CPOCustomerReportCSV?organization=@Model.CPOCustomerReport.Organization">View Excelformat</a>
+
+        <table>
+            <tr>
+                <td class="lefttd">
+                    <center>
+                        <img src="~/Capto/CPOCustomerReportPieChartDisk?iUsage=@Model.CPOCustomerReport.DiskfUsage&iQuota=@Model.CPOCustomerReport.DiskfQuota" /><br />
+                        <small>Fig 1. Network share usage</small>
+                    </center>
+                </td>
+                <td valign="middle">
+                    <p>Disk Usage: @Model.CPOCustomerReport.DiskUsage</p>
+                    <p>Disk Quota: @Model.CPOCustomerReport.DiskQuota</p>
+                </td>
+                <td class="lefttd">
+                    <center>
+                        <img src="~/Capto/CPOCustomerReportPieChartDisk?iUsage=@Model.CPOCustomerReport.ExchangefUsage&iQuota=@Model.CPOCustomerReport.ExchangefQuota" /><br />
+                        <small>Fig 2. Exchange usage</small>
+                    </center>
+                </td>
+                <td valign="middle">
+                    <p>Exchange Usage: @Model.CPOCustomerReport.ExchangeUsage GB</p>
+                    <p>Exchange Quota: @string.Format("{0:0.00}", Model.CPOCustomerReport.ExchangefQuota) GB</p>
+                    <p>Exchange Users: @Model.CPOCustomerReport.ExchangeUsersCount</p>
+                    <br />
+                    <b><p>TotalUsage: @Model.CPOCustomerReport.DiskTotalUsage GB</p></b>
+                    <p>TotalQuota: @Model.CPOCustomerReport.DiskTotalQuota GB</p>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>Database usage</legend>
+        <table>
+            <tr>
+                <td>Total: @Model.CPOCustomerReport.DatabaseUsage</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>Exchange users</legend>
+        <table>
+            <tr>
+                <td><b>Name</b></td>
+                <td><b>Email</b></td>
+                <td style="text-align:right"><b>Usage</b></td>
+                <td style="text-align:right"><b>Quota</b></td>
+            </tr>
+            @foreach (ColumbusPortal.Models.CPOExchangeUser user in Model.CPOCustomerReport.ExchangeUsers)
+            {
+                <tr>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td style="text-align:right">@user.Usage</td>
+                    <td style="text-align:right">@user.Quota</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>Office365 billing</legend>
+        <table>
+            <tr>
+                <td><b>PartnerName</b></td>
+                <td><b>License</b></td>
+                <td><b>Gyldig</b></td>
+                <td><b>Tildelt</b></td>
+                <td><b>Ledige</b></td>
+            </tr>
+            @foreach (ColumbusPortal.Models.CPOInfo365 info in Model.CPOCustomerReport.Info365s)
+            {
+                <tr>
+                    <td>@info.PartnerName</td>
+                    <td>@info.License</td>
+                    <td>@info.ActiveUnits</td>
+                    <td>@info.ConsumedUnits</td>
+                    <td>@info.FreeUnits</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>SPLA Licenses:</legend>
+        <table>
+            <tr>
+                <td><b>Windows: @Model.CPOCustomerReport.Licenses.Windows.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CPOCustomerReport.Licenses.Windows)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Office Standard: @Model.CPOCustomerReport.Licenses.OfficeStandard.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CPOCustomerReport.Licenses.OfficeStandard)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Mail Only: @Model.CPOCustomerReport.Licenses.MailOnly.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CPOCustomerReport.Licenses.MailOnly)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Stud Jur: @Model.CPOCustomerReport.Licenses.StudJur.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CPOCustomerReport.Licenses.StudJur)
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sikkermail: @Model.CPOCustomerReport.Licenses.Sikkermail.Count</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @string.Join(", ", Model.CPOCustomerReport.Licenses.Sikkermail)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</fieldset>

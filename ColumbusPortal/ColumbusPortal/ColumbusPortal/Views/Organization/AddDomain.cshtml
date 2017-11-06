@@ -69,7 +69,8 @@
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
@@ -77,38 +78,38 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.Domain.Organization) { @: selected="selected"
-                                                                    } }>
+                                                                                                        } } value="@organization.Split(' ')[0]">
                                 @organization
-                                                                </option>
+                            </option>
                         }
                     </select>
                     <span class="mandatory">*</span>
                 </td>
             </tr>
             <tr>
-                <td class="lefttd">Domains:</td>
+                <td class="lefttd">Current Domains:</td>
                 <td class="middletd">
                     <div id="Domain"></div>
                 </td>
             </tr>
             <tr>
-                <td class="lefttd tooltip"><span>Current Domains<i class="material-icons infoicon">info</i></span></td>
+                <td class="lefttd tooltip"><span>New Domain<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="domain" placeholder="testdomæne.dk" @if (Model.ActionFailed) { @: value="@Model.Domain.Domain"
-                                                                                                                                                               } />
+                    @Html.EditorFor(m => m.Domain.Domain, new { htmlAttributes = new { name = "domain", placeholder = "testdomæne.dk" } })
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             This will add a domain to the customer, and a UPN on the local on-prem AD.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.Domain.Domain, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">Add as Accepted EmailDomain</td>
                 <td>
-                    <input name="AddasEmail" type="checkbox" @if (Model.ActionFailed) { if (Model.Domain.AddasEmail) { @: checked="checked" 
-                           } } onclick="Info()" />
+                    <input name="AddasEmail" id="AddasEmail" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.Domain.AddasEmail) { @: checked="checked"
+                                                      } } onclick="Info()" /><label for="AddasEmail" class="lbl"></label>
 
                     <div class="description">
                         <p class="descriptiontext">

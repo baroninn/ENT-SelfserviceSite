@@ -1,0 +1,105 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > Intune Overview";
+}
+@section script {
+    <script>
+        $(document).on("click", ".intunedevicesummary", function () {
+            $(this).parent().parent().next("tr").children().find(".description").toggle(100);
+            //$(this).children(".description").toggle(100);
+        });
+        $(document).ready(function () {
+
+            GetIntuneOverview(function () {
+                $('.loading').hide();
+                $('#intuneoverview').fadeIn({ queue: false, duration: 'slow' });
+            });
+            GetAzureIntuneDevice(function () {
+                $('.loading').hide();
+                $('#AzureIntuneDevice').fadeIn({ queue: false, duration: 'slow' });
+            });
+            GetAzureIntunePolicyOverview(function () {
+                $('.loading').hide();
+                $('#AzureIntuneComplianceOverview').fadeIn({ queue: false, duration: 'slow' });
+            });
+
+            $("select[name=organization]").change(function () {
+                GetIntuneOverview(function () {
+                    $('.loading').hide();
+                    $('#intuneoverview').fadeIn({ queue: false, duration: 'slow' });
+                });
+                GetAzureIntuneDevice(function () {
+                    $('.loading').hide();
+                    $('#AzureIntuneDevice').fadeIn({ queue: false, duration: 'slow' });
+                });
+                GetAzureIntunePolicyOverview(function () {
+                    $('.loading').hide();
+                    $('#AzureIntuneComplianceOverview').fadeIn({ queue: false, duration: 'slow' });
+
+                });
+            });
+        });
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Intune Overview..</p>
+<br />
+
+@using (Html.BeginForm("IntuneOverview", "Azure"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Intune Overview</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization" id="organization">
+                        @foreach (string organization in Model.CloudOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.IntuneOverview.Organization) { @: selected="selected"
+                                                                 } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <div id="loading" name="loading" class="loading">
+            <span><img src="~/Images/loading.gif" /></span>
+        </div>
+        <div class="intuneoverview" id="intuneoverview" name="intuneoverview" hidden></div>
+        <div class="AzureIntuneDevice" id="AzureIntuneDevice" name="AzureIntuneDevice" hidden></div>
+        <div class="AzureIntuneComplianceOverview" id="AzureIntuneComplianceOverview" name="AzureIntuneComplianceOverview" hidden></div>
+        <br />
+        <br />
+    </fieldset>
+}

@@ -54,7 +54,7 @@ function Get-Office365Information {
     }
     else{
         $ID = @()
-        Connect-O365 -Organization $Organization
+        Connect-MSOnline -Organization $Organization
         $SKU = Get-MsolAccountSku
         foreach($i in $SKU){
             $newid = New-Office365Billing

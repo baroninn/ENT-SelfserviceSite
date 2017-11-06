@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.UI.DataVisualization.Charting;
 using ColumbusPortal.Logic;
+using XKCDPasswordGen;
 
 namespace ColumbusPortal.Controllers
 {
@@ -74,6 +75,23 @@ namespace ColumbusPortal.Controllers
 
         }
 
+        public string GetXKCDPassword(string type)
+        {
+            Random r = new Random();
+            int rInt = r.Next(0, 9);
+
+            string password = "";
+            if (type == "user")
+            {
+                password = XkcdPasswordGen.Generate(2, "");
+            }
+            if (type == "svc")
+            {
+                password = XkcdPasswordGen.Generate(6, "");
+            }
+            return password.First().ToString().ToUpper() + password.Substring(1) + rInt.ToString();
+
+        }
 
         public class AjaxDistributionGroup
         {
@@ -169,6 +187,7 @@ namespace ColumbusPortal.Controllers
 
             //return "Org: " + organization + ", Id: " + identity + ", User: " + string.Join(" & ", new JavaScriptSerializer().Deserialize<string[]>(user));
         }
+
         [Authorize(Roles = "Access_SelfService_FullAccess")]
         public class AjaxMailbox
         {
@@ -218,7 +237,7 @@ namespace ColumbusPortal.Controllers
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.GetMailbox(organization, name);
+                    ps.GetMailbox(organization, name); 
                     IEnumerable<PSObject> result = ps.Invoke();
 
                     foreach (PSObject mailbox in result)
@@ -241,6 +260,7 @@ namespace ColumbusPortal.Controllers
                 return new JsonException(exc).ToString();
             }
         }
+
         [Authorize(Roles = "Access_SelfService_FullAccess")]
         public class AjaxMailForward
         {
@@ -444,6 +464,8 @@ namespace ColumbusPortal.Controllers
         {
             try
             {
+                string initials = organization.Split(' ')[0];
+
                 List<AjaxDomain> domains = new List<AjaxDomain>();
 
                 using (MyPowerShell ps = new MyPowerShell())
@@ -544,7 +566,7 @@ namespace ColumbusPortal.Controllers
                             Name = properties["Name"].ToString(),
                             DistinguishedName = properties["DistinguishedName"].ToString(),
                             UserPrincipalName = properties["UserPrincipalName"].ToString(),
-                            proxyAddresses = properties["proxyAddresses"].ToString().Split(','),
+                            //proxyAddresses = properties["proxyAddresses"].ToString().Split(','),
                             Enabled = properties["Enabled"].ToString(),
                         });
                     }
@@ -597,91 +619,6 @@ namespace ColumbusPortal.Controllers
             }
         }
 
-
-        // Function for getting VMServers as select list..
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public class AjaxVMServers
-        {
-            public string Name { get; set; }
-            public string VMID { get; set; }
-
-        }
-
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public string GetVMServers()
-        {
-            try
-            {
-                List<AjaxVMServers> servers = new List<AjaxVMServers>();
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.GetVMServers();
-                    IEnumerable<PSObject> result = ps.Invoke();
-
-                    foreach (PSObject Server in result)
-                    {
-                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(Server);
-                        servers.Add(new AjaxVMServers()
-                        {
-                            Name = properties["Name"].ToString(),
-                            VMID = properties["VMID"].ToString(),
-                        });
-                    }
-
-                }
-                
-
-                return new JavaScriptSerializer().Serialize(servers); 
-            }
-            catch (Exception exc)
-            {
-                return new JsonException(exc).ToString();
-            }
-        }
-
-        // Function for getting VMServers as select list..
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public class AjaxVMServerslvl25
-        {
-            public string Name { get; set; }
-            public string VMID { get; set; }
-
-        }
-
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public string GetVMServerslvl25()
-        {
-            try
-            {
-                List<AjaxVMServers> servers = new List<AjaxVMServers>();
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.GetVMServerslvl25();
-                    IEnumerable<PSObject> result = ps.Invoke();
-
-                    foreach (PSObject Server in result)
-                    {
-                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(Server);
-                        servers.Add(new AjaxVMServers()
-                        {
-                            Name = properties["Name"].ToString(),
-                            VMID = properties["VMID"].ToString(),
-                        });
-                    }
-
-                }
-
-
-                return new JavaScriptSerializer().Serialize(servers);
-            }
-            catch (Exception exc)
-            {
-                return new JsonException(exc).ToString();
-            }
-        }
-
         [Authorize(Roles = "Access_SelfService_FullAccess")]
         public class AjaxVMVHDs
         {
@@ -725,6 +662,150 @@ namespace ColumbusPortal.Controllers
             }
         }
 
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public class AjaxVMSQL
+        {
+            public string Name { get; set; }
+            public string id { get; set; }
 
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string GetVMSQL(string level)
+        {
+            try
+            {
+                List<AjaxVMSQL> vms = new List<AjaxVMSQL>();
+
+                string conString = "Server=sht004;Integrated Security=true;Database=VirtualManagerDB";
+                SqlConnection con = new SqlConnection(conString);
+
+                var selectSql = "";
+
+                if (level == "lvl25")
+                {
+                    selectSql = "select * from[dbo].[tbl_WLC_VObject] " +
+                    "where (CloudId not like '4aa7203c-a223-40f8-9ca8-657332ea4fc6' " +
+                    "and CloudId not like '80981c48-fad9-4103-8a4d-efc40da5c908' " +
+                    "and CloudId not like '5cc40dfe-67c0-40c9-b921-8925eb7c28b4' " +
+                    "and CloudId not like '50e3a28c-adc7-4737-b8d7-e5fd2e7a066c' " +
+                    "and CloudId not like 'd0900697-d818-43a4-9854-71ac049be9ac')" +
+                    " and " +
+                    "(ObjectType = '1') order by Name; ";
+
+                }
+                else
+                {
+                    selectSql = "select * from[dbo].[tbl_WLC_VObject] WHERE ObjectType = '1' order by Name";
+                }
+                //string selectSql = "select * from [dbo].[tbl_WLC_VObject] where CloudId = '8f687697-4317-4435-9db1-cc5f03a8066b'";
+                SqlCommand cmd = new SqlCommand(selectSql, con);
+
+                try
+                {
+                    con.Open();
+
+                    using (SqlDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            vms.Add(new AjaxVMSQL()
+                            {
+                                Name = (read["Name"].ToString()),
+                                id = (read["ObjectId"].ToString()),
+                            });
+                        }
+                    }
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+
+                return new JavaScriptSerializer().Serialize(vms);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+      
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public class AjaxLog
+        {
+            public string entry { get; set; }
+
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string Log(string entry)
+        {
+            CommonCAS.Log(string.Format("{0}", entry));
+
+            return entry;
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public class AjaxGetCurrentOOF
+        {
+            public string Organization { get; set; }
+            public string UserPrincipalName { get; set; }
+            public string StartTime { get; set; }
+            public string EndTime { get; set; }
+            public string AutoReplyState { get; set; }
+            public string InternalMessage { get; set; }
+            public string ExternalMessage { get; set; }
+            public string ExternalAudience { get; set; }
+        }
+
+        // Ajax function - returns the current mailforward set on a mailbox
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string GetCurrentOOF(string organization, string userprincipalname)
+        {
+            try
+            {
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetOOFMessage(organization, userprincipalname);
+                    PSObject result = ps.Invoke().Single();
+
+                    return new JavaScriptSerializer().Serialize(new AjaxGetCurrentOOF()
+                    {
+                        StartTime = result.Members["StartTime"].Value.ToString(),
+                        EndTime = result.Members["EndTime"].Value.ToString(),
+                        AutoReplyState = result.Members["AutoReplyState"].Value.ToString(),
+                        InternalMessage = result.Members["InternalMessage"].Value.ToString(),
+                        ExternalMessage = result.Members["ExternalMessage"].Value.ToString(),
+                        ExternalAudience = result.Members["ExternalAudience"].Value.ToString()
+                    });
+                }
+
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string RemoveScheduledJobs(string id)
+        {
+            try
+            {
+                string[] jobs = new JavaScriptSerializer().Deserialize<string[]>(id);
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.RemoveScheduledJobs(jobs).Invoke();
+                }
+
+                return "[]";
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
     }
 }

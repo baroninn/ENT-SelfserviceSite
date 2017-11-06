@@ -5,7 +5,9 @@
     
     [Parameter(Mandatory)]
     [ValidateSet("initial", "delta")]
-    [string]$Policy
+    [string]$Policy,
+
+    [switch]$Force
 
     )
     Begin {
@@ -19,17 +21,40 @@
         if ($Config.AADsynced -eq 'true') {
         
             $DirBlock = {
-                param($Policy)
-
-                try { 
-                    Import-Module ADSync
-                    Start-ADSyncSyncCycle -PolicyType $Policy
+                param(
+                    $Policy, 
+                    $Force
+                )
+                if (-not $Force) {
+                    
+                    try { 
+                        Import-Module ADSync
+                        Start-ADSyncSyncCycle -PolicyType $Policy > $null
+                    }
+                    catch {
+                        throw "Error : $_"
+                    }
                 }
-                catch {
-                    Write-Verbose "Error : $_"
+                else {
+                    try { 
+
+                        Get-Service ADSync | Restart-Service -Force
+                        $process = Get-Process miisclient -ErrorAction SilentlyContinue
+                        if ($process) {
+                            $process | Stop-Process -Force
+                        }
+
+                        Import-Module ADSync
+                        Start-ADSyncSyncCycle -PolicyType $Policy > $null
+
+                    }
+                    catch {
+                        throw "Error : $_"
+                    }
                 }
             }
-            Invoke-Command -ComputerName $Config.ADConnectServer -ScriptBlock $DirBlock -Credential $Cred -ArgumentList $Policy | Out-Null
+
+            Invoke-Command -ComputerName $Config.ADConnectServer -ScriptBlock $DirBlock -Credential $Cred -ArgumentList $Policy, $Force
         }
         else {
             Write-Verbose "Customer is not Dirsynced according to conf.."

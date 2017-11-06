@@ -1,0 +1,43 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Azure VM</legend>
+    @if (Model.AzureVM.Count() != 0)
+    {
+        foreach (var item in Model.AzureVM)
+        {
+            <table class="VM">
+                @if (item.IPAddress == "No IP")
+                {
+                    <tr><td></td><td><input type="button" value="Connect" class="buttonazure" disabled /></td></tr>
+
+                }
+                else
+                {
+                    <tr><td></td><td><input type="button" value="Connect" class="buttonazure" onclick="downloadfile(@(String.Format("'{0}{1}.rdp'", item.Organization, item.Name)), @(String.Format("'full address:s:{0}'", item.IPAddress)) )" /></td></tr>
+
+                }
+                <tr><td><div><img style="width: 50%; height: 50%" src="../Images/Windows_logo.png"></div></td><td style="text-align: left; font-size: larger;"><b>@item.Name</b></td></tr>
+                <tr><td style="width: 120px;"><b>ResourceGroup</b></td><td>@item.ResourceGroupName</td></tr>
+                <tr><td style="width: 120px;"><b>Location</b></td><td>@item.Location</td></tr>
+                <tr><td style="width: 120px;"><b>Provisioning</b></td><td>@item.ProvisioningState</td></tr>
+                <tr><td style="width: 120px;"><b>PowerState</b></td><td>@item.PowerState</td></tr>
+                <tr><td style="width: 120px;"><b>VmSize</b></td><td>@item.VmSize</td></tr>
+                <tr><td style="width: 120px;"><b>CPU</b></td><td>@item.CPU</td></tr>
+                <tr><td style="width: 120px;"><b>RAM</b></td><td>@item.RAM</td></tr>
+                <tr><td style="width: 120px;"><b>IP</b></td><td>@item.IPAddress</td></tr>
+            </table>
+        }
+    }
+    else
+    {
+        <table class="VM">
+            <tr>
+                <td>
+                    VM list is empty...
+                </td>
+            </tr>
+        </table>
+    }
+
+</fieldset>

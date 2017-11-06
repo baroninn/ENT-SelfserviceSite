@@ -1,0 +1,117 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="macOS subfieldset" hidden>
+    <legend class="sublegend">Password (Mac OS)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### macOS CONFIGURATION ####################-->
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings">Password</td>
+            <td class="righttdsettings">
+                <select name="macpasswordRequired" id="macpasswordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordRequired == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordRequiredType" id="macpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordRequiredType == "numeric")" value="numeric">Numeric</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Number of non-alphanumeric characters in password<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordMinimumCharacterSetCount" id="macpasswordMinimumCharacterSetCount">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinimumCharacterSetCount == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinimumCharacterSetCount == "1")" value="1">1</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinimumCharacterSetCount == "2")" value="2">2</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinimumCharacterSetCount == "3")" value="3">3</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinimumCharacterSetCount == "4")" value="4">4</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Minimum number of non-alphanumeric characters (like #, %, !, etc.) that the password must contain.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum password length<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordMinimumLength" name="macpasswordMinimumLength" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.macpasswordMinimumLength"
+                                                       } />
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the minimum number of digits or characters in the password.</p>
+                    <p class="descriptiontext">Recommended Value: 4 (4-14)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip"><span>Simple Passwords<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordBlockSimple" id="macpasswordBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordBlockSimple == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to block devices from using simple password sequences, such as 1234 or 1111. Recommended Value: Block</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Maximum minutes after screen lock before password is required<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordMinutesOfInactivityBeforeLock" id="macpasswordMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeLock == "480")" value="480">8 Hours</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Maximum minutes after screen lock before password is required.</p>
+                    <p class="descriptiontext">Immediately recommended. Ignored by device if new time is longer than what's currently set on device.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Maximum minutes of inactivity until screen locks<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordMinutesOfInactivityBeforeScreenTimeout" id="macpasswordMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.macpasswordMinutesOfInactivityBeforeScreenTimeout == "60")" value="60">1 Hour</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Maximum minutes of inactivity until screen locks. </p>
+                    <p class="descriptiontext">Ignored by device if new time is longer than what's currently set on device.  If set to Immediately, devices will use the minimum possible value per device.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordExpirationDays" name="macpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.macpasswordExpirationDays"
+                                                                                                                } />
+            </td>
+        </tr>
+
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordPreviousPasswordBlockCount" name="macpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.macpasswordPreviousPasswordBlockCount"
+                                                                                                                } />
+            </td>
+        </tr>
+    </table>
+</fieldset>

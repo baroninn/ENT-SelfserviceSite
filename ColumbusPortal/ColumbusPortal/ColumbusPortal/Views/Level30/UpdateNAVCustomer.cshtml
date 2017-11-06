@@ -1,0 +1,172 @@
+﻿@model ColumbusPortal.Models.Level30Model
+@{
+    ViewBag.Title = "Level30 > UpdateNAVCustomer";
+}
+@section script {
+
+<script>
+    $(document).ready(function () {
+
+        $("select[name=organization]").change(function () {
+
+            document.getElementById("Platform").value = 'Contacting Database, please wait';
+            document.getElementById("Name").value = 'Contacting Database, please wait';
+            document.getElementById("NavMiddleTier").value = 'Contacting Database, please wait';
+            document.getElementById("SQLServer").value = 'Contacting Database, please wait';
+            document.getElementById("RDSServer").value = 'Contacting Database, please wait';
+            //document.getElementById("LoginInfo").value = 'Contacting Database, please wait';
+
+            GetCurrentNAVCustomerConfLIST()
+
+        });
+        GetCurrentNAVCustomerConfLIST()
+
+        $('#Platform').on('change', function () {
+            if (this.value == 'Shared') {
+                document.getElementById("LoginInfoTR").hidden = true;
+
+            }
+            if (this.value == 'Custom') {
+                document.getElementById("LoginInfoTR").hidden = false;
+
+            }
+        });
+
+});
+
+</script>
+
+<script src="~/scripts/tinymce/tinymce.min.js"></script>
+<!-- Script to wire up your TinyMCE editor -->
+<script type="text/javascript">
+        // Initialize your tinyMCE Editor with your preferred options
+    tinymce.init({
+        selector: 'textarea',
+        height: '150',
+        width: '664',
+        branding: false,
+        menubar: false,
+        plugins: [
+          'advlist autolink lists link image charmap print preview anchor',
+          'searchreplace visualblocks code fullscreen',
+          'insertdatetime media table contextmenu paste code textcolor colorpicker'
+        ],
+        toolbar1: 'insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor',
+        content_css: [
+          '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+          '../Scripts/tinymce/skins/lightgray/skin.min.css'],
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+            });
+        }
+    });
+
+</script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the Conf file for a given customer.</p>
+<p class="warning2">This is used for the organization list at cascpa.columbusit.com.</p>
+<br />
+
+@using (Html.BeginForm("UpdateNAVCustomer", "Level30"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Update NAV Customer Info</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd"><span>Organization</span></td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CASOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.UpdateNAVCustomer.Organization) { @: selected="selected"
+                                                                                                                       } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Platform</td>
+                <td>
+                    <select name="Platform" id="Platform">
+                        <option value="Shared" selected="@(Model.ActionFailed && Model.UpdateNAVCustomer.Platform == "Shared")">Shared</option>
+                        <option value="Custom" selected="@(Model.ActionFailed && Model.UpdateNAVCustomer.Platform == "Custom")">Custom</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Customer Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="Name" id="Name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateNAVCustomer.Name"
+                                                                                                } />
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Please write the full customer name etc Contoso Holding A/S..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Nav Middle Tier</td>
+                <td class="middletd">
+                    <input name="NavMiddleTier" id="NavMiddleTier" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateNAVCustomer.NavMiddleTier"
+                                                                                                                                                                       } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">SQL Server</td>
+                <td class="middletd">
+                    <input name="SQLServer" id="SQLServer" placeholder="DMZXXXE" @if (Model.ActionFailed) {  @: value="@Model.UpdateNAVCustomer.SQLServer"
+                                                                                                                                                                       } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">RDS Server</td>
+                <td class="middletd">
+                    <input name="RDSServer" id="RDSServer" placeholder="XXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateNAVCustomer.RDSServer"
+                                                                                                                                                                                                  } />
+                </td>
+            </tr>
+            <tr id="LoginInfoTR" hidden>
+                <td class="lefttd">LoginInfo</td>
+                <td class="middletd">
+                    <textarea id="LoginInfo" name="LoginInfo"></textarea>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Update NAV Customer" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

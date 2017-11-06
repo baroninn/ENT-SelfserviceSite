@@ -27,6 +27,7 @@
         $NewConfig += [pscustomobject]@{
                 Organization     = $Organization
                 Name             = $Name
+                Platform         = $null
                 UserContainer    = $null
                 ExchangeServer   = $null
                 DomainFQDN       = $null
@@ -45,6 +46,11 @@
                 SQLServer        = $null
                 AdminRDS         = $null
                 AdminRDSPort     = $null
+                AppID            = $null
+                AppSecret        = $null
+                ServiceCompute   = "false"
+                Service365       = "false"
+                ServiceIntune    = "false"
         }
 
         Upload-SQLEntConfig -Organization $Organization -Config $NewConfig

@@ -1,0 +1,94 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Mail > Add Mailbox Permission";
+}
+@section script {
+    <script>
+    $(document).ready(function () {
+        $("select[name=organization]").change(function () {
+            CPOGetMailbox();
+
+        });
+
+        @if (Model.CPOMailboxPermission != null)
+        {
+        <text>$("select[name=organization]").val("@Model.CPOMailboxPermission.Organization");</text>
+        }
+
+        CPOGetMailbox();
+    });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to add a permission group to a capto mailbox.</p>
+
+@using (Html.BeginForm("CPOAddMailboxPermission", "Capto"))
+{
+    <fieldset>
+        <legend>Add Mailbox Permission</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CPOMailboxPermission.Organization) { @: selected="selected"
+                                                                    } }>
+                                @organization
+                                                                </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">FullAccess</td>
+                <td class="middletd">
+                    <input name="fullaccess" id="fullaccess" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOMailboxPermission.FullAccess) { @: checked="checked"
+                                                                                     } } /><label for="fullaccess" class="lbl"></label>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">SendAs</td>
+                <td class="middletd">
+                    <input name="sendas" id="sendas" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOMailboxPermission.SendAs) { @: checked="checked"
+                                                                                    } } /><label for="sendas" class="lbl"></label>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" value="Add Mailbox Permission" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

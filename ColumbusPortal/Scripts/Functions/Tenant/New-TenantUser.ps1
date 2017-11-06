@@ -57,8 +57,8 @@
 
         $Config = Get-SQLEntConfig -Organization $Organization
 
-        $OrganizationDomains = @($Config.EmailDomains)
-        if (-not ($OrganizationDomains.Where{$_.DomainName -eq "$domain"})) {
+        $OrganizationDomains = @($Config.EmailDomains -split ',')
+        if (-not $OrganizationDomains -contains $domain) {
             Write-Error "Domain '$domain' was not found for the tenant '$Organization'."
         }
 
@@ -97,7 +97,7 @@
 
             Wait-ADReplication -UPN $PrimarySmtpAddress -Config $config -Cred $cred -Verbose
 
-            if ($Config.ExchangeServer -ne "null") {
+            if (-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
 
                 Import-Module (New-ExchangeProxyModule -Organization $Organization -Command 'Get-Mailbox', 'Enable-Mailbox', 'Get-MailboxDatabase')
 
@@ -132,7 +132,8 @@
                             )
 
                             $path = ($DFSPath + $SAMAccountName)
-                            New-Item -Path $DFSPath -Name $SAMAccountName -ItemType Directory
+                            $HomeDir = New-Item -Path $DFSPath -Name $SAMAccountName -ItemType Directory
+                            Write-Output "Home Directory created: $($HomeDir.FullName)"
 
                             $acl = (Get-Item $path).GetAccessControl('Access')
 

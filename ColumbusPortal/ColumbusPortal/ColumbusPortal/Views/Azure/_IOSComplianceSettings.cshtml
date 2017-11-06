@@ -1,0 +1,167 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Email (IOS)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### IOS CONFIGURATION ####################-->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Require mobile devices to have a managed email profile<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="managedEmailProfileRequired" id="managedEmailProfileRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.managedEmailProfileRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.managedEmailProfileRequired == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">If you set this to Require, then devices that don't have an email profile managed by Intune will be considered as not-compliant. </p>
+                    <p class="descriptiontext">A device may not have a managed email profile when it is not correctly targeted or if the user has manually setup the email account on the device.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Device Health (IOS)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### IOS CONFIGURATION ####################-->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Jailbroken devices<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="iossecurityBlockJailbrokenDevices" id="iossecurityBlockJailbrokenDevices">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iossecurityBlockJailbrokenDevices == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iossecurityBlockJailbrokenDevices == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Prevent jailbroken devices to have corporate access (This compliance check is supported for devices with OS versions iOS 8.0 and above)</p>
+
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Require the device to be at or under the Mobile Threat Level<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="iosdeviceThreatProtectionRequiredSecurityLevel" id="iosdeviceThreatProtectionRequiredSecurityLevel">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iosdeviceThreatProtectionRequiredSecurityLevel == "unavailable")" value="unavailable">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iosdeviceThreatProtectionRequiredSecurityLevel == "secured")" value="secured">Secured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iosdeviceThreatProtectionRequiredSecurityLevel == "low")" value="low">Low</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iosdeviceThreatProtectionRequiredSecurityLevel == "medium")" value="medium">Medium</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.iosdeviceThreatProtectionRequiredSecurityLevel == "high")" value="high">High</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Select the maximum allowed mobile threat level of the device evaluated by your Mobile Threat Defense services above which the device gets marked as noncompliant. </p>
+                    <p class="descriptiontext">(This compliance check is supported for devices with OS versions iOS 8.0 and above).</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Device Properties (IOS)</legend>
+    <!-- General -->
+    <table>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="iososMinimumVersion" id="iososMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.iososMinimumVersion"
+                                                                                                                                                                                                                           } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the min OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions IOS 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="iososMaximumVersion" id="iososMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.iososMaximumVersion"
+                                                                                                 } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the max OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions IOS 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Password (IOS)</legend>
+    <table>
+        <!-- Password -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Password</td>
+            <td class="righttdsettings">
+                <select name="passcodeRequired" id="passcodeRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeRequired == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Simple passwords</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeBlockSimple" id="passcodeBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeBlockSimple == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodeMinimumLength" name="passcodeMinimumLength" placeholder="Number (4-14)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passcodeMinimumLength"
+                                                                                                                                                         } />
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeRequiredType" id="passcodeRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeRequiredType == "deviceDefault")" value="deviceDefault">deviceDefault</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeRequiredType == "numeric")" value="numeric">Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Number of non-alphanumeric characters in password</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeMinimumCharacterSetCount" id="passcodeMinimumCharacterSetCount">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinimumCharacterSetCount == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinimumCharacterSetCount == "1")" value="1">1</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinimumCharacterSetCount == "2")" value="2">2</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinimumCharacterSetCount == "3")" value="3">3</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinimumCharacterSetCount == "4")" value="4">4</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity before password is required</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeMinutesOfInactivityBeforeLock" id="passcodeMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "0")" value="0">Immidiately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passcodeMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodeExpirationDays" name="passcodeExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passcodeExpirationDays"
+                                                                                                                                                                                                                                  } />
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodePreviousPasscodeBlockCount" name="passcodePreviousPasscodeBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passcodePreviousPasscodeBlockCount"
+                                                                                                                                                                                                                   } />
+            </td>
+        </tr>
+    </table>
+</fieldset>

@@ -17,7 +17,7 @@
             # command - text
             $sqlCmd = New-Object System.Data.SqlClient.SqlCommand
             $sqlCmd.Connection = $sqlConnection
-            $sqlCmd.CommandText = "select * FROM [dbo].[Organizations]"
+            $sqlCmd.CommandText = "select * FROM [dbo].[Organizations] WHERE [Platform] NOT LIKE 'Cloud'"
 
             # execute - data reader
             $reader = $sqlCmd.ExecuteReader()

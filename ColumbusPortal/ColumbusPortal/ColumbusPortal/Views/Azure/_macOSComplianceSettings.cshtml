@@ -1,0 +1,159 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="macOS subfieldset" hidden>
+    <legend class="sublegend">Device Health (Mac OS)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### macOS CONFIGURATION ####################-->
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings">Require system integrity protection</td>
+            <td class="righttdsettings">
+                <select name="systemIntegrityProtectionEnabled" id="systemIntegrityProtectionEnabled">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.systemIntegrityProtectionEnabled == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.systemIntegrityProtectionEnabled == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="macOS subfieldset" hidden>
+    <legend class="sublegend">Device Properties (Mac OS)</legend>
+    <!-- General -->
+    <table>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="macosMinimumVersion" id="macosMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.macosMinimumVersion"
+                                                                                                                                                                                                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">Must be a valid version format. Example: 4.3.06, 7.01.4, etc.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="macosMaximumVersion" id="macosMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.macosMaximumVersion"
+                                                                                                                        } />
+                <div class="description">
+                    <p class="descriptiontext">Must be a valid version format. Example: 4.3.06, 7.01.4, etc.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="macOS subfieldset" hidden>
+    <legend class="sublegend">Password (Mac OS)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Require a password to unlock devices.<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="macpasswordRequired" id="macpasswordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordRequired == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to require users to enter a password before access is granted to information on their mobile devices.</p>
+                    <p class="descriptiontext">Recommended value: Require (This compliance check is supported for devices with OS versions macOS 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip"><span>Simple Passwords<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <select name="macpasswordBlockSimple" id="macpasswordBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordBlockSimple == "True")" value="True">Block</option>
+                </select>                                                                                                                                                                                                                                       } />
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to block devices from using simple password sequences, such as 1234 or 1111. Recommended Value: Block</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum password length<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordMinimumLength" name="macpasswordMinimumLength" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.macpasswordMinimumLength"
+                                                                                                                                                                                                                } />
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the minimum number of digits or characters in the password.</p>
+                    <p class="descriptiontext">Recommended Value: 4 (4-14)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Required password type<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordRequiredType" id="macpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordRequiredType == "numeric")" value="numeric">Numeric</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether passwords are allowed to be comprised only of numeric characters, or whether they must contain characters other than numbers.</p>
+                    <p class="descriptiontext">Recommendations:  Required password type: Alphanumeric, Minimum number of character sets: 1</p>
+                </div>
+            </td>
+        </tr>
+
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Number of non-alphanumeric characters in password<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordMinimumCharacterSetCount" id="macpasswordMinimumCharacterSetCount">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinimumCharacterSetCount == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinimumCharacterSetCount == "1")" value="1">1</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinimumCharacterSetCount == "2")" value="2">2</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinimumCharacterSetCount == "3")" value="3">3</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinimumCharacterSetCount == "4")" value="4">4</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Minimum number of non-alphanumeric characters (like #, %, !, etc.) that the password must contain.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings tooltip">Maximum minutes of inactivity before password is required<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="macOSPassword" name="macpasswordMinutesOfInactivityBeforeLock" id="macpasswordMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macpasswordMinutesOfInactivityBeforeLock == "480")" value="480">8 Hours</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the length of time without user input after which the mobile device screen is locked.</p>
+                    <p class="descriptiontext">Recommended value: 15 min</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordExpirationDays" name="macpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.macpasswordExpirationDays"
+                                                                                         } />
+            </td>
+        </tr>
+
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="macOSPassword" type="number" id="macpasswordPreviousPasswordBlockCount" name="macpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.macpasswordPreviousPasswordBlockCount"
+                                                                                         } />
+            </td>
+        </tr>
+        <tr class="macOS" hidden>
+            <td class="lefttdsettings">Encryption of data storage on device.</td>
+            <td class="righttdsettings">
+                <select name="macstorageRequireEncryption" id="macstorageRequireEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macstorageRequireEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.macstorageRequireEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>

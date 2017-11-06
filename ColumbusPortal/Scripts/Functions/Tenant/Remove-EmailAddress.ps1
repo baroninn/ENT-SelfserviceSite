@@ -36,7 +36,7 @@
                 }
             }
 
-        Set-ADUser $User -Remove @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+        Set-ADUser $User -Remove @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred > $null
 
         if ($Config.AADsynced -eq 'true') {
             Start-Dirsync -Organization $Organization -Policy 'delta'

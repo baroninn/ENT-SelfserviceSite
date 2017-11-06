@@ -983,7 +983,7 @@ namespace ColumbusPortal.Controllers
         }
 
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult EnableSikkerMail()
+        public ActionResult SetOOFMessage()
         {
             try
             {
@@ -994,51 +994,103 @@ namespace ColumbusPortal.Controllers
                 return View("Error", exc);
             }
         }
+
         [HttpPost]
         [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult EnableSikkerMail(FormCollection _POST)
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
+        public ActionResult SetOOFMessage(FormCollection _POST)
         {
             try
             {
-                CustomSikkermail enableSikkermail = new CustomSikkermail()
+                CustomOOF OOF = new CustomOOF()
                 {
-                    Organization = _POST["organization"],
-                    SendAsGroup = _POST["distinguishedname"],
-                    Alias = _POST["alias"],
-                    Remove = _POST["remove"] == "on" ? true : false,
-                    Force = _POST["force"] == "on" ? true : false,
-                    UpdateAll = _POST["updateall"] == "on" ? true : false
+                    Organization = _POST["organization"].ToString(),
+                    UserPrincipalName = _POST["userprincipalname"].ToString()
                 };
 
-                model.Sikkermail = enableSikkermail;
+                if (_POST["StartTime"] != null)
+                {
+                    OOF.StartTime = _POST["starttime"].ToString();
+                }
+                if (_POST["EndTime"] != null)
+                {
+                    OOF.EndTime = _POST["endtime"].ToString();
+                }
+                if (_POST["Internal"] != null)
+                {
+                    OOF.Internal = _POST["internal"].ToString();
+                }
+                if (_POST["External"] != null)
+                {
+                    OOF.External = _POST["external"].ToString();
+                };
 
-                CommonCAS.Log(string.Format("has run Mail/EnableSikkerMail() for Organization {0} to enable {1}", enableSikkermail.Organization, enableSikkermail.SendAsGroup));
+                CommonCAS.Log(string.Format("has run Mail/SetOOFMessage() for organization {0} and mailbox {1}", OOF.Organization, OOF.UserPrincipalName));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.EnableSikkermail(enableSikkermail.Organization, enableSikkermail.SendAsGroup, enableSikkermail.Alias,  enableSikkermail.Remove, enableSikkermail.Force, enableSikkermail.UpdateAll);
+                    ps.SetOOFMessage(OOF);
                     var result = ps.Invoke();
                 }
 
-                CommonCAS.Stats("Mail/EnableSikkermail");
-                if (enableSikkermail.UpdateAll == true)
+                CommonCAS.Stats("Mail/SetOOFMessage");
+
+                model.OKMessage.Add(string.Format("'{0}' OOF has been updated...", OOF.UserPrincipalName));
+
+                return View("SetOOFMessage", model);
+            }
+            catch (Exception exc)
+            {
+                CommonCAS.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult RemoveOOFMessage()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                return View("Error", exc);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
+        public ActionResult RemoveOOFMessage(FormCollection _POST)
+        {
+            try
+            {
+                CustomOOF OOF = new CustomOOF()
                 {
-                    model.OKMessage.Add("Successfully enabled Sikkermail attributes for everyone!");
-                }
-                if (enableSikkermail.Force == true)
-                {
-                    model.OKMessage.Add("Successfully forced Sikkermail conf for " + enableSikkermail.Organization + " : " + enableSikkermail.SendAsGroup + "");
-                }
-                if (enableSikkermail.Remove == true)
-                {
-                    model.OKMessage.Add("Successfully removed Sikkermail conf for " + enableSikkermail.Organization + " : " + enableSikkermail.SendAsGroup + "");
-                }
-                if (enableSikkermail.Force == false & enableSikkermail.UpdateAll == false) {
-                    model.OKMessage.Add("Successfully enabled Sikkermail conf for " + enableSikkermail.Organization + " : " + enableSikkermail.SendAsGroup + ""); 
+                    Organization = _POST["organization"].ToString(),
+                    UserPrincipalName = _POST["userprincipalname"].ToString()
                 };
 
-                return View("EnableSikkermail", model);
+                CommonCAS.Log(string.Format("has run Mail/RemoveOOFMessage() for organization {0} and mailbox {1}", OOF.Organization, OOF.UserPrincipalName));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.RemoveOOFMessage(OOF);
+                    var result = ps.Invoke();
+                }
+
+                CommonCAS.Stats("Mail/RemoveOOFMessage");
+
+                model.OKMessage.Add(string.Format("'{0}' OOF has been removed...", OOF.UserPrincipalName));
+
+                return View("RemoveOOFMessage", model);
             }
             catch (Exception exc)
             {

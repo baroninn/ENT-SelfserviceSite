@@ -1,0 +1,96 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Level30 > Create Golden VM";
+}
+@section script {
+    <script>
+        window.onload = function () {
+            document.getElementById("test").checked = true;
+        };
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create/update the golden image VM..</p>
+
+@using (Html.BeginForm("CPOCreateGoldenVM", "Capto"))
+{
+    <fieldset>
+        <legend>Create Golden VM</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Solution<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <select name="solution">
+                        <option selected="@(Model.ActionFailed && Model.CPOCreateGoldenVM.Solution.ToUpper() == "ADVOPLUS")">AdvoPlus</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOCreateGoldenVM.Solution.ToUpper() == "LEGAL")">Legal</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOCreateGoldenVM.Solution.ToUpper() == "MEMBER2015")">Member2015</option>
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies which Capto product to create a golden image VM for..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Test<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="test" id="test" type="checkbox" class="cbx hidden" /><label for="test" class="lbl"></label>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If chosen, SSS will create a new test golden image, instead of deploying a new official version.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <table>
+            <tr>
+                <td class="lefttdhelp helptooltip"><span class="info"><b>Click for Guide</b><i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <div class="infohelp">
+                        <p class="infohelptext">
+                            <br />
+                        <p>
+                            This will create a new Golden VM on Capto VMM.
+                            Whenever you create a new Golden VM, it will auto boot and install, the solution.
+                            When it is finally complete, the VM's status will be "Powered OFF"
+                        </p>
+                        <p>The VM will be named CPO[solution]Golden[version]. The code will automatically pick the next number in the row.</p>
+                        <br />
+                        <p class="warning2">Remember to start the VM, rename it to fit the VM name in VMM. Make sure everything is deployed correctly from SCCM.</p>
+                        <br />
+                        <p><img src="~/Images/Create2.png" alt="Create2" width="680"></p>
+                        <br />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create new Golden VM" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

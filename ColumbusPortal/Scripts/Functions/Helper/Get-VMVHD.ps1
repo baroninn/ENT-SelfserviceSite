@@ -8,11 +8,12 @@
 
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2
-        $Server= 'vmm-a.corp.systemhosting.dk'
+        $SCVMMServer= 'vmm-a.corp.systemhosting.dk'
         $Cmdlets = @("Get-SCVirtualDiskDrive", "Get-SCVirtualHardDisk", "Get-SCVMMServer", "Get-SCVirtualMachine")
         $Cred = Get-RemoteCredentials -SSS
-        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
-        $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
+        #Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+        import-module "C:\Program Files\Microsoft System Center 2016\Virtual Machine Manager\bin\Microsoft.SystemCenter.VirtualMachineManager.dll" -Cmdlet $Cmdlets
+        #$SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
         
     }
     Process {
@@ -28,7 +29,7 @@
                     Size = $i.MaximumSize / 1024 /1024 / 1024
                 }
         }
-    return $VHDlist | sort Name | select Name, VHDID, Size
+        return $VHDlist | sort Name | select Name, VHDID, Size
  
     }
 }

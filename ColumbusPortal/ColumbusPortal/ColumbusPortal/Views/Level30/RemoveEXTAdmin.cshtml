@@ -59,6 +59,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
                 <td class="middletd">
@@ -66,7 +68,7 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.EXTAdminUser.Organization) { @: selected="selected"
-                                                                                               } }>
+                                                                                                                                   } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }

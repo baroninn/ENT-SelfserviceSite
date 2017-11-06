@@ -1,0 +1,91 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Office365 > Add Domain";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                $("#acceptedDomain").html("Loading...");
+                CPOGetAcceptedDomain();
+            });
+
+            $("#acceptedDomain").html("Loading...");
+            CPOGetAcceptedDomain();
+        });
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to add a UPN domain to the customers registered Office 365 tenant.</p>
+@using (Html.BeginForm("CPOAddDomain", "Capto"))
+{
+    <fieldset>
+        <legend>Add UPN</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CPOAddDomain.Organization) { @: selected="selected"
+                                                                        } }>
+                                @organization
+                                                                    </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Accepted emaildomains:</td>
+                <td class="middletd">
+                    <div id="acceptedDomain"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Domain<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="domain" placeholder="testdomæne.dk" @if (Model.ActionFailed) { @: value="@Model.CPOAddDomain.Domain"
+                                                                                                             } />
+                    <div class="description">
+                        <p class="descriptiontext"></p>
+                        <p>This will add a domain to the registered tenant in Office 365, and a UPN on the local on-prem AD.</p>
+                        <p>The added domain will be federated for SSO <b>IF</b> the customer doesn't have it's own tenant!. If the customer has it own seperate tenant, you need to run "Enable Federation" after this..</p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <p class="title">
+            Stuff to do manually:
+        </p>
+        <p>Remember to verify the domain with DNS records in the O365 portal. </p>
+        <p>If the added domain will be used for log on, remember to change the UPN on the affected AD users.</p>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Add Domain" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

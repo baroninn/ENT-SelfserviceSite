@@ -1,0 +1,112 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Azure Security Center</legend>
+
+    @if (Model.AzureSecurity.Count() != 0)
+    {
+
+        <table class="VMSecurity">
+            <tr>
+                <td style="width: 150px;"><b>Name</b>
+                <td style="width: 150px;"><b>Patch severity</b></td>
+                <td style="width: 150px;"><b>Malware severity</b></td>
+                <td style="width: 150px;"><b>Patches missing</b></td>
+                <td style="width: 180px;"><b>Malware info</b></td>
+                <td style="width: 180px;"><b>VM Recommandations</b></td>
+            </tr>
+            @foreach (var item in Model.AzureSecurity)
+                {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.PatchesSecurityState</td>
+                    <td>@item.MalwaresecurityState</td>
+                    <td>
+                        <div>
+
+                            @foreach (var patchitem in item.Patches)
+                            {
+                                if (patchitem.title == "No patches needed..")
+                                {
+                                    <div style="color: green">@patchitem.patchId</div>
+                                }
+                                else
+                                {
+                                    if (patchitem.severity == "Critical")
+                                    {
+                                        <div><a style='color: red' href="@patchitem.linksToMsDocumentation" target="_blank" title="@patchitem.title">@patchitem.patchId</a></div>
+                                    }
+                                    if (patchitem.severity == "Moderate")
+                                    {
+                                        <div><a style='color: orange' href="@patchitem.linksToMsDocumentation" target="_blank" title="@patchitem.title">@patchitem.patchId</a></div>
+                                    }
+                                    if (patchitem.severity == "Low")
+                                    {
+                                        <div><a href="@patchitem.linksToMsDocumentation" target="_blank" title="@patchitem.title">@patchitem.patchId</a></div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            @foreach (var malwareitem in item.Malware)
+                            {
+                                if (malwareitem.description == "Nothing to report..")
+                                {
+                                    <div style="color: green">Nothing to report..</div>
+                                }
+                                else
+                                {
+                                    if (malwareitem.severity == "Critical")
+                                    {
+                                        <div><a style='color: red' href="#" title="@malwareitem.componentName">@malwareitem.description</a></div>
+                                    }
+                                    if (malwareitem.severity == "Error")
+                                    {
+                                        <div><a style='color: red' href="#" title="@malwareitem.componentName">@malwareitem.description</a></div>
+                                    }
+                                    if (malwareitem.severity == "Moderate")
+                                    {
+                                        <div><a style='color: orange' href="#" title="@malwareitem.componentName">@malwareitem.description</a></div>
+                                    }
+                                    if (malwareitem.severity == "Low")
+                                    {
+                                        <div><a href="#" title="@malwareitem.componentName">@malwareitem.description</a></div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            @foreach (var recommendationitem in item.Recommendations)
+                            {
+                                if (recommendationitem.name == "Nothing to report..")
+                                {
+                                    <div style="color: green">Nothing to report..</div>
+                                }
+                                else
+                                {
+                                    <div><a style='color: red' href="#" title="@recommendationitem.name">@recommendationitem.name</a></div>
+                                }
+                            }
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </table>
+    }
+    else
+    {
+        <table class="VM">
+            <tr>
+                <td>
+                    Security list is empty...
+                </td>
+            </tr>
+        </table>
+    }
+
+</fieldset>

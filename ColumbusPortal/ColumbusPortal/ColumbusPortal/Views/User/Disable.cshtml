@@ -73,18 +73,18 @@
                 </div>
             </td>
         </tr>
-
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
-            <td class="middletd"><select name="organization">
-                    @foreach(string organization in Model.Organizations) 
+            <td class="middletd">
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
                     {
-                            <option @if(Model.ActionFailed)
-                                    {
-                                        if(organization == Model.DisableUser.Organization) {
-                                            @:selected="selected"
-                                        }
-                                    }>@organization</option>
+                        <option @if (Model.ActionFailed) { if (organization == Model.DisableUser.Organization) { @: selected="selected"
+                                                                        } } value="@organization.Split(' ')[0]">
+                            @organization
+                                                                    </option>
                     }
                 </select>
                 <span class="mandatory">*</span>
@@ -97,14 +97,24 @@
                 <span class="mandatory">*</span>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Confirm<br /></td>
             <td>
-                <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.DisableUser.Confirm) { @: checked="checked"
-                                                                                                                  } } onclick="Confirm()" />
+                <input name="confirm" id="confirm" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.DisableUser.Confirm) { @: checked="checked"
+                                                                                                                                         } } onclick="Confirm()" />
+                <label for="confirm" class="lbl"></label>
             </td>
         </tr>
     </table>
+    <div id="loading" name="loading" class="loading" hidden>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <span><img src="~/Images/loading.gif" /></span>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br />
     <input type="submit" class="button" value="Disable User" id="buttonSubmit" onclick="buttonSubmit.disabled = true; StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

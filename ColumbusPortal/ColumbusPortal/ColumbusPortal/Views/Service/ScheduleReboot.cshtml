@@ -13,7 +13,7 @@
                 GetVMServers();
 
                 var job = 'reboot'
-                GetScheduledJobs(job);
+                GetScheduledJobsJSON(job);
                 $("#scheduledjobs").html("Loading...");
 
                 var alert = 'PendingReboots'
@@ -45,18 +45,19 @@ else
 {
     @section script {
 
-        <script>
+<script>
             $(document).ready(function () {
 
-                GetVMServerslvl25();
+                GetVMServers('lvl25');
 
                 var job = 'reboot'
-                GetScheduledJobs(job);
+                GetScheduledJobsJSON(job);
                 $("#scheduledjobs").html("Loading...");
 
                 var alert = 'PendingReboots'
                 GetLatestAlerts(alert);
                 $("#latestalerts").html("Contacting DB... please be patient..");
+
 
                 var d = new Date(),
                     // ' 01:00' there has to be a space for the jquery to understand...
@@ -75,7 +76,7 @@ else
                 });
 
             });
-        </script>
+</script>
     }
 }
 
@@ -111,7 +112,8 @@ else
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>VMServers<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
@@ -121,7 +123,7 @@ else
             </tr>
 
         </table>
-        <table>
+        <table class="hide">
 
             <tr>
                 <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
@@ -135,31 +137,40 @@ else
             <tr>
                 <td class="lefttd"><span>Opgave nr<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
-                    <input id="taskid" name="taskid" placeholder="109000" type="text" @if (Model.ActionFailed) {  @: value="@Model.ScheduleReboot.TaskID"
-                                                                                                                                                                                                                       } />
+                    @Html.EditorFor(m => m.ScheduleReboot.TaskID, new { htmlAttributes = new { name = "taskid", id = "taskid", placeholder = "109000" } })
+
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter TaskID (Opgave nr.) from Navision..
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ScheduleReboot.TaskID, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="email" placeholder="xxx@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.ScheduleReboot.Email"
-                                                                                                                                                                                                                           } />
+                    @Html.EditorFor(m => m.ScheduleReboot.Email, new { htmlAttributes = new { name = "email", id = "email", placeholder = "xxx@columbusglobal.com" } })
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter the email which will be notified when task is complete.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ScheduleReboot.Email, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
         </table>
-
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br />
         <input type="submit" class="button" id="buttonSubmit" value="Schedule Reboot" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
@@ -173,6 +184,7 @@ else
                 </td>
             </tr>
         </table>
+        <input type="button" name="buttonRemove" id="buttonRemove" class="button" value="Remove Selected Schedules" onclick="RemoveSelectedSchedules('reboot')" hidden />
     </fieldset>
     <br />
     <fieldset>

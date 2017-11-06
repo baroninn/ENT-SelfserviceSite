@@ -1,0 +1,97 @@
+﻿@model ColumbusPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Create > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>A new organization has been created</p>
+
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td colspan="2">@if (Model.Message != null)
+            { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Name:</td>
+            <td class="middletd"><b>@Model.Organization.Name</b></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Initials:</td>
+            <td class="middletd"><b>@Model.Organization.initials</b></td>
+        </tr>
+    </table>
+    <br />
+    @if (Model.Organization.createcrayon)
+    {
+        <table>
+            <tr>
+                <td class="lefttd">Microsoft Tenant Id:</td>
+                <td class="middletd"><b>@Model.CrayonTenantDetailed.ExternalPublisherCustomerId</b></td>
+            </tr>
+            <tr>
+                <td class="lefttd">Microsoft Admin User:</td>
+                <td class="middletd"><b>@Model.CrayonTenantDetailed.AdminUser</b></td>
+            </tr>
+            <tr>
+                <td class="lefttd">Microsoft Admin Pass:</td>
+                <td class="middletd"><b>@Model.CrayonTenantDetailed.AdminPass</b></td>
+            </tr>
+        </table>
+        <br />
+        <div>
+            <p>
+                <span class="warning">Remember to change the password for the admin account!</span>
+            </p>
+            <p>
+                <span><a href="@("https://login.microsoftonline.com/common/oauth2/authorize?client_id=")@Model.CrayonTenantDetailed.ExternalPublisherCustomerId@("&username=")@Model.CrayonTenantDetailed.AdminUser@("@")@Model.CrayonTenantDetailed.DomainPrefix@(".onmicrosoft.com")" title="Click here to log on." target="_blank" />Click here to log on.</span>
+            </p>
+            <p>
+                <span class="warning">After you have changed the password, please update the configuration with the new password.!</span>
+            </p>
+        </div>
+    }
+    @if (Model.Organization.CreateVMM)
+    {
+        <table>
+            <tr>
+                <td class="lefttd">VMM Ip Address Range Start:</td>
+                <td class="middletd"><b>@Model.Organization.IPAddressRangeStart</b></td>
+            </tr>
+            <tr>
+                <td class="lefttd">VMM Ip Address Range End:</td>
+                <td class="middletd"><b>@Model.Organization.IPAddressRangeEnd</b></td>
+            </tr>
+            <tr>
+                <td class="lefttd">VMM Vlan:</td>
+                <td class="middletd"><b>@Model.Organization.Vlan</b></td>
+            </tr>
+        </table>
+    }
+    <br />
+</fieldset>

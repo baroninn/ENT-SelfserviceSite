@@ -1,0 +1,1888 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+@Html.ValidationSummary(true)
+
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">General (WIN10)</legend>
+    <table>
+        <!--#################### Win10 CONFIGURATION ####################-->
+        <tr class="Win10" hidden>
+            <td class="righttdsettings">Screen capture (mobile only)</td>
+            <td>
+                <select name="winscreenCaptureBlocked" id="winscreenCaptureBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winscreenCaptureBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winscreenCaptureBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Copy and paste (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="copyPasteBlocked" id="copyPasteBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.copyPasteBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.copyPasteBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Manual unenrollment</td>
+            <td class="righttdsettings">
+                <select name="deviceManagementBlockManualUnenroll" id="deviceManagementBlockManualUnenroll">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceManagementBlockManualUnenroll == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceManagementBlockManualUnenroll == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Manual root certificate installation (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="certificatesBlockManualRootCertificateInstallation" id="certificatesBlockManualRootCertificateInstallation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.certificatesBlockManualRootCertificateInstallation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.certificatesBlockManualRootCertificateInstallation == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Camera</td>
+            <td class="righttdsettings">
+                <select name="wincameraBlocked" id="wincameraBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wincameraBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wincameraBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">OneDrive file sync</td>
+            <td class="righttdsettings">
+                <select name="oneDriveDisableFileSync" id="oneDriveDisableFileSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.oneDriveDisableFileSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.oneDriveDisableFileSync == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Removable storage</td>
+            <td class="righttdsettings">
+                <select name="winstorageBlockRemovableStorage" id="winstorageBlockRemovableStorage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winstorageBlockRemovableStorage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winstorageBlockRemovableStorage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Geolocation<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="winlocationServicesBlocked" id="winlocationServicesBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winlocationServicesBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winlocationServicesBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether location services are enabled and can track the location of the device.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Internet sharing</td>
+            <td class="righttdsettings">
+                <select name="internetSharingBlocked" id="internetSharingBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.internetSharingBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.internetSharingBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Phone reset</td>
+            <td class="righttdsettings">
+                <select name="deviceManagementBlockFactoryResetOnMobile" id="deviceManagementBlockFactoryResetOnMobile">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceManagementBlockFactoryResetOnMobile == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceManagementBlockFactoryResetOnMobile == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">USB connection (mobile only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="usbBlocked" id="usbBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.usbBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.usbBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether the USB connection on the device is enabled. USB charging will not be affected by this setting.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">AntiTheft mode (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="antiTheftModeBlocked" id="antiTheftModeBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.antiTheftModeBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.antiTheftModeBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Cortana</td>
+            <td class="righttdsettings">
+                <select name="cortanaBlocked" id="cortanaBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cortanaBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cortanaBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Voice recording (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="voiceRecordingBlocked" id="voiceRecordingBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceRecordingBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.voiceRecordingBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Device name modification (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockEditDeviceName" id="settingsBlockEditDeviceName">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockEditDeviceName == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockEditDeviceName == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Add provisioning packages<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="settingsBlockAddProvisioningPackage" id="settingsBlockAddProvisioningPackage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAddProvisioningPackage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAddProvisioningPackage == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether to block the runtime configuration agent to install provisioning packages.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Remove provisioning packages<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="settingsBlockRemoveProvisioningPackage" id="settingsBlockRemoveProvisioningPackage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockRemoveProvisioningPackage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockRemoveProvisioningPackage == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether to block the runtime configuration agent to remove provisioning packages.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Device discovery</td>
+            <td class="righttdsettings">
+                <select name="experienceBlockDeviceDiscovery" id="experienceBlockDeviceDiscovery">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockDeviceDiscovery == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockDeviceDiscovery == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Task Switcher (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="experienceBlockTaskSwitcher" id="experienceBlockTaskSwitcher">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockTaskSwitcher == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockTaskSwitcher == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">SIM card error dialog (mobile only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="experienceBlockErrorDialogWhenNoSIM" id="experienceBlockErrorDialogWhenNoSIM">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockErrorDialogWhenNoSIM == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.experienceBlockErrorDialogWhenNoSIM == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the error dialog from displaying if no SIM card is detected.</p>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Password (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Password</td>
+            <td class="righttdsettings">
+                <select name="winpasswordRequired" id="winpasswordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequired == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordRequiredType" id="winpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequiredType == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequiredType == "numeric")" value="numeric">Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordMinimumLength" name="winpasswordMinimumLength" placeholder="Number (4-16)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.winpasswordMinimumLength"
+                                                                                                                                                                                                                                                                                                                                   } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity until screen locks</td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordMinutesOfInactivityBeforeScreenTimeout" id="winpasswordMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == "30")" value="30">30 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordMinutesOfInactivityBeforeScreenTimeout == "60")" value="60">1 Hour</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Number of sign-in failures before wiping device</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordSignInFailureCountBeforeFactoryReset" name="winpasswordSignInFailureCountBeforeFactoryReset" placeholder="Number (4-11)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.winpasswordSignInFailureCountBeforeFactoryReset"
+                                                                                                                                                                                                                                                                                                                                                               } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordExpirationDays" name="winpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.winpasswordExpirationDays"
+                                                                                                                                                                                                                                                                                                                       } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Prevent reuse of previous passwords</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordPreviousPasswordBlockCount" name="winpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.winpasswordPreviousPasswordBlockCount"
+                                                                                                                                                                                                                                                                                                                                                                                                                   } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Require password when device returns from idle state (mobile only)</td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordRequireWhenResumeFromIdleState" id="winpasswordRequireWhenResumeFromIdleState">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequireWhenResumeFromIdleState == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordRequireWhenResumeFromIdleState == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Simple Passwords<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordBlockSimple" id="winpasswordBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winpasswordBlockSimple == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specify whether PINs or passwords such as "1111" or "1234" are allowed.
+                    <p class="descriptiontext">
+                        For Windows 10 desktops, it also controls the use of picture passwords.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Encryption<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="storageRequireMobileDeviceEncryption" id="storageRequireMobileDeviceEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireMobileDeviceEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRequireMobileDeviceEncryption == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Require encryption on device. Not all devices support encryption.
+                        <br />
+                    <p class="descriptiontext">You must also:
+                    <p class="descriptiontext">1. Enable 'Require password'
+                    <p class="descriptiontext">2. Specify 'Password quality' of 'At least numeric'
+                    <p class="descriptiontext">3. Set 'Minimum password length' of at least 4, to correctly report compliance for this setting.
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Personalization (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Desktop background picture URL (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="personalizationDesktopImageUrl" id="personalizationDesktopImageUrl" type="text" placeholder="https://sdg.png"
+                       @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.personalizationDesktopImageUrl"
+                                                                                                                                                                                 } />
+                <div class="description">
+                    <p class="descriptiontext">Set a background picture (jpg, jpeg, png) and prevent users from changing it.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Privacy (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Input personalization<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="privacyBlockInputPersonalization" id="privacyBlockInputPersonalization">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.privacyBlockInputPersonalization == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.privacyBlockInputPersonalization == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block usage of cloud-based speech services for Cortana, dictation or Windows Store apps.</p>
+                    <p class="descriptiontext">If not configured, Microsoft may use user voice data to improve cloud speech services.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Automatic acceptance of the pairing and privacy user consent prompts</td>
+            <td class="righttdsettings">
+                <select name="privacyAutoAcceptPairingAndConsentPrompts" id="privacyAutoAcceptPairingAndConsentPrompts">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.privacyAutoAcceptPairingAndConsentPrompts == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.privacyAutoAcceptPairingAndConsentPrompts == "True")" value="True">Allow</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Locked Screen Experience (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Action center notifications (mobile only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockActionCenterNotifications" id="lockScreenBlockActionCenterNotifications">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockActionCenterNotifications == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockActionCenterNotifications == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow action center notifications to appear while device is locked.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Locked screen picture URL (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="personalizationLockScreenImageUrl" id="personalizationLockScreenImageUrl" type="text" placeholder="https://sdg.png"
+                       @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.personalizationLockScreenImageUrl"
+                                                                                                                                                                                                        } />
+                <div class="description">
+                    <p class="descriptiontext">Set a lockscreen picture (jpg, jpeg, png) and prevent users from changing it.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">User configurable screen timeout (mobile only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="lockScreenAllowTimeoutConfiguration" id="lockScreenAllowTimeoutConfiguration">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenAllowTimeoutConfiguration == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenAllowTimeoutConfiguration == "True")" value="True">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specify whether to show a user-configurable setting to control the screen timeout while on the lock screen of Windows 10 Mobile devices.</p>
+                    <p class="descriptiontext">If this policy is set to Allow, the value set by "Screen timeout" is ignored.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Cortana on locked screen (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockCortana" id="lockScreenBlockCortana">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockCortana == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockCortana == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the user from interacting with Cortana through speech while the system is locked.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Toast notifications on locked screen<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockToastNotifications" id="lockScreenBlockToastNotifications">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockToastNotifications == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockToastNotifications == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block toast notifications above the device lock screen.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip"><span>Screen timeout (mobile only)</span><i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input type="number" min="11" max="1800" id="lockScreenTimeoutInSeconds" name="lockScreenTimeoutInSeconds" placeholder="Number (11-1800)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.lockScreenTimeoutInSeconds"
+                                                                                                                                                    } />
+                <!--@Html.TextBoxFor(m => m.AzureDeviceConfiguration.lockScreenTimeoutInSeconds, new { type = "number", placeholder = "Number (11-1800)", id = "lockScreenTimeoutInSeconds" })
+                @Html.ValidationMessageFor(m => m.AzureDeviceConfiguration.lockScreenTimeoutInSeconds, "", new { @style = "color:red" })-->
+                <div class="description">
+                    <p class="descriptiontext">Set the duration (in seconds) from the screen locking to the screen turning off for Windows 10 Mobile devices.</p>
+                    <p class="descriptiontext">Supported values are 11-1800. (11-1800)</p>
+                </div>
+            </td>
+
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">App Store (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">App store (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="windowsStoreBlocked" id="windowsStoreBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Auto-update apps from store<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="windowsStoreBlockAutoUpdate" id="windowsStoreBlockAutoUpdate">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreBlockAutoUpdate == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreBlockAutoUpdate == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether apps from the Windows Store can automatically update.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Trusted app installation<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="appsAllowTrustedAppsSideloading" id="appsAllowTrustedAppsSideloading">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsAllowTrustedAppsSideloading == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsAllowTrustedAppsSideloading == "blocked")" value="blocked">Block</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsAllowTrustedAppsSideloading == "allowed")" value="allowed">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether apps from Appx packages signed with a trusted certificate can be sideloaded.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Developer unlock</td>
+            <td class="righttdsettings">
+                <select name="developerUnlockSetting" id="developerUnlockSetting">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.developerUnlockSetting == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.developerUnlockSetting == "blocked")" value="blocked">Block</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.developerUnlockSetting == "allowed")" value="allowed">Allow</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Shared user app data<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="sharedUserAppDataAllowed" id="sharedUserAppDataAllowed">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.sharedUserAppDataAllowed == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.sharedUserAppDataAllowed == "True")" value="True">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether multiple users of the same app can share data.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Use private store only<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="windowsStoreEnablePrivateStoreOnly" id="windowsStoreEnablePrivateStoreOnly">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreEnablePrivateStoreOnly == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.windowsStoreEnablePrivateStoreOnly == "True")" value="True">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Only allows apps to be downloaded from a private store and not the public store.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Store originated app launch<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="appsBlockWindowsStoreOriginatedApps" id="appsBlockWindowsStoreOriginatedApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockWindowsStoreOriginatedApps == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appsBlockWindowsStoreOriginatedApps == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Disables the launch of all apps from Windows store that came pre-installed or were downloaded.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Install app data on system volume<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="storageRestrictAppDataToSystemVolume" id="storageRestrictAppDataToSystemVolume">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRestrictAppDataToSystemVolume == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRestrictAppDataToSystemVolume == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies that app data can only be stored on the system disk volume.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Install apps on system drive<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="storageRestrictAppInstallToSystemVolume" id="storageRestrictAppInstallToSystemVolume">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRestrictAppInstallToSystemVolume == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.storageRestrictAppInstallToSystemVolume == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies that apps can only be stored on the system disk drive.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Game DVR (desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="gameDvrBlocked" id="gameDvrBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gameDvrBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gameDvrBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether DVR and broadcasting is allowed.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Apps from store only<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="smartScreenEnableAppInstallControl" id="smartScreenEnableAppInstallControl">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenEnableAppInstallControl == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenEnableAppInstallControl == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specify whether users are allowed to install apps from places other than the Windows App Store.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Edge Browser (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Microsoft Edge browser (mobile only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlocked" id="edgeBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the Microsoft Edge browser completely (only applies to mobile devices). If you block Edge, the individual settings will only apply to desktop.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Address bar dropdown (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockAddressBarDropdown" id="edgeBlockAddressBarDropdown">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAddressBarDropdown == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAddressBarDropdown == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the address bar dropdown functionality in Microsoft Edge.</p>
+                    <p class="descriptiontext">Disable this settings to minimize network connections from Microsoft Edge to Microsoft services.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Sync favorites between Microsoft browsers (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeSyncFavoritesWithInternetExplorer" id="edgeSyncFavoritesWithInternetExplorer">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSyncFavoritesWithInternetExplorer == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSyncFavoritesWithInternetExplorer == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enable favorites sync between Internet Explorer and Microsoft Edge.</p>
+                    <p class="descriptiontext">Additions, deletions, modifications and order changes to favorites are shared between browsers.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Clear browsing data on exit (Desktop only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeClearBrowsingDataOnExit" id="edgeClearBrowsingDataOnExit">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeClearBrowsingDataOnExit == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeClearBrowsingDataOnExit == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the Microsoft Edge browser completely (only applies to mobile devices). If you block Edge, the individual settings will only apply to desktop.</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <b><span>Individual Microsoft Edge settings (mobile and desktop)</span></b>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Send do-not-track headers<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockSendingDoNotTrackHeader" id="edgeBlockSendingDoNotTrackHeader">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSendingDoNotTrackHeader == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSendingDoNotTrackHeader == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the Microsoft Edge browser completely (only applies to mobile devices). If you block Edge, the individual settings will only apply to desktop.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Cookies</td>
+            <td class="righttdsettings">
+                <select name="edgeCookiePolicy" id="edgeCookiePolicy">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeCookiePolicy == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeCookiePolicy == "allow")" value="allow">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeCookiePolicy == "blockAll")" value="blockAll">Block All Cookies</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeCookiePolicy == "blockThirdParty")" value="blockThirdParty">Block only third party cookies</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">JavaScript</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockJavaScript" id="edgeBlockJavaScript">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockJavaScript == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockJavaScript == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Pop-ups</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockPopups" id="edgeBlockPopups">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockPopups == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockPopups == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Search suggestions<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockSearchSuggestions" id="edgeBlockSearchSuggestions">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSearchSuggestions == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSearchSuggestions == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block search suggestions in address bar.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Send intranet traffic to Internet Explorer<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockSendingIntranetTrafficToInternetExplorer" id="edgeBlockSendingIntranetTrafficToInternetExplorer">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSendingIntranetTrafficToInternetExplorer == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockSendingIntranetTrafficToInternetExplorer == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Send intranet traffic to Internet Explorer (instead of Microsoft Edge, for backward compatibility issues)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Autofill</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockAutofill" id="edgeBlockAutofill">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAutofill == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAutofill == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Password Manager<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockPasswordManager" id="edgeBlockPasswordManager">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockPasswordManager == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockPasswordManager == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the address bar dropdown functionality in Microsoft Edge.</p>
+                    <p class="descriptiontext">Disable this settings to minimize network connections from Microsoft Edge to Microsoft services.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Enterprise mode site list location<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="edgeEnterpriseModeSiteListLocation" id="edgeEnterpriseModeSiteListLocation" type="text" placeholder="https://sdg.png"
+                       @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.edgeEnterpriseModeSiteListLocation"
+                                                                                                          } />
+                <div class="description">
+                    <p class="descriptiontext">Where to find list of websites to be opened in Enterprise mode (Desktop only).</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Developer tools</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockDeveloperTools" id="edgeBlockDeveloperTools">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockDeveloperTools == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockDeveloperTools == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Extensions</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockExtensions" id="edgeBlockExtensions">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockExtensions == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockExtensions == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">InPrivate browsing</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockInPrivateBrowsing" id="edgeBlockInPrivateBrowsing">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockInPrivateBrowsing == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockInPrivateBrowsing == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Show first run page</td>
+            <td class="righttdsettings">
+                <select name="edgeDisableFirstRunPage" id="edgeDisableFirstRunPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeDisableFirstRunPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeDisableFirstRunPage == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the address bar dropdown functionality in Microsoft Edge.</p>
+                    <p class="descriptiontext">Disable this settings to minimize network connections from Microsoft Edge to Microsoft services.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">First run url<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="edgeFirstRunUrl" id="edgeFirstRunUrl" type="text" placeholder="https://contoso.com/sites.xml"
+                       @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.edgeFirstRunUrl"
+                                                                                                                                 } />
+                <div class="description">
+                    <p class="descriptiontext">URL that Microsoft edge will use when it is opened for the first time (Mobile only).</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Changes to start page<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeAllowStartPagesModification" id="edgeAllowStartPagesModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeAllowStartPagesModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeAllowStartPagesModification == "True")" value="True">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow users to change Start pages on Edge.</p>
+                    <p class="descriptiontext">Use the EdgeHomepageUrls to specify the Start pages that the user would see by default when they open Edge.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Block access to about flags</td>
+            <td class="righttdsettings">
+                <select name="edgeBlockAccessToAboutFlags" id="edgeBlockAccessToAboutFlags">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAccessToAboutFlags == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockAccessToAboutFlags == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">WebRtc localhost ip address<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="webRtcBlockLocalhostIpAddress" id="webRtcBlockLocalhostIpAddress">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webRtcBlockLocalhostIpAddress == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.webRtcBlockLocalhostIpAddress == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow or block access to displaying a user's localhost IP address when making phone calls using the web RTC protocol.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Default search engine</td>
+            <td class="righttdsettings">
+                <select name="edgeSearchEngine" id="edgeSearchEngine">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == "default")" value="default">Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == "bing")" value="bing">Bing</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == "https://go.microsoft.com/fwlink/?linkid=842596")" value="https://go.microsoft.com/fwlink/?linkid=842596">Google</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == "https://go.microsoft.com/fwlink/?linkid=842600")" value="https://go.microsoft.com/fwlink/?linkid=842600">Yahoo</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeSearchEngine == "Custom")" value="Custom">Custom Value</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 Custom" hidden id="edgeCustomURLid" name="edgeCustomURLid">
+            <td class="lefttdsettings">OpenSearch Xml Url</td>
+            <td class="righttdsettings">
+                <input name="edgeCustomURL" id="edgeCustomURL" type="text" placeholder="https://contoso.com/sites.xml"
+                       @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.edgeCustomURL"
+                                                                                                                                                        } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Microsoft compatibility list<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockCompatibilityList" id="edgeBlockCompatibilityList">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockCompatibilityList == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockCompatibilityList == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block Microsoft compatibility list in Microsoft Edge.</p>
+                    <p class="descriptiontext">This list from Microsoft helps Edge properly display sites with known compatibility issues.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Live Tile data collection<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeBlockLiveTileDataCollection" id="edgeBlockLiveTileDataCollection">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockLiveTileDataCollection == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeBlockLiveTileDataCollection == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow or block access to displaying a user's localhost IP address when making phone calls using the web RTC protocol.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Windows Defender SmartScreen (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">SmartScreen<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="edgeRequireSmartScreen" id="edgeRequireSmartScreen">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeRequireSmartScreen == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.edgeRequireSmartScreen == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Require SmartScreen in Microsoft Edge browser</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Smart screen prompt override<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="smartScreenBlockPromptOverride" id="smartScreenBlockPromptOverride">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenBlockPromptOverride == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenBlockPromptOverride == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow or block access to override smartscreen filter warnings about potentially malicious websites.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Smart screen prompt override for files<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="smartScreenBlockPromptOverrideForFiles" id="smartScreenBlockPromptOverrideForFiles">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenBlockPromptOverrideForFiles == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.smartScreenBlockPromptOverrideForFiles == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Allow or block access to displaying a user's localhost IP address when making phone calls using the web RTC protocol.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Search (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Safe Search (mobile only)</td>
+            <td class="righttdsettings">
+                <select name="safeSearchFilter" id="safeSearchFilter">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safeSearchFilter == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safeSearchFilter == "strict")" value="strict">Strict</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safeSearchFilter == "moderate")" value="moderate">Moderate</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Cloud and Storage (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Microsoft account<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="microsoftAccountBlocked" id="microsoftAccountBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.microsoftAccountBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.microsoftAccountBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block Microsoft account from linking to device.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Non-Microsoft account<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="accountsBlockAddingNonMicrosoftAccountEmail" id="accountsBlockAddingNonMicrosoftAccountEmail">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.accountsBlockAddingNonMicrosoftAccountEmail == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.accountsBlockAddingNonMicrosoftAccountEmail == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block user from adding non-Microsoft accounts</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Settings synchronization for Microsoft account<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="microsoftAccountBlockSettingsSync" id="microsoftAccountBlockSettingsSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.microsoftAccountBlockSettingsSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.microsoftAccountBlockSettingsSync == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block synchronization between Microsoft accounts</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Cellular and connectivity (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Cellular data channel<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="cellularData" id="cellularData">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularData == "allowed")" value="allowed">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularData == "blocked")" value="blocked">Block</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularData == "required")" value="required">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block data usage over cellular networks.</p>
+                    <p class="descriptiontext">When not configured, data usage over cellular networks is allowed and editable by users.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Data roaming</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockDataWhenRoaming" id="cellularBlockDataWhenRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockDataWhenRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockDataWhenRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">VPN over the cellular network</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockVpn" id="cellularBlockVpn">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVpn == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVpn == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">VPN roaming over the cellular network</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockVpnWhenRoaming" id="cellularBlockVpnWhenRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVpnWhenRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockVpnWhenRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Bluetooth</td>
+            <td class="righttdsettings">
+                <select name="winbluetoothBlocked" id="winbluetoothBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winbluetoothBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winbluetoothBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Bluetooth discoverability<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="bluetoothBlockDiscoverableMode" id="bluetoothBlockDiscoverableMode">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockDiscoverableMode == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockDiscoverableMode == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether other bluetooth devices like a headset would be discoverable to the device.</p>
+                </div>
+            </td>
+        </tr>
+
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Bluetooth pre-pairing<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="bluetoothBlockPrePairing" id="bluetoothBlockPrePairing">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockPrePairing == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockPrePairing == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether to allow specific bundled Bluetooth peripherals to automatically pair with the host device.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Bluetooth advertising<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="bluetoothBlockAdvertising" id="bluetoothBlockAdvertising">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockAdvertising == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockAdvertising == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether the device can act as a source for Bluetooth advertisements and be discoverable to other devices.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Connected devices service<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="connectedDevicesServiceBlocked" id="connectedDevicesServiceBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.connectedDevicesServiceBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.connectedDevicesServiceBlocked == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether to allow the connected devices service which enables discovery and connection to other devices.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">NFC</td>
+            <td class="righttdsettings">
+                <select name="winnfcBlocked" id="winnfcBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winnfcBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winnfcBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Wi-Fi</td>
+            <td class="righttdsettings">
+                <select name="winwiFiBlocked" id="winwiFiBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winwiFiBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.winwiFiBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Automatically connect to Wi-Fi hotspots<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="wiFiBlockAutomaticConnectHotspots" id="wiFiBlockAutomaticConnectHotspots">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlockAutomaticConnectHotspots == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlockAutomaticConnectHotspots == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block devices from automatically connecting to Wi-Fi hotspots and accepting the terms of service.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Manual Wi-Fi configuration<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="wiFiBlockManualConfiguration" id="wiFiBlockManualConfiguration">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlockManualConfiguration == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiBlockManualConfiguration == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Specifies whether users can manually connect to Wi-Fi networks not specified in the MDM list of configured Wi-Fi networks.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Wi-Fi scan interval (mobile only)</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="wiFiScanInterval" name="wiFiScanInterval" placeholder="Number (1-500)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.wiFiScanInterval"
+                                                                                                                                                                                                                                                                                                                                                          } />
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Control Panel and Settings (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Settings app</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockSettingsApp" id="settingsBlockSettingsApp">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockSettingsApp == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockSettingsApp == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">System</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockSystemPage" id="settingsBlockSystemPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockSystemPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockSystemPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Power and sleep settings modification (desktop only)</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockChangePowerSleep" id="settingsBlockChangePowerSleep">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangePowerSleep == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangePowerSleep == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Devices</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockDevicesPage" id="settingsBlockDevicesPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockDevicesPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockDevicesPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Network and Internet</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockNetworkInternetPage" id="settingsBlockNetworkInternetPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockNetworkInternetPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockNetworkInternetPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Personalization</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockPersonalizationPage" id="settingsBlockPersonalizationPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockPersonalizationPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockPersonalizationPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Apps</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockAppsPage" id="settingsBlockAppsPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAppsPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAppsPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Accounts</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockAccountsPage" id="settingsBlockAccountsPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAccountsPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockAccountsPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Time and Language</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockTimeLanguagePage" id="settingsBlockTimeLanguagePage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockTimeLanguagePage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockTimeLanguagePage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">System Time modification</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockChangeSystemTime" id="settingsBlockChangeSystemTime">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeSystemTime == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeSystemTime == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Region settings modification (desktop only)</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockChangeRegion" id="settingsBlockChangeRegion">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeRegion == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeRegion == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Language settings modification (desktop only)</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockChangeLanguage" id="settingsBlockChangeLanguage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeLanguage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockChangeLanguage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Gaming</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockGamingPage" id="settingsBlockGamingPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockGamingPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockGamingPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Ease of Access</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockEaseOfAccessPage" id="settingsBlockEaseOfAccessPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockEaseOfAccessPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockEaseOfAccessPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Privacy</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockPrivacyPage" id="settingsBlockPrivacyPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockPrivacyPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockPrivacyPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Update and Security</td>
+            <td class="righttdsettings">
+                <select name="settingsBlockUpdateSecurityPage" id="settingsBlockUpdateSecurityPage">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockUpdateSecurityPage == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.settingsBlockUpdateSecurityPage == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Windows Defender Antivirus (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Real-time monitoring</td>
+            <td class="righttdsettings">
+                <select name="defenderRequireRealTimeMonitoring" id="defenderRequireRealTimeMonitoring">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireRealTimeMonitoring == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireRealTimeMonitoring == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Behavior monitoring</td>
+            <td class="righttdsettings">
+                <select name="defenderRequireBehaviorMonitoring" id="defenderRequireBehaviorMonitoring">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireBehaviorMonitoring == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireBehaviorMonitoring == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Network Inspection System (NIS)</td>
+            <td class="righttdsettings">
+                <select name="defenderRequireNetworkInspectionSystem" id="defenderRequireNetworkInspectionSystem">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireNetworkInspectionSystem == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireNetworkInspectionSystem == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan all downloads</td>
+            <td class="righttdsettings">
+                <select name="defenderScanDownloads" id="defenderScanDownloads">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanDownloads == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanDownloads == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan scripts loaded in Microsoft web browsers</td>
+            <td class="righttdsettings">
+                <select name="defenderScanScriptsLoadedInInternetExplorer" id="defenderScanScriptsLoadedInInternetExplorer">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanScriptsLoadedInInternetExplorer == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanScriptsLoadedInInternetExplorer == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">End-user access to Defender</td>
+            <td class="righttdsettings">
+                <select name="defenderBlockEndUserAccess" id="defenderBlockEndUserAccess">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderBlockEndUserAccess == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderBlockEndUserAccess == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Signature update interval (in hours)</td>
+            <td class="righttdsettings">
+                <select name="defenderSignatureUpdateIntervalInHours" id="defenderSignatureUpdateIntervalInHours">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "0")" value="0">Do not check</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "1")" value="1">1</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "2")" value="2">2</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "3")" value="3">3</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "4")" value="4">4</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "5")" value="5">5</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "6")" value="6">6</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "7")" value="7">7</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "8")" value="8">8</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "9")" value="9">9</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "10")" value="10">10</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "11")" value="11">11</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "12")" value="12">12</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "13")" value="13">13</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "14")" value="14">14</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "15")" value="15">15</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "16")" value="16">16</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "17")" value="17">17</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "18")" value="18">18</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "19")" value="19">19</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "20")" value="20">20</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "21")" value="21">21</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "22")" value="22">22</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "23")" value="23">23</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSignatureUpdateIntervalInHours == "24")" value="24">24</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Monitor file and program activity</td>
+            <td class="righttdsettings">
+                <select name="defenderMonitorFileActivity" id="defenderMonitorFileActivity">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderMonitorFileActivity == "userDefined")" value="userDefined">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderMonitorFileActivity == "disable")" value="disable">Monitoring Disabled</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderMonitorFileActivity == "monitorAllFiles")" value="monitorAllFiles">Monitor all files</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderMonitorFileActivity == "monitorIncomingFilesOnly")" value="monitorIncomingFilesOnly">Monitor incoming files only</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderMonitorFileActivity == "monitorOutgoingFilesOnly")" value="monitorOutgoingFilesOnly">Monitor outgoing files only</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Days before deleting quarantined malware</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="defenderDaysBeforeDeletingQuarantinedMalware" name="defenderDaysBeforeDeletingQuarantinedMalware" placeholder="Enter number of days (0-90)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.defenderDaysBeforeDeletingQuarantinedMalware"
+                                                                                                                                                                                                                                                                                                                                                                                                        } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>CPU usage limit during a scan</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="defenderScanMaxCpu" name="defenderScanMaxCpu" placeholder="Enter CPU% usage (0-100)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.defenderScanMaxCpu"
+                                                                                                                                                                                                                                                                                                                                                                                 } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan archive files</td>
+            <td class="righttdsettings">
+                <select name="defenderScanArchiveFiles" id="defenderScanArchiveFiles">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanArchiveFiles == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanArchiveFiles == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan incoming mail messages</td>
+            <td class="righttdsettings">
+                <select name="defenderScanIncomingMail" id="defenderScanIncomingMail">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanIncomingMail == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanIncomingMail == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan removable drives during a full scan</td>
+            <td class="righttdsettings">
+                <select name="defenderScanRemovableDrivesDuringFullScan" id="defenderScanRemovableDrivesDuringFullScan">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanRemovableDrivesDuringFullScan == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanRemovableDrivesDuringFullScan == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan mapped network drives during a full scan</td>
+            <td class="righttdsettings">
+                <select name="defenderScanMappedNetworkDrivesDuringFullScan" id="defenderScanMappedNetworkDrivesDuringFullScan">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanMappedNetworkDrivesDuringFullScan == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanMappedNetworkDrivesDuringFullScan == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Scan files opened from network folders</td>
+            <td class="righttdsettings">
+                <select name="defenderScanNetworkFiles" id="defenderScanNetworkFiles">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanNetworkFiles == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanNetworkFiles == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Cloud-delivered protection</td>
+            <td class="righttdsettings">
+                <select name="defenderRequireCloudProtection" id="defenderRequireCloudProtection">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireCloudProtection == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderRequireCloudProtection == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Prompt users before sample submission</td>
+            <td class="righttdsettings">
+                <select name="defenderPromptForSampleSubmission" id="defenderPromptForSampleSubmission">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPromptForSampleSubmission == "userDefined")" value="userDefined">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPromptForSampleSubmission == "alwaysPrompt")" value="alwaysPrompt">Always Prompt</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPromptForSampleSubmission == "promptBeforeSendingPersonalData")" value="promptBeforeSendingPersonalData">Prompt before sending personal data</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPromptForSampleSubmission == "neverSendData")" value="neverSendData">Never send data</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPromptForSampleSubmission == "sendAllDataWithoutPrompting")" value="sendAllDataWithoutPrompting">Send all data without prompting</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Time to perform a daily quick scan</td>
+            <td class="righttdsettings">
+                <select name="defenderScheduledQuickScanTime" id="defenderScheduledQuickScanTime">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "00:00:00.0000000")" value="00:00:00.0000000">12 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "01:00:00.0000000")" value="01:00:00.0000000">1 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "02:00:00.0000000")" value="02:00:00.0000000">2 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "03:00:00.0000000")" value="03:00:00.0000000">3 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "04:00:00.0000000")" value="04:00:00.0000000">4 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "05:00:00.0000000")" value="05:00:00.0000000">5 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "06:00:00.0000000")" value="06:00:00.0000000">6 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "07:00:00.0000000")" value="07:00:00.0000000">7 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "08:00:00.0000000")" value="08:00:00.0000000">8 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "09:00:00.0000000")" value="09:00:00.0000000">9 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "10:00:00.0000000")" value="10:00:00.0000000">10 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "11:00:00.0000000")" value="11:00:00.0000000">11 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "12:00:00.0000000")" value="12:00:00.0000000">12 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "13:00:00.0000000")" value="13:00:00.0000000">13 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "14:00:00.0000000")" value="14:00:00.0000000">14 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "15:00:00.0000000")" value="15:00:00.0000000">15 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "16:00:00.0000000")" value="16:00:00.0000000">16 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "17:00:00.0000000")" value="17:00:00.0000000">17 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "18:00:00.0000000")" value="18:00:00.0000000">18 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "19:00:00.0000000")" value="19:00:00.0000000">19 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "20:00:00.0000000")" value="20:00:00.0000000">20 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "21:00:00.0000000")" value="21:00:00.0000000">21 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "22:00:00.0000000")" value="22:00:00.0000000">22 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledQuickScanTime == "23:00:00.0000000")" value="23:00:00.0000000">23 AM</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Type of system scan to perform</td>
+            <td class="righttdsettings">
+                <select name="defenderScanType" id="defenderScanType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanType == "userDefined")" value="userDefined">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanType == "disabled")" value="disabled">Disable</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanType == "quick")" value="quick">Quick Scan</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScanType == "full")" value="full">Full Scan</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 scantime" hidden>
+            <td class="lefttdsettings">Day scheduled</td>
+            <td class="righttdsettings">
+                <select name="defenderSystemScanSchedule" id="defenderSystemScanSchedule">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "everyday")" value="everyday">Every Day</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "sunday")" value="sunday">Sunday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "monday")" value="monday">Monday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "tuesday")" value="tuesday">Tuesday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "wednesday")" value="wednesday">Wednesday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "thursday")" value="thursday">Thursday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "friday")" value="friday">Friday</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderSystemScanSchedule == "saturday")" value="saturday">Saturday</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 scantime" hidden>
+            <td class="lefttdsettings">Time scheduled</td>
+            <td class="righttdsettings">
+                <select name="defenderScheduledScanTime" id="defenderScheduledScanTime">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "00:00:00.0000000")" value="00:00:00.0000000">12 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "01:00:00.0000000")" value="01:00:00.0000000">1 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "02:00:00.0000000")" value="02:00:00.0000000">2 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "03:00:00.0000000")" value="03:00:00.0000000">3 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "04:00:00.0000000")" value="04:00:00.0000000">4 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "05:00:00.0000000")" value="05:00:00.0000000">5 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "06:00:00.0000000")" value="06:00:00.0000000">6 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "07:00:00.0000000")" value="07:00:00.0000000">7 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "08:00:00.0000000")" value="08:00:00.0000000">8 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "09:00:00.0000000")" value="09:00:00.0000000">9 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "10:00:00.0000000")" value="10:00:00.0000000">10 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "11:00:00.0000000")" value="11:00:00.0000000">11 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "12:00:00.0000000")" value="12:00:00.0000000">12 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "13:00:00.0000000")" value="13:00:00.0000000">13 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "14:00:00.0000000")" value="14:00:00.0000000">14 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "15:00:00.0000000")" value="15:00:00.0000000">15 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "16:00:00.0000000")" value="16:00:00.0000000">16 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "17:00:00.0000000")" value="17:00:00.0000000">17 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "18:00:00.0000000")" value="18:00:00.0000000">18 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "19:00:00.0000000")" value="19:00:00.0000000">19 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "20:00:00.0000000")" value="20:00:00.0000000">20 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "21:00:00.0000000")" value="21:00:00.0000000">21 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "22:00:00.0000000")" value="22:00:00.0000000">22 AM</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderScheduledScanTime == "23:00:00.0000000")" value="23:00:00.0000000">23 AM</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Detect potentially unwanted applications</td>
+            <td class="righttdsettings">
+                <select name="defenderPotentiallyUnwantedAppAction" id="defenderPotentiallyUnwantedAppAction">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPotentiallyUnwantedAppAction == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPotentiallyUnwantedAppAction == "block")" value="block">Block</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderPotentiallyUnwantedAppAction == "audit")" value="audit">Audit</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Actions on detected malware threats</td>
+            <td class="righttdsettings">
+                <select name="defenderDetectedMalwareActions" id="defenderDetectedMalwareActions">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderDetectedMalwareActions == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderDetectedMalwareActions == "True")" value="True">Enable</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 malwaresecurity" hidden>
+            <td class="lefttdsettings">Low severity</td>
+            <td class="righttdsettings">
+                <select name="defenderlowseverity" id="defenderlowseverity">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "clean")" value="clean">Clean</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "quarantine")" value="quarantine">Quarantine</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "remove")" value="remove">Remove</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "allow")" value="allow">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderlowseverity == "block")" value="block">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 malwaresecurity" hidden>
+            <td class="lefttdsettings">Moderate severity</td>
+            <td class="righttdsettings">
+                <select name="defendermoderateseverity" id="defendermoderateseverity">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "clean")" value="clean">Clean</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "quarantine")" value="quarantine">Quarantine</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "remove")" value="remove">Remove</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "allow")" value="allow">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendermoderateseverity == "block")" value="block">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 malwaresecurity" hidden>
+            <td class="lefttdsettings">High severity</td>
+            <td class="righttdsettings">
+                <select name="defenderhighseverity" id="defenderhighseverity">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "clean")" value="clean">Clean</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "quarantine")" value="quarantine">Quarantine</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "remove")" value="remove">Remove</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "allow")" value="allow">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defenderhighseverity == "block")" value="block">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10 malwaresecurity" hidden>
+            <td class="lefttdsettings">Severe severity</td>
+            <td class="righttdsettings">
+                <select name="defendersevereseverity" id="defendersevereseverity">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "deviceDefault")" value="deviceDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "clean")" value="clean">Clean</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "quarantine")" value="quarantine">Quarantine</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "remove")" value="remove">Remove</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "allow")" value="allow">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.defendersevereseverity == "block")" value="block">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Start (WIN10)</legend>
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Unpin apps from task bar</td>
+            <td class="righttdsettings">
+                <select name="startBlockUnpinningAppsFromTaskbar" id="startBlockUnpinningAppsFromTaskbar">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startBlockUnpinningAppsFromTaskbar == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startBlockUnpinningAppsFromTaskbar == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Fast user switching</td>
+            <td class="righttdsettings">
+                <select name="logonBlockFastUserSwitching" id="logonBlockFastUserSwitching">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.logonBlockFastUserSwitching == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.logonBlockFastUserSwitching == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Most used apps<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideFrequentlyUsedApps" id="startMenuHideFrequentlyUsedApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideFrequentlyUsedApps == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideFrequentlyUsedApps == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides the most used apps from appearing on the start menu and disables the corresponding toggle in the Settings app.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Recently added apps<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideRecentlyAddedApps" id="startMenuHideRecentlyAddedApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRecentlyAddedApps == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRecentlyAddedApps == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides recently added apps from appearing on the start menu and disables the corresponding toggle in the Settings app.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Start screen mode</td>
+            <td class="righttdsettings">
+                <select name="startMenuMode" id="startMenuMode">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuMode == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuMode == "fullScreen")" value="fullScreen">Full screen</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuMode == "nonFullScreen")" value="nonFullScreen">Non-Full screen</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Recently opened items in Jump Lists</td>
+            <td class="righttdsettings">
+                <select name="startMenuHideRecentJumpLists" id="startMenuHideRecentJumpLists">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRecentJumpLists == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRecentJumpLists == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">App list<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuAppListVisibility" id="startMenuAppListVisibility">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuAppListVisibility == "userDefined")" value="userDefined">User Defined</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuAppListVisibility == "collapse")" value="collapse">Collapse</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuAppListVisibility == "collapse, disableSettingsApp")" value="collapse, disableSettingsApp">Collapse and Disable Settings App</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuAppListVisibility == "remove, disableSettingsApp")" value="remove, disableSettingsApp">Remove and Disable Settings App</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Setting the value of this collapses the app list, removes the app list entirely, or disables the corresponding toggle in the Settings app.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Power button</td>
+            <td class="righttdsettings">
+                <select name="startMenuHidePowerButton" id="startMenuHidePowerButton">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHidePowerButton == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHidePowerButton == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">User Tile</td>
+            <td class="righttdsettings">
+                <select name="startMenuHideUserTile" id="startMenuHideUserTile">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideUserTile == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideUserTile == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Lock<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideLock" id="startMenuHideLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideLock == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideLock == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides lock from appearing in the user tile in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Sign out</td>
+            <td class="righttdsettings">
+                <select name="startMenuHideSignOut" id="startMenuHideSignOut">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSignOut == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSignOut == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Shut Down<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideShutDown" id="startMenuHideShutDown">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideShutDown == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideShutDown == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides shut down/update and shut down from appearing in the power button in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Sleep<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideSleep" id="startMenuHideSleep">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSleep == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSleep == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides sleep from appearing in the power button in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Hibernate<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideHibernate" id="startMenuHideHibernate">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideHibernate == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideHibernate == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides hibernate from appearing in the power button in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Switch Account<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideSwitchAccount" id="startMenuHideSwitchAccount">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSwitchAccount == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideSwitchAccount == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides Switch Account from appearing in the user tile in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Restart Options<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="startMenuHideRestartOptions" id="startMenuHideRestartOptions">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRestartOptions == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuHideRestartOptions == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Enabling this policy hides “Restart/Update and Restart” from appearing in the power button in the start menu.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Documents on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderDocuments" id="startMenuPinnedFolderDocuments">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDocuments == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDocuments == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDocuments == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Downloads on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderDownloads" id="startMenuPinnedFolderDownloads">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDownloads == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDownloads == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderDownloads == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">File Explorer on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderFileExplorer" id="startMenuPinnedFolderFileExplorer">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderFileExplorer == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderFileExplorer == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderFileExplorer == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">HomeGroup on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderHomeGroup" id="startMenuPinnedFolderHomeGroup">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderHomeGroup == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderHomeGroup == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderHomeGroup == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Music on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderMusic" id="startMenuPinnedFolderMusic">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderMusic == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderMusic == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderMusic == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Network on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderNetwork" id="startMenuPinnedFolderNetwork">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderNetwork == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderNetwork == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderNetwork == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Personal folder on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderPersonalFolder" id="startMenuPinnedFolderPersonalFolder">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPersonalFolder == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPersonalFolder == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPersonalFolder == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Pictures on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderPictures" id="startMenuPinnedFolderPictures">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPictures == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPictures == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderPictures == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Settings on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderSettings" id="startMenuPinnedFolderSettings">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderSettings == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderSettings == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderSettings == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Videos on Start</td>
+            <td class="righttdsettings">
+                <select name="startMenuPinnedFolderVideos" id="startMenuPinnedFolderVideos">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderVideos == "notConfigured")" value="notConfigured">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderVideos == "hide")" value="hide">Hide</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.startMenuPinnedFolderVideos == "show")" value="show">Show</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>

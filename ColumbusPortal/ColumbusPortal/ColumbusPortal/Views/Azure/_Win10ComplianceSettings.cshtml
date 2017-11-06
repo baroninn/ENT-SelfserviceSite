@@ -1,0 +1,186 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Windows Health Attestation Service evaluation rules (Win10)</legend>
+    <!-- Device Health -->
+    <table>
+        <!--#################### Windows 10 CONFIGURATION ####################-->
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Require bitlocker</td>
+            <td class="righttdsettings">
+                <select name="bitLockerEnabled" id="bitLockerEnabled">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.bitLockerEnabled == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.bitLockerEnabled == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Require secure boot to be enabled on the device</td>
+            <td class="righttdsettings">
+                <select name="secureBootEnabled" id="secureBootEnabled">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.secureBootEnabled == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.secureBootEnabled == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Require code integrity</td>
+            <td class="righttdsettings">
+                <select name="codeIntegrityEnabled" id="codeIntegrityEnabled">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.codeIntegrityEnabled == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.codeIntegrityEnabled == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Device Properties (Win10)</legend>
+    <!-- General -->
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="winosMinimumVersion" id="winosMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.winosMinimumVersion"
+                                                                                                                                                                                                                           } />
+                <div class="description">
+                    <p class="descriptiontext">Select the oldest OS version a device can have. </p>
+                    <p class="descriptiontext">The operating system version is defined as major.minor.build. The version number must correspond to the version returned by the winver command.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="winosMaximumVersion" id="winosMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.winosMaximumVersion"
+                                                                                                 } />
+                <div class="description">
+                    <p class="descriptiontext">Select the oldest OS version a device can have. </p>
+                    <p class="descriptiontext">The operating system version is defined as major.minor.build. The version number must correspond to the version returned by the winver command.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version for mobile devices<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="mobileOsMinimumVersion" id="mobileOsMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.mobileOsMinimumVersion"
+                                                                                                                                                                                                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">Select the oldest OS version a device can have. </p>
+                    <p class="descriptiontext">The operating system version is defined as major.minor.build. The version number must correspond to the version returned by the winver command.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version for mobile devices<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="mobileOsMaximumVersion" id="mobileOsMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.mobileOsMaximumVersion"
+                                                                                                                        } />
+                <div class="description">
+                    <p class="descriptiontext">Select the newest OS version a device can have. The operating system version is defined as major.minor.build.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Win10 subfieldset" hidden>
+    <legend class="sublegend">Password (Win10)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Require a password to unlock mobile devices.<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="winpasswordRequired" id="winpasswordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequired == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to require users to enter a password before access is granted to information on their mobile devices.</p>
+                    <p class="descriptiontext">Recommended value: Require</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">Simple passwords<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="passwordBlockSimple" id="passwordBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordBlockSimple == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to block mobile devices from using simple password sequences, such as 1234 or 1111.</p>
+                    <p class="descriptiontext">Recommended Value: Block</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings tooltip">password type<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordRequiredType" id="winpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequiredType == "numeric")" value="numeric">Numeric</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether passwords are allowed to be comprised only of numeric characters, or whether they must contain characters other than numbers. </p>
+                    <p class="descriptiontext">Recommendations:  Required password type: Alphanumeric, Minimum number of character sets: 1</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordMinimumLength" name="winpasswordMinimumLength" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.winpasswordMinimumLength"
+                                                                                                                                                                                         } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity before password is required</td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordMinutesOfInactivityBeforeLock" id="winpasswordMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordMinutesOfInactivityBeforeLock == "480")" value="480">8 Hours</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordExpirationDays" name="winpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.winpasswordExpirationDays"
+                                                                  } />
+            </td>
+        </tr>
+
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="Win10Password" type="number" id="winpasswordPreviousPasswordBlockCount" name="winpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.winpasswordPreviousPasswordBlockCount"
+                                                                  } />
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Require password when device returns from idle state (mobile only)</td>
+            <td class="righttdsettings">
+                <select class="Win10Password" name="winpasswordRequiredToUnlockFromIdle" id="winpasswordRequiredToUnlockFromIdle">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequiredToUnlockFromIdle == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winpasswordRequiredToUnlockFromIdle == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Win10" hidden>
+            <td class="lefttdsettings">Encryption of data storage on device</td>
+            <td class="righttdsettings">
+                <select name="winstorageRequireEncryption" id="winstorageRequireEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winstorageRequireEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.winstorageRequireEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>

@@ -21,7 +21,7 @@ $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine")
 Import-Module (Join-Path $PSScriptRoot Functions)
 $Server= 'vmm-a.corp.systemhosting.dk'
 $Cred = Get-RemoteCredentials -SSS
-Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force > $null
 $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
 
 
@@ -63,7 +63,7 @@ function StartRunbook($EmailStatusTo, $Parameters, $ScheduledTime, $RunbookId, $
 }
 
 try {
-    StartRunbook -EmailStatusTo $Email -Parameters $paramString -ScheduledTime $ScheduledTime -RunbookId $RunbookId -TaskID $TaskID | Out-Null
+    StartRunbook -EmailStatusTo $Email -Parameters $paramString -ScheduledTime $ScheduledTime -RunbookId $RunbookId -TaskID $TaskID > $null
     Write-Output "$VMName has been scheduled for reboot on $DateTime"
 }
 catch {

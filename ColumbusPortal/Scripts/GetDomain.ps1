@@ -18,7 +18,7 @@ $domains = @()
 if ($O365) { 
     if ($Config.TenantID) {
 
-        Connect-O365 -Organization $Organization
+        Connect-MSOnline -Organization $Organization
     
         $Dom = ((Get-MsolDomain)| where{$_.Name -notlike "*onmicrosoft.com"})
 

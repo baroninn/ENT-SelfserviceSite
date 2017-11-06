@@ -1,0 +1,86 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > AzureOverview";
+}
+@section script {
+    <script>
+        $(document).on("click", ".intunedevicesummary", function () {
+            $(this).parent().parent().next("tr").children().find(".description").toggle(100);
+        });
+        $(document).ready(function () {
+            
+            GetAzureOverview();
+            $("select[name=organization]").change(function () {
+                GetAzureOverview();
+            });
+        });
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Azure Overview..</p>
+<br />
+
+@using (Html.BeginForm("OverView", "Azure"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Azure Overview</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CloudOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.OverView.Organization) { @: selected="selected"
+                                                                                                                  } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <div id="loading" name="loading" class="loading">
+            <span><img src="~/Images/loading.gif" /></span>
+        </div>
+        <div id="AzureVMS" name="AzureVMS" hidden></div>
+        <br />
+        <div id="AzureSecurityCenter" name="AzureSecurityCenter" hidden></div>
+        <br />
+        <div id="intuneoverview" name="intuneoverview" hidden></div>
+        <br />
+        <div id="AzureIntuneDevice" name="AzureIntuneDevice" hidden></div>
+        <br />
+        <div id="AzureIntuneComplianceOverview" name="AzureIntuneComplianceOverview" hidden></div>
+        <br />
+    </fieldset>
+
+}

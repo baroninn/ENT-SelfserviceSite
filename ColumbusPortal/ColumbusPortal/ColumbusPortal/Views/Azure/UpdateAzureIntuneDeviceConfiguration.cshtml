@@ -1,0 +1,240 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > Update Device Configuration";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+
+            GetAzureIntuneDeviceConfiguration();
+            $("select[name=organization]").change(function () {
+                $('.loading').fadeIn();
+                $('.Android').fadeOut();
+                $('.AFW').fadeOut();
+                $('.IOS').fadeOut();
+                $('.Win10').fadeOut();
+                $('.macOS').fadeOut();
+                GetAzureIntuneDeviceConfiguration();
+            });
+            $("select[name=deviceconf]").change(function () {
+                $('.Android').fadeOut();
+                $('.AFW').fadeOut();
+                $('.IOS').fadeOut();
+                $('.Win10').fadeOut();
+                $('.macOS').fadeOut();
+                GetAzureIntuneDeviceConfigurationsettings();
+            });
+
+            $('#platform').on('change', function () {
+                if (this.value == 'Android') {
+                    $('.Android').fadeIn();
+                    $('.AFW').fadeOut();
+                    $('.IOS').fadeOut();
+                    $('.Win10').fadeOut();
+                    $('.macOS').fadeOut();
+                }
+                if (this.value == 'AFW') {
+                    $('.Android').fadeOut();
+                    $('.AFW').fadeIn();
+                    $('.IOS').fadeOut();
+                    $('.Win10').fadeOut();
+                    $('.macOS').fadeOut();
+                }
+                if (this.value == 'macOS') {
+                    $('.Android').fadeOut();
+                    $('.AFW').fadeOut();
+                    $('.macOS').fadeIn();
+                    $('.IOS').fadeOut();
+                    $('.Win10').fadeOut();
+                }
+                if (this.value == 'IOS') {
+                    $('.Android').fadeOut();
+                    $('.AFW').fadeOut();
+                    $('.IOS').fadeIn();
+                    $('.Win10').fadeOut();
+                    $('.macOS').fadeOut();
+
+                }
+                if (this.value == 'Win10') {
+                    $('.Android').fadeOut();
+                    $('.AFW').fadeOut();
+                    $('.IOS').fadeOut();
+                    $('.Win10').fadeIn();
+                    $('.macOS').fadeOut();
+                }
+            });
+
+            $('#edgeSearchEngine').on('change', function () {
+                if (this.value == 'Custom') {
+                    $('#edgeCustomURLid').show();
+                }
+                else {
+                    $('#edgeCustomURLid').hide();
+                }
+            });
+
+            $('#defenderScanType').on('change', function () {
+                if (this.value == 'disabled' || this.value == 'userDefined') {
+                    $('.scantime').fadeOut();
+                }
+                else {
+                    $('.scantime').fadeIn();
+                }
+            });
+
+            $('#defenderDetectedMalwareActions').on('change', function () {
+                if (this.value == 'True') {
+                    $('.malwaresecurity').fadeIn();
+                }
+                else {
+                    $('.malwaresecurity').fadeOut();
+                }
+            });
+
+            $('#passwordRequired').on('change', function () {
+                if (this.value == 'False') {
+                    $('.AndroidPassword').prop("disabled", true);
+                }
+                if (this.value == 'True') {
+                    $('.AndroidPassword').prop("disabled", false);
+                }
+            });
+            $('#workProfileRequirePassword').on('change', function () {
+                if (this.value == 'False') {
+                    $('.AFWPassword').prop("disabled", true);
+                }
+                if (this.value == 'True') {
+                    $('.AFWPassword').prop("disabled", false);
+                }
+            });
+            $('#passcodeRequired').on('change', function () {
+                if (this.value == 'False') {
+                    $('.IOSPassword').prop("disabled", true);
+                }
+                if (this.value == 'True') {
+                    $('.IOSPassword').prop("disabled", false);
+                }
+            });
+            $('#winpasswordRequired').on('change', function () {
+                if (this.value == 'False') {
+                    $('.Win10Password').prop("disabled", true);
+                }
+                if (this.value == 'True') {
+                    $('.Win10Password').prop("disabled", false);
+                }
+            });
+            $('#macpasswordRequired').on('change', function () {
+                if (this.value == 'False') {
+                    $('.macOSPassword').prop("disabled", true);
+                }
+                if (this.value == 'True') {
+                    $('.macOSPassword').prop("disabled", false);
+                }
+            });
+        });
+
+
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<br />
+<br />
+
+@using (Html.BeginForm("UpdateAzureIntuneDeviceConfiguration", "Azure"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Update Device Configuration</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttdsettings">Organization</td>
+                <td class="righttdsettings">
+                    <select name="organization">
+                        @foreach (string organization in Model.CloudOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.AzureDeviceConfiguration.organization) { @: selected="selected"
+                                     } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttdsettings"><span>Configuration</span></td>
+                <td class="righttdsettings">
+                    <select id="deviceconf" name="deviceconf"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttdsettings">OS Platform</td>
+                <td>
+                    <select name="platform" id="platform">
+                        <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.platform == "IOS")" value="IOS">IOS</option>
+                        <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.platform == "Android")" value="Android">Android</option>
+                        <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.platform == "AFW")" value="AFW">Android for work</option>
+                        <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.platform == "Win10")" value="Win10">Windows 10</option>
+                        <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.platform == "macOS")" value="macOS">Mac OS</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttdsettings"><span>DisplayName</span></td>
+                <td class="righttdsettings">
+                    <input id="displayName" name="displayName" placeholder="Android Configuration" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.displayName"
+                                                                                            } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttdsettings"><span>Description</span></td>
+                <td class="righttdsettings">
+                    <input id="description" name="description" placeholder="AndroidConf bla bla" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.description"
+                                                                                                                       } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+            <div id="AndroidConf" name="AndroidConf">@Html.Partial("_AndroidSettings")</div>
+            <div id="AndroidAFWConf" name="AndroidAFWConf">@Html.Partial("_AndroidAFWSettings")</div>
+            <div id="Win10Conf" name="Win10Conf">@Html.Partial("_Win10Settings")</div>
+            <div id="IOSConf" name="IOSConf">@Html.Partial("_IOSSettings")</div>
+            <div id="macOSConf" name="macOSConf">@Html.Partial("_macOSSettings")</div>
+
+        <br />
+        <div id="loading" name="loading" class="loading" hidden>
+            <span><img src="~/Images/loading.gif" /></span>
+        </div>
+        <input type="submit" class="button" value="Update Device Configuration" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

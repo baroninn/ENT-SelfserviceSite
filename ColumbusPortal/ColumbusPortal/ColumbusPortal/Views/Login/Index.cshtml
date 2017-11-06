@@ -11,7 +11,7 @@
     <div class="col-md-8">
         <section id="loginForm">
             
-            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("Index", "Login", new { returnUrl = Request.QueryString["returnUrl"] }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <hr />
@@ -34,7 +34,9 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
+                //<input type="hidden" name="returnUrl" value="@Request.QueryString["ReturnUrl"]" />
                 <br />
+                //@Html.HiddenFor(m => m.returnUrl)
                 <div class="logindiv">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Log in" class="btn btn-default" />

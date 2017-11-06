@@ -55,19 +55,19 @@
                 </div>
             </td>
         </tr>
-
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
-            <td class="middletd"><select name="organization">
-                @foreach(string organization in Model.Organizations) 
-                {
-                    <option @if(Model.ActionFailed)
-                            {
-                                if(organization == Model.Alias.Organization) {
-                                    @:selected="selected"
-                                }
-                            }>@organization</option>
-                }
+            <td class="middletd">
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
+                    {
+                        <option @if (Model.ActionFailed) { if (organization == Model.Alias.Organization) { @: selected="selected"
+                                                                } } value="@organization.Split(' ')[0]">
+                            @organization
+                                                            </option>
+                    }
                 </select>
                 <span class="mandatory">*</span>
             </td>
@@ -75,10 +75,10 @@
         <tr>
             <td class="lefttd">Emaildomains:</td>
             <td class="middletd">
-                    <div id="Domain"></div>
+                <div id="Domain"></div>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Existing aliases:</td>
             <td class="middletd">
                 <div id="existingAliasesDiv">
@@ -93,31 +93,38 @@
                 <span class="mandatory">*</span>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Set first alias as primary address</td>
             <td>
-                <input name="setfirstasprimary" type="checkbox" @if (Model.ActionFailed)
-                                                           { 
-                                                                if(Model.Alias.SetFirstAsPrimary) { 
-                                                                    @:checked="checked"
-                                                                }
-                                                            }/>
+                <input name="setfirstasprimary" id="setfirstasprimary" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.Alias.SetFirstAsPrimary) { @: checked="checked"
+                                                                                       } } /> <label for="setfirstasprimary" class="lbl"></label>
 
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">New email aliases</td>
-            <td class="middletd">@if (Model.ActionFailed)
+            <td class="middletd">
+                @if (Model.ActionFailed)
                 {
-                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
-                }
-                else {
-                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
-                }
-                <span class="mandatory">*</span>
-            </td>
-        </tr>
-    </table>
+                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
+            }
+            else
+            {
+                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+            }
+            <span class="mandatory">*</span>
+        </td>
+    </tr>
+</table>
+    <div id="loading" name="loading" class="loading" hidden>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <span><img src="~/Images/loading.gif" /></span>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br />
     <input type="submit" class="button" value="Add Alias" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

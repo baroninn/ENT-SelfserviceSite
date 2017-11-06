@@ -35,7 +35,7 @@
                                         if(organization == Model.CustomerReport.Organization) {
                                             @:selected="selected"
                                         }
-                                    }>@organization</option>
+                                    } value="@organization.Split(' ')[0]">@organization</option>
                     }
                 </select></td>
 

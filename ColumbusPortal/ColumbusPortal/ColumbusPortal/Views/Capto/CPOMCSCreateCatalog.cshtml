@@ -1,0 +1,123 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Level30 > MCS Create Machine Catalog";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+
+            var mcsenabled = false;
+            CPOGetCTXGoldenServers(mcsenabled);
+
+            $("select[name=solution]").change(function () {
+                $("select[name=server]").html('<option>loading...</option>');
+                CPOGetCTXGoldenServers(mcsenabled);
+            });
+
+
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the MCS golden image..</p>
+
+@using (Html.BeginForm("CPOMCSCreateCatalog", "Capto"))
+{
+    <fieldset>
+        <legend>MCS Create Catalog</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Solution<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <select name="solution" onselect="CPOGetCTXGoldenServers()" id="solution">
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSCreateCatalog.Solution.ToUpper() == "ADVOPLUS")">AdvoPlus</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSCreateCatalog.Solution.ToUpper() == "LEGAL")">Legal</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSCreateCatalog.Solution.ToUpper() == "MEMBER2015")">Member2015</option>
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies which Capto product to create the MCS catalog for...
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>CTX Available Golden Servers<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <select name="server">
+                        <option>loading...</option>
+                    </select>
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            A list of Golden servers that are NOT already used in a different MCS catalog...
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Catalog Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="name" type="text" maxlength="50" placeholder="MCS - Legal" @if (Model.ActionFailed) { @: value="@Model.CPOMCSCreateCatalog.Name"
+                                                                                                                                                                                                                                                } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Input the name for the new catalog.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">OU</td>
+                <td class="middletd">
+                    <select name="ou">
+                        @foreach (string mcsou in Model.CPOMCSOUs)
+                        {
+                            <option @if (Model.ActionFailed) { if (mcsou == Model.CPOMCSCreateCatalog.OU) { @: selected="selected"
+                                                                                                                                                } }>
+                                @mcsou
+                            </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>NamingScheme<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="namingscheme" type="text" maxlength="15" placeholder="CPO-ADVO-###" @if (Model.ActionFailed) { @: value="@Model.CPOMCSCreateCatalog.NamingScheme"
+                                                                                                                                                                                                                     } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Input the namingscheme for the VM's created by Citrix.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create MCS Catalog" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

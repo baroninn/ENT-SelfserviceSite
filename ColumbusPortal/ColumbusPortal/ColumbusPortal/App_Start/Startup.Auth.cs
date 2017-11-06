@@ -24,6 +24,7 @@ namespace ColumbusPortal
                 CookieName = "ColumbusCookie",
                 CookieHttpOnly = true,
                 ExpireTimeSpan = TimeSpan.FromHours(1), // adjust to your needs
+                ReturnUrlParameter = "returnUrl"
             });
         }
     }

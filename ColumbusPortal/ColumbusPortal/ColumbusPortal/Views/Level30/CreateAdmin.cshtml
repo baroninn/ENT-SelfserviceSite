@@ -62,11 +62,13 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">First name</td>
                 <td class="middletd">
                     <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].FirstName"
-                                                                                                                } />
+                                                                                                                                           } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -74,7 +76,7 @@
                 <td class="lefttd">Last name</td>
                 <td class="middletd">
                     <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].LastName"
-                                                                                                                } />
+                                                                                                                                           } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -82,7 +84,7 @@
                 <td class="lefttd">SamAccountName</td>
                 <td class="middletd">
                     <input name="samaccountname" placeholder="ADMINXXX" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].SamAccountName"
-                                                                                                                                           } />
+                                                                                                                                                                      } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -90,7 +92,7 @@
                 <td class="lefttd">DisplayName</td>
                 <td class="middletd">
                     <input name="displayname" placeholder="Admin User" @if (Model.ActionFailed) {  @: value="@Model.UserList[0].DisplayName"
-                                                                                                                                                                      } />
+                                                                                                                                                                                                 } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -98,7 +100,7 @@
                 <td class="lefttd">Password</td>
                 <td class="middletd">
                     <input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed) { @: value="@Model.UserList[0].Password"
-                                                                                         } />
+                                                                                                                    } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -118,7 +120,7 @@
                             The department will give different access based on role..
                         </p>
                     </div>
-                    
+
                 </td>
             </tr>
         </table>

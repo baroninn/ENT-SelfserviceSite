@@ -1,0 +1,92 @@
+﻿@model ColumbusPortal.Models.OrganizationModel
+@{
+    ViewBag.Title = "Organization > Connect to AdminRDS";
+}
+@section script {
+    <script>
+        function changebuttontext()
+        {
+            var getelem = document.getElementById("download");
+            if (getelem.value == "Download RDP") getelem.value = "Working..";
+            else getelem.value = "Download RDP";
+        }
+        function downloadRDP()
+        {
+            var organization = $("select[name=organization]").val();
+            $.get("/Azure/GetCustomerConf?organization=" + organization, function (data) {
+
+                var json = JSON.parse(data);
+
+                for (i = 0; i < json.length; i++) {
+
+                    if (json[i].AdminRDSPort != null) {
+                        var rdpfilename = organization + "Admin.rdp";
+                        var rdptext = "full address:s:adminrds.systemhosting.dk:" + json[i].AdminRDSPort;
+                        downloadfile(rdpfilename, rdptext)
+                        changebuttontext();
+                    }
+                    
+                }
+            });
+            
+        }
+
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to connect to a customers AdminRDS.</p>
+<br />
+
+@using (Html.BeginForm("ConnectAdminRDS", "Organization"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Connect to Organization</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.Domain.Organization) { @: selected="selected"
+                                                                                                                                            } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="button" class="button" value="Download RDP" id="download" onclick="changebuttontext(); downloadRDP();" />
+    </fieldset>
+}

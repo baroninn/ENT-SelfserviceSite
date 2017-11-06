@@ -1,0 +1,77 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Level30 > MCS Update Checkpoint";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+
+            var mcsenabled = true;
+            CPOGetCTXGoldenServers(mcsenabled);
+
+            $("select[name=solution]").change(function () {
+                $("select[name=server]").html('<option>loading...</option>');
+                CPOGetCTXGoldenServers(mcsenabled);
+            });
+
+
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to update the MCS golden checkpoint..</p>
+
+@using (Html.BeginForm("CPOMCSUpdateImage", "Capto"))
+{
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Solution<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <select name="solution" onselect="CPOGetCTXGoldenServers()" id="solution">
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSUpdateImage.Solution.ToUpper() == "ADVOPLUS")">AdvoPlus</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSUpdateImage.Solution.ToUpper() == "LEGAL")">Legal</option>
+                        <option selected="@(Model.ActionFailed && Model.CPOMCSUpdateImage.Solution.ToUpper() == "MEMBER2015")">Member2015</option>
+                    </select>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies which Capto product to update the MCS master checkpoint for. The update will happen at night after reboot..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>CTX Golden Servers<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select name="server"><option>loading...</option></select>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Update MCS Checkpoint" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

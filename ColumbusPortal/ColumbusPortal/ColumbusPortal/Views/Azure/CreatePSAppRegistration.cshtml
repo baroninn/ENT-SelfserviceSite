@@ -1,0 +1,66 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > Create Azure Management App";
+}
+@section script {
+    <script>
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<br />
+<p>Use this form to create the App registration for future graph management.</p>
+<p>This will be used for intune etc..</p>
+<br />
+
+@using (Html.BeginForm("CreatePSAppRegistration", "Azure"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>1. Create Azure Management App</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization" id="organization">
+                        @foreach (string organization in Model.CloudOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.IntuneOverview.Organization) { @: selected="selected"
+                                                                                                     } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Create App Management" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+        <br />
+    </fieldset>
+}

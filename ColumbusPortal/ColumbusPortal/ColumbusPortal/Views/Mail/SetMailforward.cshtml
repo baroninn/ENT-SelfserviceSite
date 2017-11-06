@@ -6,17 +6,12 @@
     <script>
         $(document).ready(function () {
 
-            @if (Model.Mailforward != null)
-            {
-            @:$("select[name=organization]").val("@Model.Mailforward.Organization");
-            }
-
-            GetMailbox();
-            GetMailbox("all", $("select[name=forwardselector]"))
-
+            GetMailbox("UserMailbox");
+            GetMailbox("UserMailbox", $("select[name=forwardselector]"))
+            //GetMailbox("all", $("select[name=forwardselector]"))
             $("select[name=organization]").change(function () {
-                GetMailbox();
-                GetMailbox("all", $("select[name=forwardselector]"))
+                GetMailbox("UserMailbox");
+                GetMailbox("UserMailbox", $("select[name=forwardselector]"))
             });
 
             $("select[name=userprincipalname]").change(function () {
@@ -33,20 +28,20 @@
                     $("select[name=forwardselector]").show();
                     $("input[name=forwardingaddress]").hide();
                     $("p[name=clearmessage]").hide();
-                    $("tr[id=delivertomailboxandforward]").show()
+                    $("tr[id=delivertomailboxandforwardtr]").show()
                 }
                 else if (type == "External") {
                     $("select[name=forwardselector]").hide();
                     $("input[name=forwardingaddress]").val("");
                     $("input[name=forwardingaddress]").show();
                     $("p[name=clearmessage]").hide();
-                    $("tr[id=delivertomailboxandforward]").show()
+                    $("tr[id=delivertomailboxandforwardtr]").show()
                 }
                 else {
                     $("select[name=forwardselector]").hide();
                     $("input[name=forwardingaddress]").hide();
                     $("p[name=clearmessage]").show();
-                    $("tr[id=delivertomailboxandforward]").hide()
+                    $("tr[id=delivertomailboxandforwardtr]").hide()
                 }
             });
 
@@ -86,28 +81,29 @@
                     </div>
                 </td>
             </tr>
-            
+        </table>
+        <table>
 
             <tr>
                 <td class="lefttd">Organization</td>
-                <td>
+                <td class="middletd">
                     <select name="organization">
                         @foreach (string organization in Model.Organizations)
                         {
-                            <option selected="@(Model.ActionFailed && Model.Mailforward.Organization == organization)">@organization</option>
+                            <option selected="@(Model.ActionFailed && Model.Mailforward.Organization == organization)" value="@organization.Split(' ')[0]">@organization</option>
                         }
                     </select>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">Existing mailforwards</td>
-                <td>
+                <td class="middletd">
                     <div id="existingforwards"></div>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Mailbox<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     <select name="userprincipalname"><option>loading...</option></select>
                     <div class="description">
                         <p class="descriptiontext">
@@ -118,9 +114,9 @@
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Forwarding type<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     <select name="forwardingtype">
-                        <option @if (Model.Mailforward == null || (Model.Mailforward != null && Model.Mailforward.ForwardingType == "Internal")) { <text>selected</text> }>Internal</option>
+                        <option @if (Model.Mailforward == null || (Model.Mailforward != null && Model.Mailforward.ForwardingType == "Internal")) { <text> selected</text> }>Internal</option>
                         <option @if (Model.Mailforward != null && Model.Mailforward.ForwardingType == "External") { <text> selected</text> }>External</option>
                         <option @if (Model.Mailforward != null && Model.Mailforward.ForwardingType == "Clear") { <text> selected</text> }>Clear</option>
                     </select>
@@ -135,7 +131,7 @@
             </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Forwarding address<i class="material-icons infoicon">info</i></span></td>
-                <td>
+                <td class="middletd">
                     @{
                         string forwardingaddress = Model.ActionFailed ? Model.Mailforward.ForwardingSmtpAddress : "";
                         @:<input name="forwardingaddress" placeholder="john.doe@gmail.com" value="@forwardingaddress" />
@@ -149,10 +145,15 @@
                     </div>
                 </td>
             </tr>
-            <tr id="delivertomailboxandforward">
+            <tr id="delivertomailboxandforwardtr">
                 <td class="lefttd tooltip"><span>Deliver and forward<i class="material-icons infoicon">info</i></span></td>
-                <td>
-                    <input id="delivertomailboxandforward" name="delivertomailboxandforward" checked="@(Model.ActionFailed && Model.Mailforward.DeliverToMailboxAndForward)" type="checkbox" />
+                <td class="middletd">
+                    <input name="delivertomailboxandforward" id="delivertomailboxandforward" type="checkbox" class="cbx hidden" @if (Model.ActionFailed)
+                    {
+                        if(Model.Mailforward.DeliverToMailboxAndForward)
+                        { 
+                            @:checked="checked" 
+                        }} />   <label for="delivertomailboxandforward" class="lbl"></label>
                     <div class="description">
                         <p class="descriptiontext">
                             By default, incoming e-mails will only be forwarded, not stored in the mailbox. To enable delivery to the mailbox as well, check <b>Deliver and forward</b>.
@@ -160,7 +161,6 @@
                     </div>
                 </td>
             </tr>
-
 
         </table>
         <br />

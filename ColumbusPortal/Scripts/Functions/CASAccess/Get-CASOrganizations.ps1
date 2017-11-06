@@ -21,14 +21,14 @@
             # command - text
             $sqlCmd = New-Object System.Data.SqlClient.SqlCommand
             $sqlCmd.Connection = $sqlConnection
-            $sqlCmd.CommandText = "select Organization, Name, NavMiddleTier, SQLServer, Platform FROM [dbo].[CASOrganizations] WHERE Organization = '$Organization' UNION Select Organization, Name, NavMiddleTier, SQLServer, Platform FROM [dbo].[Organizations] WHERE Organization = '$Organization'"
+            $sqlCmd.CommandText = "select Organization, Name, NavMiddleTier, SQLServer, Platform, RDSServer FROM [dbo].[CASOrganizations] WHERE Organization = '$Organization' UNION Select Organization, Name, NavMiddleTier, SQLServer, Platform, RDSServer FROM [dbo].[Organizations] WHERE Organization = '$Organization'"
         }
         else {
             if ($Type -eq 'All') {
                 # command - text
                 $sqlCmd = New-Object System.Data.SqlClient.SqlCommand
                 $sqlCmd.Connection = $sqlConnection
-                $sqlCmd.CommandText = "select Organization, Name, NavMiddleTier, SQLServer, Platform FROM [dbo].[CASOrganizations] UNION Select Organization, Name, NavMiddleTier, SQLServer, Platform FROM [dbo].[Organizations]"
+                $sqlCmd.CommandText = "select Organization, Name, NavMiddleTier, SQLServer, Platform, RDSServer FROM [dbo].[CASOrganizations] UNION Select Organization, Name, NavMiddleTier, SQLServer, Platform, RDSServer FROM [dbo].[Organizations]"
             }
             if ($Type -eq 'Shared') {
                 # command - text
@@ -62,6 +62,8 @@
                     NavMiddleTier = $reader["NavMiddleTier"]
                     SQLServer = $reader["SQLServer"]
                     Platform = $reader["Platform"]
+                    LoginInfo = $reader["LoginInfo"]
+                    RDSServer = $reader["RDSServer"]
                 }
                 $Org += $object
             }

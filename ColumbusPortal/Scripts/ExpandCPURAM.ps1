@@ -31,7 +31,7 @@ $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine")
 
 $Server= 'vmm-a.corp.systemhosting.dk'
 $Cred = Get-RemoteCredentials -SSS
-Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force > $null
 $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
 
 ## Convert VMID back to name
@@ -97,6 +97,6 @@ function StartRunbook($EmailStatusTo, $Parameters, $ScheduledTime, $RunbookId, $
     $hook.Run("80f0fe85-c2f6-4603-a1c7-5c96ac12f5cb", $params)
 }
 
-StartRunbook -EmailStatusTo $Email -Parameters $paramString -ScheduledTime $ScheduledTime -RunbookId $RunbookId -TaskID $TaskID | Out-Null
+StartRunbook -EmailStatusTo $Email -Parameters $paramString -ScheduledTime $ScheduledTime -RunbookId $RunbookId -TaskID $TaskID > $null
 
 Remove-Module OrchestratorHook2 -Force

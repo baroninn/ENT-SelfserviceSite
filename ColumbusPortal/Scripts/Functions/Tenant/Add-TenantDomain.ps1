@@ -12,11 +12,11 @@
 
     Begin {
 
-    $ErrorActionPreference = "Stop"
-    Import-Module ActiveDirectory
+        $ErrorActionPreference = "Stop"
+        Import-Module ActiveDirectory
 
-    $Config = Get-SQLEntConfig -Organization $Organization
-    $Cred  = Get-RemoteCredentials -Organization $Organization
+        $Config = Get-SQLEntConfig -Organization $Organization
+        $Cred  = Get-RemoteCredentials -Organization $Organization
 
     }
 
@@ -24,10 +24,8 @@
 
         if ($AddasEmail) {
 
-            if ($Config.ExchangeServer -ne "null") {
-                    
-                Import-Module (New-ExchangeProxyModule -Organization $Organization -Command 'New-AcceptedDomain', 'Get-AcceptedDomain')
-
+            if (-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
+                Import-Module (New-ExchangeProxyModule -Organization $Organization -Command 'New-AcceptedDomain', 'Get-AcceptedDomain') > $null
                 try {
                     $accepteddomains = Get-AcceptedDomain | select -ExpandProperty DomainName
                     if ($accepteddomains -match $Domain) {
@@ -41,19 +39,16 @@
                     throw "ERROR: $_"
                 }
             }
-
             else {
-                if ($Config.Office365.TenantID -ne "null") {
-
-                    Connect-O365 -Organization $Organization
-            
+                if (-not [string]::IsNullOrWhiteSpace($Config.TenantId)) {
+                    Connect-MSOnline -Organization $Organization
                     try {
-                        $MSOLDomains = Get-MsolDomain |select -ExpandProperty Name
+                        $MSOLDomains = Get-MsolDomain | select -ExpandProperty Name
                         if ($MSOLDomains -match $Domain) {
                             Write-Output "$Domain already exist in Office365.. Not gonna do anything here.."
                         }
                         else {
-                            New-MsolDomain -Name $Domain | Out-Null
+                            New-MsolDomain -Name $Domain > $null
 
                             try {
                                 $DNS = (Get-MsolDomainVerificationDns -DomainName $Domain).Label.split('.')[0]
@@ -83,7 +78,7 @@
                 Write-Output "$Domain already exist in forest.. Not gonna do anything here.."
             }
             else {
-                Set-ADForest -Identity $Forest -Server $Config.DomainFQDN -UPNSuffixes @{Add=$Domain} -Credential $Cred
+                Set-ADForest -Identity $Forest -Server $Config.DomainFQDN -UPNSuffixes @{Add=$($Domain)} -Credential $Cred
             }
 
         }

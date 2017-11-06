@@ -10,17 +10,18 @@
         });
 
         function info() {
+            var organization = $("select[name=organization]").val();
             $.confirm({
                 theme: 'light',
                 type: 'green',
                 typeAnimated: true,
                 title: 'INFO:',
-                content: 'All admin users will now be created on ' +  +
+                content: 'All admin users will now be created on ' + organization +
                          '<p>Please be patient..',
                 buttons: {
                     OK: function () {
                         StartSubmitButtonMessage();
-                        document.forms[0].submit();
+                        document.getElementById("CreateAllAdmins").submit();
 
                     },
                 }
@@ -34,7 +35,7 @@
 <p>Use this form to create all admin accounts for an organization.</p>
 <br />
 
-@using (Html.BeginForm("CreateAllAdmins", "Organization"))
+@using (Html.BeginForm("CreateAllAdmins", "Organization", FormMethod.Post, new { id = "CreateAllAdmins" }))
 {
     @Html.AntiForgeryToken()
     <fieldset>
@@ -62,6 +63,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
                 <td class="middletd">
@@ -69,7 +72,7 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.CreateALLAdmins.Organization) { @: selected="selected"
-                                                                                                                                                                                } }>
+                                                                                                           } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }

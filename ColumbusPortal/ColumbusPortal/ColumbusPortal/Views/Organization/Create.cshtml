@@ -6,45 +6,52 @@
   
     <script>
 
-        window.onload = function () {
-            document.forms[0].createvmm.checked = true;
-            // you can change the 0 to a string of the form's name
-        };
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
 
-      function setGrey() {
-            var el = document.getElementById("createvmm");
-            var subnet = document.getElementById("subnet");
-            var vlan = document.getElementById("vlan");
-            var gateway = document.getElementById("gateway");
-            var ipstart = document.getElementById("ipstart");
-            var ipend = document.getElementById("ipend");
-            var mandatory_subnet = document.getElementById("mandatory_subnet");
-            var mandatory_vlan = document.getElementById("mandatory_vlan");
-            var mandatory_ipstart = document.getElementById("mandatory_ipstart");
-            var mandatory_ipend = document.getElementById("mandatory_ipend");
-            if (el.checked) {
-                subnet.disabled = false;
-                vlan.disabled = false;
-                gateway.disabled = false;
-                ipstart.disabled = false;
-                ipend.disabled = false;
-                mandatory_subnet.hidden = false;
-                mandatory_vlan.hidden = false;
-                mandatory_gateway.hidden = false;
-                mandatory_ipstart.hidden = false;
-                mandatory_ipend.hidden = false;
+            $("select[name=platform]").on('change', function () {
+                var platform = $("select[name=platform]").val();
+                if (platform == "Enterprise") {
+                    $('#createvmm').prop("checked", true);
+                    $('#createcrayon').prop("checked", false);
+                    $('.vmmfunction').fadeIn({ queue: false, duration: 'slow' });
+                    $('.crayonfunction').fadeOut({ queue: false, duration: 'slow' });
+                    hide();
+                }
+                if (platform == "Hybrid") {
+                    $('#createvmm').prop("checked", true);
+                    $('.vmmfunction').fadeIn({ queue: false, duration: 'slow' });
+                    $('.crayonfunction').fadeIn({ queue: false, duration: 'slow' });
+                    hide();
+                }
+                if (platform == "Cloud") {
+                    $('#createvmm').prop("checked", false);
+                    $('.vmmfunction').fadeOut({ queue: false, duration: 'slow' });
+                    $('.crayonfunction').fadeIn({ queue: false, duration: 'slow' });
+                    hide();
+                }
 
+            }).trigger('change');
+
+            GetCrayonInvoiceProfiles();
+            document.getElementById("CrayonFirstName").value = "Annike";
+            document.getElementById("CrayonLastName").value = "Fossing";
+            document.getElementById("CrayonEmail").value = "DriftenSystemHosting@columbusglobal.com";
+            document.getElementById("CrayonPhoneNumber").value = "+45 28888225";
+            
+        });
+        function hide() {
+            var vmm = document.getElementById("createvmm");
+            var crayon = document.getElementById("createcrayon");
+            if (vmm.checked) {
+                $('.VMM').fadeIn({ queue: false, duration: 'slow' });
             } else {
-                subnet.disabled = true;
-                vlan.disabled = true;
-                gateway.disabled = true;
-                ipstart.disabled = true;
-                ipend.disabled = true;
-                mandatory_subnet.hidden = true;
-                mandatory_vlan.hidden = true;
-                mandatory_gateway.hidden = true;
-                mandatory_ipstart.hidden = true;
-                mandatory_ipend.hidden = true;
+                $('.VMM').fadeOut({ queue: false, duration: 'slow' });
+            }
+            if (crayon.checked) {
+                $('.Crayon').fadeIn({ queue: false, duration: 'slow' });
+            } else {
+                $('.Crayon').fadeOut({ queue: false, duration: 'slow' });
             }
         };
     </script>
@@ -83,125 +90,294 @@
                 </div>
             </td>
         </tr>
-
+    </table>
+    <table>
+        <tr>
+            <td class="lefttd">Platform</td>
+            <td>
+                <select name="platform" id="platform">
+                    <option selected="@(Model.ActionFailed && Model.Organization.Platform == "Enterprise")">Enterprise</option>
+                    <option selected="@(Model.ActionFailed && Model.Organization.Platform == "Hybrid")">Hybrid</option>
+                    <option selected="@(Model.ActionFailed && Model.Organization.Platform == "Cloud")">Cloud</option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td class="lefttd tooltip"><span>Initials<i class="material-icons infoicon">info</i></span></td>
             <td class="middletd">
-                <input name="initials" placeholder="XXX" @if (Model.ActionFailed) {  @: value="@Model.Organization.initials"
-                                                                                                            } />
+                @Html.EditorFor(m => m.Organization.initials, new { htmlAttributes = new { placeholder = "XXX" } })
                 <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         Specifies the initials that the organization will be created as. This is limited to be between 2 and 5 characters.
                     </p>
                 </div>
+                <div>@Html.ValidationMessageFor(m => m.Organization.initials, "", new { @class = "warning2" })</div>
             </td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Name<i class="material-icons infoicon">info</i></span></td>
             <td class="middletd">
-                <input name="name" placeholder="Contoso A/S" @if (Model.ActionFailed) {  @: value="@Model.Organization.Name"
-                                                                                                                                   } />
+                @Html.EditorFor(m => m.Organization.Name, new { htmlAttributes = new { placeholder = "Contoso A/S" } })
                 <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
                         Specifies the full name of the organization..
                     </p>
                 </div>
+                <div>@Html.ValidationMessageFor(m => m.Organization.Name, "", new { @class = "warning2" })</div>
             </td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Email Domain Name<i class="material-icons infoicon">info</i></span></td>
             <td class="middletd">
-                <input name="emaildomainname" placeholder="contoso.com" @if (Model.ActionFailed) {  @: value="@Model.Organization.EmailDomainName"
-                                                                                                               } />
+                @Html.EditorFor(m => m.Organization.EmailDomainName, new { htmlAttributes = new { placeholder = "contoso.com" } })
                 <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
-                        This is the primary e-mail domain that the customer will use..
+                        This is the primary e-mail domain that the customer will use. It will also be used to create the FQDN.
                     </p>
                 </div>
+                <div>@Html.ValidationMessageFor(m => m.Organization.EmailDomainName, "", new { @class = "warning2" })</div>
             </td>
         </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>Subnet<i class="material-icons infoicon">info</i></span></td>
-            <td class="middletd">
-                <input name="subnet" placeholder="172.25.185.0/24" id="subnet" @if (Model.ActionFailed) {  @: value="@Model.Organization.Subnet"
-                                                                                                                                      } />
-                <span id="mandatory_subnet" class="mandatory">*</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        The subnet has to be in the following format: xxx.xx.xxx.x/xx.
-                    </p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>VLan<i class="material-icons infoicon">info</i></span></td>
-            <td class="middletd">
-                <input name="vlan" placeholder="185" id="vlan" @if (Model.ActionFailed) {  @: value="@Model.Organization.Vlan"
-                                                                                                                                      } />
-                <span id="mandatory_vlan" class="mandatory">*</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        This is the Vlan used for the customer. It has to be specific for that customer.
-                    </p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>Gateway<i class="material-icons infoicon">info</i></span></td>
-            <td class="middletd">
-                <input name="gateway" placeholder="172.25.xxx.254" id="gateway" @if (Model.ActionFailed) {  @: value="@Model.Organization.Gateway"
-                                                                                                                                                             } />
-                <span id="mandatory_gateway" class="mandatory">*</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        This is the default Gateway used for the customer. It has to be specific for that customer.
-                    </p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>IPAddressRangeStart<i class="material-icons infoicon">info</i></span></td>
-            <td class="middletd">
-                <input name="ipaddressrangestart" placeholder="172.25.185.10" id="ipstart" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeStart"
-                                                                                                                                                             } />
-                <span id="mandatory_ipstart" class="mandatory">*</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        Usually we start the ip address range at xxx.xxx.xxx.10 -> 250. This way we can automate the gateway address.
-                    </p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>IPAddressRangeEnd<i class="material-icons infoicon">info</i></span></td>
-            <td class="middletd">
-                <input name="ipaddressrangeend" placeholder="172.25.185.250" id="ipend" @if (Model.ActionFailed) {  @: value="@Model.Organization.IPAddressRangeEnd"
-                                                                                                                                                             } />
-                <span id="mandatory_ipend" class="mandatory">*</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        The end range address..
-                    </p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="lefttd tooltip"><span>Create VMM Private Cloud<i class="material-icons infoicon">info</i></span></td>
-            <td>
-                <input name="createvmm" type="checkbox" id="createvmm" checked="checked" onchange="setGrey();" @if (Model.ActionFailed) { if (Model.Organization.CreateVMM) { @: checked="checked"
-                                                                                                                     } } /><span>Recommended!</span>
-                <div class="description">
-                    <p class="descriptiontext">
-                        If checked, we will also create the VMM Private Cloud, Vlan's, accounts, and service template..
-                    </p>
-                </div>
-            </td>
-        </tr>
-
     </table>
+    <div class="vmmfunction">
+        <table>
+            <tr>
+                <td class="lefttd tooltip"><span>Create VMM Cloud (recommended!)<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <div>
+                        <input name="createvmm" type="checkbox" id="createvmm" checked="checked" class="cbx hidden" onchange="hide();" />
+                        <label for="createvmm" class="lbl"></label>
+                    </div>
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If checked, we will also create the VMM Private Cloud, Vlan's, accounts, and service template..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr class="VMM">
+                <td class="lefttd tooltip"><span>Subnet<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.Organization.Subnet, new { htmlAttributes = new { id = "subnet", placeholder = "172.25.185.0/24" } })
+
+                    <span id="mandatory_subnet" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The subnet has to be in the following format: xxx.xx.xxx.x/xx.
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.Organization.Subnet, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+            <tr class="VMM">
+                <td class="lefttd tooltip"><span>VLan<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.Organization.Vlan, new { htmlAttributes = new { id = "vlan", placeholder = "185" } })
+
+                    <span id="mandatory_vlan" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the Vlan used for the customer. It has to be specific for that customer.
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.Organization.Vlan, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+            <tr class="VMM">
+                <td class="lefttd tooltip"><span>Gateway<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.Organization.Gateway, new { htmlAttributes = new { id = "gateway", placeholder = "172.25.xxx.254" } })
+
+                    <span id="mandatory_gateway" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This is the default Gateway used for the customer. It has to be specific for that customer.
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.Organization.Gateway, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+            <tr class="VMM">
+                <td class="lefttd tooltip"><span>IPAddressRangeStart<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.Organization.IPAddressRangeStart, new { htmlAttributes = new { id = "ipstart", placeholder = "172.25.185.50" } })
+                    <span id="mandatory_ipstart" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Usually we start the ip address range at xxx.xxx.xxx.50 -> 250. This way we can automate the gateway address.
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.Organization.IPAddressRangeStart, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+            <tr class="VMM">
+                <td class="lefttd tooltip"><span>IPAddressRangeEnd<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.Organization.IPAddressRangeEnd, new { htmlAttributes = new { id = "ipend", placeholder = "172.25.185.250" } })
+
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The end range address..
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.Organization.IPAddressRangeEnd, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="crayonfunction">
+        <table>
+            <tr>
+                <td class="lefttd"><span>Create Crayon CSP Tenant</span></td>
+                <td class="middletd">
+                    <div>
+                        <input name="createcrayon" type="checkbox" id="createcrayon" class="cbx hidden" onchange="hide();" />
+                        <label for="createcrayon" class="lbl"></label>
+                    </div>
+
+                    <div class="description">
+                        <p class="descriptiontext">
+                            If checked, we will also create the VMM Private Cloud, Vlan's, accounts, and service template..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <!--  Crayon tenant    -->
+            <tr class="Crayon" hidden>
+                <td class="lefttd">Invoice Profile</td>
+                <td class="middletd">
+                    <select name="InvoiceProfile" id="InvoiceProfile"><option>loading...</option></select>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr class="Crayon" hidden>
+                <td class="lefttd">Domain Prefix</td>
+                <td class="lefttdaccepteddomain">
+                    <input name="CrayonDomainPrefix" id="CrayonDomainPrefix" placeholder="Contoso" @if (Model.ActionFailed) { @: value="@Model.CrayonTenantDetailed.DomainPrefix"
+                                                                                        } />
+                </td>
+                <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;"><p><text>></text></p></td>
+                <td class="righttdaccepteddomain">
+                    <input readonly placeholder=".onmicrosoft.com" value=".onmicrosoft.com" />
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr class="Crayon" hidden>
+                <td class="lefttd tooltip"><span>Columbus First Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="CrayonFirstName" id="CrayonFirstName" placeholder="Annike" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.FirstName"
+                                                                                                                           } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The first name on the contact person at Columbus CIS.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd tooltip"><span>Columbus Last Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="CrayonLastName" id="CrayonLastName" placeholder="Fossing" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.LastName"
+                                                   } />
+                    <span id="mandatory_subnet" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The last name on the contact person at Columbus CIS.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd tooltip"><span>Columbus Email<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    @Html.EditorFor(m => m.CrayonTenantDetailed.Email, new { htmlAttributes = new { id = "CrayonEmail", placeholder = "driftenSystemHosting@columbusglobal.com" } })
+
+                    <span id="mandatory_vlan" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            the email at which we get information from Crayon on the customer, ex: driften@columbusglobal.com
+                        </p>
+                    </div>
+                    <div>@Html.ValidationMessageFor(m => m.CrayonTenantDetailed.Email, "", new { @class = "warning2" })</div>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd tooltip"><span>Columbus Phone Number<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="CrayonPhoneNumber" id="CrayonPhoneNumber" placeholder="+45 8188 8223" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.PhoneNumber"
+                                                                  } />
+                    <span id="mandatory_gateway" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The phone number in which Crayon can contact us. (Type in Annike's phone number).
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd"><span>End Customer First Name</span></td>
+                <td class="middletd">
+                    <input name="CrayonCustomerFirstName" placeholder="bob" id="CrayonCustomerFirstName" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.CustomerFirstName"
+                                                                                                                                                              } />
+                    <span id="mandatory_ipstart" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd"><span>End Customer Last Name</span></td>
+                <td class="middletd">
+                    <input name="CrayonCustomerLastName" placeholder="Lee Swagger" id="CrayonCustomerLastName" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.CustomerLastName"
+                                                                                             } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd"><span>End Customer Address</span></td>
+                <td class="middletd">
+                    <input name="CrayonAddressLine1" placeholder="Bobvej 1" id="CrayonAddressLine1" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.AddressLine1"
+                                                                                                                                                                          } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd"><span>End Customer City</span></td>
+                <td class="middletd">
+                    <input name="CrayonCity" placeholder="Søborg" id="CrayonCity" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.City"
+                                                                                                                                                     } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd tooltip"><span>End Customer Region<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="CrayonRegion" placeholder="Copenhagen" id="CrayonRegion" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.Region"
+                                                                   } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            It's mandatory so type in Copenhagen..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr class="Crayon" hidden>
+                <td class="lefttd"><span>End Customer Postal Code</span></td>
+                <td class="middletd">
+                    <input name="CrayonPostalCode" placeholder="2860" id="CrayonPostalCode" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenantDetailed.PostalCode"
+                                                      } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br/>
     <table>
         <tr>

@@ -1,0 +1,34 @@
+﻿@model ColumbusPortal.Models.ServiceModel
+@{
+    ViewBag.Title = "Service > Latest created VMs";
+}
+@section script {
+
+    <script>
+        $(document).ready(function () {
+
+            GetLatestVMs();
+
+        });
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>A short list of newly created VMs</p>
+<br />
+
+@using (Html.BeginForm("SCOMLatestVMs", "Service"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Latest Created VMs</legend>
+        <div id="loading" name="loading" class="loading">
+            <span><img src="~/Images/loading.gif" /></span>
+        </div>
+        <div class="latestvms" id="latestvms" name="latestvms" hidden></div>
+        <br />
+        <input type="button" class="button" id="buttonSubmit" value="Refresh List" onclick="ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); GetLatestVMs();" />
+    </fieldset>
+
+}

@@ -96,15 +96,17 @@ function Get-TenantBillingInformation {
         Set-StrictMode -Version 2
 
         $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine", "Get-SCCloud")
-        $Server= 'vmm-a.corp.systemhosting.dk'
+        $SCVMMServer= 'vmm-a.corp.systemhosting.dk'
         $Cred = Get-RemoteCredentials -SSS
 
+        import-module "C:\Program Files\Microsoft System Center 2016\Virtual Machine Manager\bin\Microsoft.SystemCenter.VirtualMachineManager.dll" -Cmdlet $Cmdlets
+        <#
         $module = Get-Module virtualmachinemanager -ErrorAction SilentlyContinue
         if (-not $module) {
             Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
         }
         $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
-        
+        #>
     }
 
     Process {
@@ -216,7 +218,7 @@ function Get-TenantBillingInformation {
         $LightUsers = Get-ADGroupMember -Credential $Cred -Server $Config.DomainDC -Identity G_LightUsers
 
         $FullADObjects = foreach ($i in $FullUsers) {
-        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
+        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, proxyAddresses, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
         }
 
         foreach ($user in $FullADObjects) {
@@ -225,8 +227,21 @@ function Get-TenantBillingInformation {
             $newFulluser.Disabled           = $user.Enabled
             $newFulluser.DisplayName        = $user.DisplayName
 
-            if($user.EmailAddress -eq $null){$newFulluser.PrimarySmtpAddress = 'Null'}
-            else{$newFulluser.PrimarySmtpAddress = $user.EmailAddress}
+            if (-not $user.EmailAddress) {
+
+                if (-not $user.proxyAddresses) {
+                    $newFulluser.PrimarySmtpAddress = 'Null'
+                }
+                elseif ($user.proxyAddresses -clike "SMTP:*") {
+                    $newFulluser.PrimarySmtpAddress = ($user.proxyAddresses -clike "SMTP:*").split(':')[1]
+                }
+                else {
+                    $newFulluser.PrimarySmtpAddress = ($user.proxyAddresses -clike "smtp:*")[0]
+                }
+            }
+            else {
+                $newFulluser.PrimarySmtpAddress = $user.EmailAddress
+            }
 
             $newFulluser.SAMAccountName     = $user.SamAccountName
             $newFulluser.Type               = $user.ObjectClass
@@ -236,7 +251,7 @@ function Get-TenantBillingInformation {
         }
 
         $LightADObjects = foreach ($i in $LightUsers) {
-        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
+        Get-ADUser -Credential $Cred -Server $Config.DomainDC -Identity $i.distinguishedName -Properties Name, DisplayName, Enabled, SamAccountName, UserPrincipalName, EmailAddress, proxyAddresses, ObjectClass | where{$_.Enabled -eq $true -and $_.DisplayName -notlike "*test*"}
         }
 
         foreach ($user in $LightADObjects) {
@@ -245,8 +260,21 @@ function Get-TenantBillingInformation {
             $newLightuser.Disabled           = $user.Enabled
             $newLightuser.DisplayName        = $user.DisplayName
 
-            if($user.EmailAddress -eq $null){$newLightuser.PrimarySmtpAddress = 'Null'}
-            else{$newLightuser.PrimarySmtpAddress = $user.EmailAddress}
+            if (-not $user.EmailAddress) {
+
+                if (-not $user.proxyAddresses) {
+                    $newLightuser.PrimarySmtpAddress = 'Null'
+                }
+                elseif ($user.proxyAddresses -clike "SMTP:*") {
+                    $newLightuser.PrimarySmtpAddress = ($user.proxyAddresses -clike "SMTP:*").split(':')[1]
+                }
+                else {
+                    $newLightuser.PrimarySmtpAddress = ($user.proxyAddresses -clike "smtp:*")[0]
+                }
+            }
+            else {
+                $newLightuser.PrimarySmtpAddress = $user.EmailAddress
+            }
 
             $newLightuser.SAMAccountName     = $user.SamAccountName
             $newLightuser.Type               = $user.ObjectClass

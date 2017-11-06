@@ -72,6 +72,8 @@
                 </div>
             </td>
         </tr>
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
             <td class="middletd">
@@ -79,9 +81,9 @@
                     @foreach (string organization in Model.Organizations)
                     {
                         <option @if (Model.ActionFailed) { if (organization == Model.DistributionGroup.Organization) { @: selected="selected"
-                                                                } }>
+                                                                                                } } value="@organization.Split(' ')[0]">
                             @organization
-                                                            </option>
+                        </option>
                     }
                 </select>
                 <span class="mandatory">*</span>
@@ -94,17 +96,17 @@
                 <span id="managermandatory" class="mandatory">*</span>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Group name</td>
-            <td><input name="name" placeholder="Den Gode Gruppe" @if (Model.ActionFailed)
-                                                                                   { 
-                                                                                       @:value="@Model.DistributionGroup.Name" 
-                                                                                   }/>
+            <td>
+                <input name="name" placeholder="Den Gode Gruppe" @if (Model.ActionFailed) { @: value="@Model.DistributionGroup.Name"
+                                                                                                          } />
                 <span class="mandatory">*</span>
             </td>
         </tr>
-        </table>
-        <table>
+    </table>
+
+        <table class="hide">
             <tr>
                 <td class="lefttd">Primary Email</td>
                 <td class="lefttdaccepteddomain">
@@ -117,19 +119,19 @@
                 </td>
             </tr>
         </table>
-    <table>
+    <table class="hide">
         <tr>
             <td class="lefttd">Allow external email delivery</td>
             <td class="middletd">
-                <input name="allowexternalemails" type="checkbox" @if (Model.ActionFailed) { if (Model.DistributionGroup.RequireSenderAuthentication) { @: checked="checked"
-                                                                                       } } />
+                <input name="allowexternalemails" id="allowexternalemails" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.DistributionGroup.RequireSenderAuthentication) { @: checked="checked"
+                                                                                       } } /><label for="allowexternalemails" class="lbl"></label><p></p>
 
             </td>
         </tr>
         <tr>
             <td class="lefttd tooltip"><span>Add Group Manager<i class="material-icons infoicon">info</i></span></td>
             <td>
-                <input name="manager" type="checkbox" id="addmanager" onchange="setGrey();" checked="checked" />
+                <input name="manager" type="checkbox" id="addmanager" class="cbx hidden" onchange="setGrey();" checked="checked" /><label for="addmanager" class="lbl"></label>
                 <div class="description">
                     <p class="descriptiontext">
                         Checked as default, as it is recommended.. Uncheck to not have a group manager set on the AD Group, Calendar teams and other Exchange related stuff will not work.
@@ -138,6 +140,15 @@
             </td>
         </tr>
     </table>
+    <div id="loading" name="loading" class="loading" hidden>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <span><img src="~/Images/loading.gif" /></span>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br />
     <input type="submit" class="button" value="Create Distribution Group" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

@@ -51,21 +51,21 @@
                 </div>
             </td>
         </tr>
-
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
-                @foreach(string organization in Model.Organizations) 
-                {
-                    <option @if(Model.ActionFailed)
-                            {
-                                if (organization == Model.MailboxPermission.Organization)
-                                {
-                                    @:selected="selected"
-                                }
-                            }>@organization</option>
-                }
-                </select></td>
+            <td>
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
+                    {
+                        <option @if (Model.ActionFailed) { if (organization == Model.MailboxPermission.Organization) { @: selected="selected"
+                                                                } } value="@organization.Split(' ')[0]">
+                            @organization
+                                                            </option>
+                    }
+                </select>
+            </td>
         </tr>
         <tr>
             <td class="lefttd">Mailbox</td>
@@ -76,30 +76,21 @@
         <tr>
             <td class="lefttd">FullAccess</td>
             <td>
-                <input name="fullaccess" type="checkbox" @if (Model.ActionFailed)
-                                                      {
-                                                          if (Model.MailboxPermission.FullAccess)
-                                                          {  
-                                                              @: checked="checked"
-                                                          } 
-                                                      } />
+                <input name="fullaccess" type="checkbox" @if (Model.ActionFailed) { if (Model.MailboxPermission.FullAccess) { @: checked="checked"
+                                                                                 } } />
             </td>
         </tr>
 
         <tr>
             <td class="lefttd">SendAs</td>
             <td>
-                <input name="sendas" type="checkbox" @if (Model.ActionFailed)
-                                                     {
-                                                         if (Model.MailboxPermission.SendAs)
-                                                         {  
-                                                             @: checked="checked"                                 
-                                                         } 
-                                                     } />
+                <input name="sendas" type="checkbox" @if (Model.ActionFailed) { if (Model.MailboxPermission.SendAs) { @: checked="checked"
+                                                                                } } />
             </td>
         </tr>
 
     </table>
+
     <br />
     <input type="submit" class="button" value="Add Mailbox Permission" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

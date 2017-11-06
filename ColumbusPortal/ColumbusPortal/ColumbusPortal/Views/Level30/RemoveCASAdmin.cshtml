@@ -60,15 +60,16 @@
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
                 <td class="middletd">
                     <select name="organization">
-                        @foreach (string organization in Model.ALLOrganizations)
+                        @foreach (string organization in Model.ALLCASOrganizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.CASAdminUser.Organization) { @: selected="selected"
-                                                                                                                                   } }>
+                                                                                        } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -86,7 +87,7 @@
 
         </table>
         <br />
-        <input type="submit" class="button" id="buttonSubmit" value="Remove CAS Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); this.form.submit()" />
+        <input type="submit" class="button" id="buttonSubmit" value="Remove CAS Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
     <br />
     <fieldset>

@@ -45,6 +45,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td>
@@ -60,7 +62,7 @@
                 <td class="lefttd tooltip"><span>Mail<i class="material-icons infoicon">info</i></span></td>
                 <td>
                     <input name="mail" placeholder="xxx@systemhosting.dk" @if (Model.ActionFailed) { @: value="@Model.ItemsReport.Mail"
-                                                                                                                                                                                          } />
+                                                                                                                                                                                                                     } />
                     <div class="description">
                         <p class="descriptiontext">
                             This will generate an HTML based email report with mail items, and send them to the specified email address..
@@ -72,9 +74,9 @@
                 <td class="lefttd tooltip"><span>Get the HUGE Report!!<i class="material-icons infoicon">info</i></span></td>
                 <td>
                     <input name="getall" type="checkbox" @if (Model.ActionFailed) { if (Model.ItemsReport.GetALL) { @: checked="checked"
-                                                                                                                      } } onclick="GetALL()" />
+                                                                                                                                                 } } onclick="GetALL()" />
                     <span class="warning">Please read the info first..</span>
-                        <div class="description">
+                    <div class="description">
                         <p class="descriptiontext">
                             If you check this, it will generate a BIG report on all customers on the platform.. It will take a long time before it will be finished, AND do some heavy lifting on both the SSS and CPO-EXCH-01...
                         </p>

@@ -1,0 +1,39 @@
+﻿@model ColumbusPortal.Models.CrayonModel
+@{
+    ViewBag.Title = "Crayon > CreateTenant > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Below Crayon tenant has been created. User/pass has also been saved to log and config.</p>
+
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                @if (Model.Message != null)
+            { <div class="message">@Model.Message</div> }
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Tenant Id:</td>
+            <td class="righttd">@Model.CrayonTenantDetailed.Id</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Tenant Name:</td>
+            <td class="righttd">@Model.CrayonTenantDetailed.Name</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Domain Prefix:</td>
+            <td class="righttd">@Model.CrayonTenantDetailed.DomainPrefix<span>.onmicrosoft.com</span></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Global Admin User:</td>
+            <td class="righttd">@Model.CrayonTenantDetailed.AdminUser</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Global Admin Password:</td>
+            <td class="righttd">@Model.CrayonTenantDetailed.AdminPass</td>
+        </tr>
+    </table>
+</fieldset>

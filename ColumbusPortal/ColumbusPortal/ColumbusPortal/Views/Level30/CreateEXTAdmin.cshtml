@@ -5,7 +5,7 @@
 @section script {
 <script>
         $(document).ready(function () {
-            var password = GeneratePassword()
+            var password = GeneratePassword('user');
             document.getElementById("password").value = password;
 
             var status = 'Scheduled';
@@ -84,15 +84,16 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
                 <td class="middletd">
                     <select name="organization">
                         @foreach (string organization in Model.ALLOrganizations)
                         {
-                            <option @if (Model.ActionFailed) { if (organization == Model.EXTAdminUser.Organization) {
-                                    @: selected="selected"
-                                                           } }>
+                            <option @if (Model.ActionFailed) { if (organization == Model.EXTAdminUser.Organization) { @: selected="selected"
+                                                                                               } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -117,7 +118,7 @@
                 <td class="lefttd">First name</td>
                 <td class="middletd">
                     <input name="firstname" id="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.FirstName"
-                                            } />
+                                                                       } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -125,7 +126,7 @@
                 <td class="lefttd">Last name</td>
                 <td class="middletd">
                     <input name="lastname" id="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.LastName"
-                                             } />
+                                                                        } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -133,7 +134,7 @@
                 <td class="lefttd">Company</td>
                 <td class="middletd">
                     <input name="company" id="company" placeholder="Contoso A/S" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.Company"
-                                         } />
+                                                                    } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -141,7 +142,7 @@
                 <td class="lefttd">SamAccountName</td>
                 <td class="middletd">
                     <input name="samaccountname" placeholder="EXTADMINXXX" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.SamAccountName"
-                                          } />
+                                                                     } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -149,7 +150,7 @@
                 <td class="lefttd">Password</td>
                 <td class="middletd">
                     <input name="password" id="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Password"
-                                                                                                                    } />
+                                                                                                                                               } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -157,7 +158,7 @@
                 <td class="lefttd">Email</td>
                 <td class="middletd">
                     <input name="email" id="email" placeholder="xxx@company.dk, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Email"
-                                              } />
+                                                                         } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -165,7 +166,7 @@
                 <td class="lefttd">Description</td>
                 <td class="middletd">
                     <input name="description" id="description" placeholder="used for bla bla, etc..." @if (Model.ActionFailed) { @: value="@Model.EXTAdminUser.Description"
-                                                                         } />
+                                                                                                    } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
@@ -173,14 +174,15 @@
                 <td class="lefttd"><span>Expiration Date<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
                     <input id="expiredate" name="expiredate" placeholder="YYYY-MM-DD" type="text" @if (Model.ActionFailed) {  @: value="@Model.EXTAdminUser.ExpireDate"
-                                                                                                                                                                                                                           } />
+                                                                                                                                                                                                                                                      } />
                     <span class="mandatory">*</span>
 
                 </td>
             </tr>
         </table>
+
         <br />
-        <input type="submit" class="button" id="buttonSubmit" value="Create EXT Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); this.form.submit()" />
+        <input type="submit" class="button" id="buttonSubmit" value="Create EXT Admin" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
     <br />
     <fieldset>

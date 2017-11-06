@@ -41,7 +41,7 @@ Import-Module (Join-Path $PSScriptRoot "Functions")
 
 $newUserParams = @{
     Organization       = $Organization
-    PrimarySmtpAddress = ($UserName + '@' + $DomainName)
+    PrimarySmtpAddress = "$($UserName)@$($DomainName)"
     FirstName          = $FirstName 
     LastName           = $LastName 
     Password           = $Password

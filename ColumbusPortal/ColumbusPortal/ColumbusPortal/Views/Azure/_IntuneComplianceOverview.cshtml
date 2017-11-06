@@ -1,0 +1,45 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Intune Policy Overview</legend>
+
+    @if (Model.ComplianceOverview.Count() != 0)
+    {
+
+        <table class="IntuneDevice">
+            <tr>
+                <td style="width: 30%"><b>Policy Name</b></td>
+                <td><b>Pending</b></td>
+                <td><b>Not Applicable</b></td>
+                <td><b>Success</b></td>
+                <td><b>Error</b></td>
+                <td><b>Failed</b></td>
+                <td><b>Last Update</b></td>
+            </tr>
+            @foreach (var item in Model.ComplianceOverview)
+            {
+                <tr>
+                    <td>@item.name</td>
+                    <td>@item.pendingCount</td>
+                    <td>@item.notApplicableCount</td>
+                    <td>@item.successCount</td>
+                    <td>@item.errorCount</td>
+                    <td>@item.failedCount</td>
+                    <td>@item.lastUpdateDateTime</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <table class="IntuneDevice">
+            <tr>
+                <td>
+                    IntuneDevice list is empty...
+                </td>
+            </tr>
+        </table>
+    }
+</fieldset>
+
+

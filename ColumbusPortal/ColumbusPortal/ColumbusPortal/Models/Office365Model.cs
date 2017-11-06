@@ -30,6 +30,7 @@ namespace ColumbusPortal.Models
     {
         public string Organization { get; set; }
         public string Policy { get; set; }
+        public bool Force { get; set; }
     }
 
 

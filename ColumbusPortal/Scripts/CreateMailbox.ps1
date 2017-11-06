@@ -31,7 +31,7 @@ Set-StrictMode -Version 2
 
 Import-Module (Join-Path $PSScriptRoot "Functions")
 
-$Config = Get-EntConfig -Organization $Organization
+$Config = Get-SQLEntConfig -Organization $Organization
 
 if ($config.ExchangeServer -eq $null -and $Config.TenantID -eq $null) {
 

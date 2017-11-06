@@ -51,6 +51,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
@@ -58,9 +60,9 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.ResetPWD.Organization) { @: selected="selected"
-                                                                            } }>
+                                                                                                                } } value="@organization.Split(' ')[0]">
                                 @organization
-                                                                        </option>
+                            </option>
                         }
                     </select>
                     <span class="mandatory">*</span>
@@ -75,29 +77,39 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr class="hide">
                 <td class="lefttd">New Password</td>
                 <td class="middletd">
                     <input name="password" placeholder="Something insane like Qwerty..." @if (Model.ActionFailed) {  @: value="@Model.ResetPWD.Password"
-                                                                                                                } />
+                                                                                                                                           } />
                     <span class="mandatory">*</span>
                 </td>
             </tr>
 
-        <tr>
-            <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
-            <td>
-                <input name="passwordneverexpires" type="checkbox" @if (Model.ActionFailed) { if (Model.ResetPWD.PasswordNeverExpires) { @: checked="checked"
-                                                                                              } } />
-                <div class="description">
-                    <p class="descriptiontext">
-                        Passwords will never expire if this is checked. This must be confirmed by the organization first.
-                    </p>
-                </div>
-            </td>
-        </tr>
+            <tr class="hide">
+                <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
+                <td>
+                    <input name="passwordneverexpires" id="passwordneverexpires" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.ResetPWD.PasswordNeverExpires) { @: checked="checked"
+                                                                                                                         } } />
+                    <label for="passwordneverexpires" class="lbl"></label>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Passwords will never expire if this is checked. This must be confirmed by the organization first.
+                        </p>
+                    </div>
+                </td>
+            </tr>
 
-    </table>
+        </table>
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     <br />
     <input type="submit" class="button" id="buttonSubmit" value="Reset Password" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

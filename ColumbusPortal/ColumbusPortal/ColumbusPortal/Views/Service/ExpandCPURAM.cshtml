@@ -8,10 +8,10 @@
     <script>
         $(document).ready(function () {
 
-            GetVMServerslvl25();
+            GetVMServers('lvl25');
 
             var job = 'expandcpuram'
-            GetScheduledJobs(job);
+            GetScheduledJobsJSON(job);
             $("#scheduledjobs").html("Loading...");
 
             $("select[name=vmid]").html('<option>loading, this could take some time, (VMM is sooo slow)......</option>').change(function () {
@@ -43,16 +43,6 @@
 
         $('#cpu').on('paste input', function () {
             var number = $(this).val()
-            if (isNaN(number)) {
-                $.alert({
-                    theme: 'light',
-                    type: 'red',
-                    typeAnimated: true,
-                    title: 'WARNING:',
-                    content: 'Enter only numbers!',
-                });
-                $(this).val('');
-            }
 
             if (number > 4) {
                 $.alert({
@@ -68,16 +58,6 @@
 
         $('#ram').on('paste input', function () {
             var number = $(this).val()
-            if (isNaN(number)) {
-                $.alert({
-                    theme: 'light',
-                    type: 'red',
-                    typeAnimated: true,
-                    title: 'WARNING:',
-                    content: 'Enter only numbers!',
-                });
-                $(this).val('');
-            }
 
             if (number > 16) {
                 $.alert({
@@ -136,7 +116,7 @@
             </tr>
         </table>
     </fieldset>
-    <fieldset>
+    <fieldset  class="hide">
         <legend class="sublegend">Current VM configuration</legend>
         <table>
             <tr>
@@ -148,7 +128,7 @@
     </fieldset>
     <fieldset>
         <table>
-            <tr>
+            <tr class="hide">
                 <td class="longtd">
                     <span class="warning2">If ex. CPU count should stay the same, enter the current core number instead of nothing. Every field must be filled out.</span>
                 </td>
@@ -156,21 +136,20 @@
         </table>
         <br />
         <table>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd"><span>Opgave nr<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
-                    <input id="taskid" name="taskid" placeholder="109000" type="text" 
-                           @if (Model.ActionFailed) {  @: value="@Model.ExpandCPURAM.TaskID"
-                           } />
+                    @Html.EditorFor(m => m.ExpandCPURAM.TaskID, new { htmlAttributes = new { placeholder = "109000" } })
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter TaskID (Opgave nr.) from Navision..
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandCPURAM.TaskID, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd"><span>Date & Time<i class="material-icons infoicon"></i></span></td>
                 <td class="middletd">
                     <input id="datetime" name="datetime" placeholder="YYYY-MM-DD 00:00" type="text" 
@@ -180,14 +159,10 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr class="hide">
                 <td class="lefttd tooltip"><span>Expand CPU to<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="cpu" placeholder="4" type="number" min="1" id="cpu" class="cpuwarning" required
-                           
-                            
-                           @if (Model.ActionFailed) {  @: value="@Model.ExpandCPURAM.CPU" 
-                                                                                            } />
+                    @Html.EditorFor(m => m.ExpandCPURAM.CPU, new { htmlAttributes = new { name = "cpu", id = "cpu", placeholder = "4", type = "number", @class = "ramwarning" } })
                     <span class="mandatory">*</span>
 
                     <div class="description">
@@ -195,38 +170,46 @@
                             Enter the CPU cores you want to assign.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandCPURAM.CPU, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd tooltip"><span>Expand RAM to<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="ram" placeholder="4" type="number" min="2" id="ram" class="ramwarning" required
-                           @if (Model.ActionFailed) {  @: value="@Model.ExpandCPURAM.RAM"
-                                                                                            } />
+                    @Html.EditorFor(m => m.ExpandCPURAM.RAM, new { htmlAttributes = new { name = "ram", id = "ram", placeholder = "4", type = "number", @class = "ramwarning" } })
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter the RAM in whole GB's you want to assign ex 8.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandCPURAM.RAM, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
 
-            <tr>
+            <tr class="hide">
                 <td class="lefttd tooltip"><span>Email to Notify<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="email" placeholder="xxx@columbusglobal.com" type="email"
-                           @if (Model.ActionFailed) {  @: value="@Model.ExpandCPURAM.Email"
-                                                                                            } />
+                    @Html.EditorFor(m => m.ExpandCPURAM.Email, new { htmlAttributes = new { name = "email", id = "email", placeholder = "xxx@columbusglobal.com" } })
                     <span class="mandatory">*</span>
                     <div class="description">
                         <p class="descriptiontext">
                             Enter the email which will be notified when task is complete.
                         </p>
                     </div>
+                    <div>@Html.ValidationMessageFor(m => m.ExpandCPURAM.Email, "", new { @class = "warning2" })</div>
                 </td>
             </tr>
         </table>
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br />
     <input type="submit" class="button" id="buttonSubmit" value="Expand CPU/RAM" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>
@@ -239,6 +222,7 @@
             </td>
         </tr>
     </table>
+    <input type="button" name="buttonRemove" id="buttonRemove" class="button" value="Remove Selected Schedules" onclick="RemoveSelectedSchedules('expandcpuram')" hidden />
 </fieldset>
 
 }

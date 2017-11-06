@@ -69,23 +69,24 @@
                 </div>
             </td>
         </tr>
-
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
-            <td><select name="organization">
-                @foreach (string organization in Model.Organizations)
+            <td>
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
                 {
-                    <option @if (Model.ActionFailed)
-                            {
-                                if (organization == Model.MailboxAutoResize.Organization)
-                                {
-                                    @:selected="selected"
-                                }
-                            }>@organization</option>
-                }
-                </select></td>
+                        <option @if (Model.ActionFailed) { if (organization == Model.MailboxAutoResize.Organization) { @: selected="selected"
+                                                                } }>
+                            @organization
+                                                            </option>
+                    }
+                </select>
+            </td>
         </tr>
     </table>
+
     <input type="hidden" name="exclude" value="Not Set" />
     <br />
     <input type="submit" class="button" class:hover="button:hover" value="Enable Mailbox Auto Resize" id="buttonEnable" onclick="StartSubmitButtonMessage(); SubmitEnable()" />

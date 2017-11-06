@@ -4,61 +4,41 @@
 }
 @section script {
 
-    <script>
-        window.onload = function () {
-           // $('#adsync').change();
-            // Triggers the change event on page load..
-        };
+<script>
+    $(document).ready(function () {
 
-        $(document).ready(function () {
+        if (navigator.userAgent.match(/Trident\/|MSIE /)) { alert('This page is not supported in Internet Explorer!! Please use Chrome, EDGE or Firefox'); }
             
-            $("select[name=organization]").change(function () {
+        $("select[name=organization]").change(function () {
 
-                document.getElementById("Name").value = 'Contacting Database, please wait';
-                document.getElementById("UserContainer").value = 'Contacting Database, please wait';
-                document.getElementById("DomainFQDN").value = 'Contacting Database, please wait';
-                document.getElementById("ExchangeServer").value = 'Contacting Database, please wait';
-                document.getElementById("NETBIOS").value = 'Contacting Database, please wait';
-                document.getElementById("CustomerOUDN").value = 'Contacting Database, please wait';
-                document.getElementById("AdminUserOUDN").value = 'Contacting Database, please wait';
-                document.getElementById("ExternalUserOUDN").value = 'Contacting Database, please wait';
-                document.getElementById("TenantID").value = 'Contacting Database, please wait';
-                document.getElementById("AdminUser").value = 'Contacting Database, please wait';
-                document.getElementById("AdminPass").value = 'Contacting Database, please wait';
-                document.getElementById("AADsynced").value = 'Contacting Database, please wait';
-                document.getElementById("ADConnectServer").value = 'Contacting Database, please wait';
-                document.getElementById("DomainDC").value = 'Contacting Database, please wait';
-                document.getElementById("NavMiddleTier").value = 'Contacting Database, please wait';
-                document.getElementById("SQLServer").value = 'Contacting Database, please wait';
-                document.getElementById("AdminRDS").value = 'Contacting Database, please wait';
-                document.getElementById("AdminRDSPort").value = 'Contacting Database, please wait';
-                document.getElementById("EmailDomains").value = 'Contacting Database, please wait';
-
-                GetCurrentConfLIST()
-                
-            });
             GetCurrentConfLIST()
+                
+        });
+        GetCurrentConfLIST()
 
-            
-
-           /* $('#AADsynced').on('change', function () {
-                if ( this.value == 'True' || this.value == null)
-                    //.....................^.......
-                {
-                    $("#adsyncserver").show();
-                    $("#mandatory_syncserver").show();
-                    $("#adconnecttable").show();
-                }
-                else
-                {
-                    $("#adsyncserver").hide();
-                    $("#mandatory_syncserver").hide();
-                    $("#adconnecttable").hide();
-                }
-            });*/
+        $('#Platform').on('change', function () {
+            if ( this.value == 'Cloud')
+            {
+                $('.enterprise').hide();
+                $('.hybrid').hide();
+                $('.cloud').fadeIn({ duration: 'slow' });
+            }
+            if (this.value == 'Hybrid')
+            {
+                $('.enterprise').fadeIn({ duration: 'slow' });
+                $('.hybrid').fadeIn({ duration: 'slow' });
+                $('.cloud').fadeIn({ duration: 'slow' });
+            }
+            if (this.value == 'Enterprise')
+            {
+                $('.hybrid').hide();
+                $('.cloud').hide();
+                $('.enterprise').fadeIn({ duration: 'slow' });
+            }
+        });
     });
 
-    </script>
+</script>
 }
 
 <h1 class="title">@ViewBag.Title</h1>
@@ -93,15 +73,16 @@
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd"><span>Organization</span></td>
                 <td class="middletd">
                     <select name="organization">
-                        @foreach (string organization in Model.Organizations)
+                        @foreach (string organization in Model.ALLOrganizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.UpdateConf.Organization) { @: selected="selected"
-                                                                                                                                            } }>
+                                                                                                        } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -109,10 +90,22 @@
                     <span class="mandatory">*</span>
                 </td>
             </tr>
+        </table>
+        <table class="Conf" hidden>
+            <tr>
+                <td class="lefttd">Platform</td>
+                <td>
+                    <select name="Platform" id="Platform">
+                        <option value="Enterprise" selected="@(Model.ActionFailed && Model.UpdateConf.Platform == "Enterprise")">Enterprise</option>
+                        <option value="Hybrid" selected="@(Model.ActionFailed && Model.UpdateConf.Platform == "Hybrid")">Hybrid</option>
+                        <option value="Cloud" selected="@(Model.ActionFailed && Model.UpdateConf.Platform == "Cloud")">Cloud</option>
+                    </select>
+                </td>
+            </tr>
             <tr>
                 <td class="lefttd tooltip"><span>Customer Name<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="name" id="Name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.Name"
+                    <input name="Name" id="Name" placeholder="Microsoft A/S" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.Name"
                                           } />
 
                     <div class="description">
@@ -122,10 +115,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="ExchangeServerTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>Exchange Server (FQDN)<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="exchangeserver" id="ExchangeServer" placeholder="XXX-exch-01.XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
+                    <input name="ExchangeServer" id="ExchangeServer" placeholder="XXX-exch-01.XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ExchangeServer"
                                                                                                                                                               } />
 
                     <div class="description">
@@ -135,10 +128,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="DomainFQDNTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>Domain FQDN<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="domainfqdn" id="DomainFQDN" placeholder="XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
+                    <input name="DomainFQDN" id="DomainFQDN" placeholder="XXX.XXX.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainFQDN"
                                                                                                                                                       } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -147,17 +140,17 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="NETBIOSTR" class="enterprise hybrid">
                 <td class="lefttd"><span>Domain NETBIOS</span></td>
                 <td class="middletd">
-                    <input name="netbios" id="NETBIOS" placeholder="CORP" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NETBIOS"
+                    <input name="NETBIOS" id="NETBIOS" placeholder="CORP" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NETBIOS"
                                                                                                                                                                                  } />
                 </td>
             </tr>
-            <tr>
+            <tr id="UserContainerTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>User OU DN<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="usercontainer" id="UserContainer" placeholder="OU=Users,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.UserContainer"
+                    <input name="UserContainer" id="UserContainer" placeholder="OU=Users,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.UserContainer"
                                                                                } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -166,10 +159,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="CustomerOUDNTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>Customer OU DN<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="customeroudn" id="CustomerOUDN" placeholder="OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                    <input name="CustomerOUDN" id="CustomerOUDN" placeholder="OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
                                                                                                           } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -178,10 +171,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="AdminUserOUDNTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>Internal Admin OU DN<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="adminuseroudn" id="AdminUserOUDN" placeholder="OU=Admins,OU=SYSTEMHOSTING,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                    <input name="AdminUserOUDN" id="AdminUserOUDN" placeholder="OU=Admins,OU=SYSTEMHOSTING,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
                                                                                                                                                                                                         } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -190,10 +183,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="ExternalUserOUDNTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>External User OU DN<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="externaluseroudn" id="ExternalUserOUDN" placeholder="OU=EXTERNAL,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
+                    <input name="ExternalUserOUDN" id="ExternalUserOUDN" placeholder="OU=EXTERNAL,OU=CUSTOMER,DC=XXX,DC=XXX,DC=dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.CustomerOUDN"
                                                                                                                                                                                                         } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -202,10 +195,10 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td class="lefttd tooltip"><span>365 TenantID<i class="material-icons infoicon">info</i></span></td>
+            <tr id="TenantIDTR" class="hybrid cloud">
+                <td class="lefttd tooltip"><span>Azure TenantID<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
-                    <input name="tenantid" id="TenantID" placeholder="43eea929-d726-4742-83a9-603c12a0d195" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.TenantID"
+                    <input name="TenantID" id="TenantID" placeholder="43eea929-d726-4742-83a9-603c12a0d195" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.TenantID"
                                                                           } />
                     <div class="description">
                         <p class="descriptiontext">
@@ -214,72 +207,117 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td class="lefttd">365 Admin User</td>
+            <tr id="AdminUserTR" class="hybrid cloud">
+                <td class="lefttd">Azure Admin User</td>
                 <td class="middletd">
-                    <input name="adminuser" id="AdminUser" placeholder="admin@XXX.onmicrosoft.com" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminUser"
+                    <input name="AdminUser" id="AdminUser" placeholder="admin@XXX.onmicrosoft.com" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminUser"
                                                                              } />
                 </td>
             </tr>
-            <tr>
-                <td class="lefttd">365 Admin Pass</td>
+            <tr id="AdminPassTR" class="hybrid cloud">
+                <td class="lefttd">Azure Admin Pass</td>
                 <td class="middletd">
-                    <input name="adminpass" id="AdminPass" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminPass"
+                    <input name="AdminPass" id="AdminPass" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminPass"
                                                                              } />
                 </td>
             </tr>
-            <tr>
+            <tr id="AppIDTR" class="hybrid cloud">
+                <td class="lefttdhelp helptooltip">Azure App ID<i class="material-icons infoicon">info</i></td>
+                <td class="middletd">
+                    <input name="AppID" id="AppID" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AppID"
+                                                                                                        } />
+                    <div class="infohelp">
+                        <p class="infohelptext">
+                            <br />
+                        <p>In the Azure Portal, start by creating a new APP Registration..</p>
+                        <p><img src="~/Images/Azure/AzureAPP.PNG" width="700" /></p>
+                        <br />
+                        <p>Please call the App "ColumbusPowershell" so that we can reference it between customers.</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP2.PNG" width="300" /></p>
+                        <br />
+                        <p>After creation the application ID is what goes into this field. But we are NOT done!</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP3.PNG" width="700" /></p>
+                        <br />
+                        <p>Chose Required Permission, and select everything. All API's and all permissions.</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP4.PNG" width="700" /></p>
+                        <br />
+                        <p>After this click grant permissions, so that the permissions will be forced through.</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP5.PNG" width="700" /></p>
+                        <br />
+                        <p>Click "Keys", give a description and a long expire time!, click save and copy the key Secret.</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP6.PNG" width="700" /></p>
+                        <br />
+                        <p>You will not be able to retrieve the secret key after this, so remember to put in the field below here!.</p>
+                        <br />
+                        <p><img src="~/Images/Azure/AzureAPP7.PNG" width="700" /></p>
+                        <br />
+                    </div>
+                </td>
+            </tr>
+            <tr id="AppSecretTR" class="hybrid cloud">
+                <td class="lefttd">Azure App Secret</td>
+                <td class="middletd">
+                    <input name="AppSecret" id="AppSecret" placeholder="XXXXXXXX" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AppSecret"
+                                                                                                        } />
+                </td>
+            </tr>
+            <tr id="AADsyncedTR" class="hybrid">
                 <td class="lefttd">AADSynced</td>
                 <td>
-                    <select name="aadsynced" id="AADsynced" >
+                    <select name="AADsynced" id="AADsynced" >
                         <option selected="@(Model.ActionFailed && Model.UpdateConf.AADsynced == "False")">False</option>
                         <option selected="@(Model.ActionFailed && Model.UpdateConf.AADsynced == "True")">True</option>
                     </select>
                 </td>
             </tr>
-            <tr id="adconnecttable">
+            <tr id="ADConnectServerTR" class="hybrid">
                 <td class="lefttd">ADConnect Server</td>
                 <td class="middletd">
-                    <input id="ADConnectServer" name="adconnectserver" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ADConnectServer"
+                    <input id="ADConnectServer" name="ADConnectServer" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.ADConnectServer"
                                                                                       } />
                 </td>
             </tr>
-            <tr>
+            <tr id="DomainDCTR" class="enterprise hybrid">
                 <td class="lefttd">AD Server</td>
                 <td class="middletd">
-                    <input name="domaindc" id="DomainDC" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainDC"
+                    <input name="DomainDC" id="DomainDC" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.DomainDC"
                                                                                       } />
                 </td>
             </tr>
-            <tr>
+            <tr id="NavMiddleTierTR" class="enterprise hybrid">
                 <td class="lefttd">Nav Middle Tier</td>
                 <td class="middletd">
-                    <input name="navmiddletier" id="NavMiddleTier" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NavMiddleTier"
+                    <input name="NavMiddleTier" id="NavMiddleTier" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.NavMiddleTier"
                                                                                                                  } />
                 </td>
             </tr>
-            <tr>
+            <tr id="SQLServerTR" class="enterprise hybrid">
                 <td class="lefttd">SQL Server</td>
                 <td class="middletd">
-                    <input name="sqlserver" id="SQLServer" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.SQLServer"
+                    <input name="SQLServer" id="SQLServer" placeholder="xxx-xx-xx.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.SQLServer"
                                                                                                                  } />
                 </td>
             </tr>
-            <tr>
+            <tr id="AdminRDSTR" class="enterprise hybrid">
                 <td class="lefttd">Admin RDS</td>
                 <td class="middletd">
-                    <input name="adminrds" id="AdminRDS" placeholder="xxx-AdminRDS-01.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDS"
+                    <input name="AdminRDS" id="AdminRDS" placeholder="xxx-AdminRDS-01.corp.xxxxxxx.dk" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDS"
                                                                                                                  } />
                 </td>
             </tr>
-            <tr>
+            <tr id="AdminRDSPortTR" class="enterprise hybrid">
                 <td class="lefttd">Admin RDS Port</td>
                 <td class="middletd">
-                    <input name="adminrdsport" id="AdminRDSPort" placeholder="3389" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDSPort"
+                    <input name="AdminRDSPort" id="AdminRDSPort" placeholder="3389" @if (Model.ActionFailed) {  @: value="@Model.UpdateConf.AdminRDSPort"
                                                                                                                  } />
                 </td>
             </tr>
-            <tr>
+            <tr id="EmailDomainsTR" class="enterprise hybrid">
                 <td class="lefttd tooltip"><span>Domains<i class="material-icons infoicon">info</i></span></td>
                 <td class="middletd">
                     @if (Model.ActionFailed)
@@ -288,7 +326,7 @@
                     }
                     else
                     {
-                        <textarea name="emaildomains" rows="5" id="EmailDomains" placeholder="Write one domain per line"></textarea>
+                        <textarea name="EmailDomains" rows="5" id="EmailDomains" placeholder="Write one domain per line"></textarea>
                     }
 
                     <div class="description">
@@ -304,9 +342,49 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table class="Conf" hidden>
+            <tr id="AzureServiceTR" class="hybrid cloud">
+                <td class="lefttd">Services</td>
+                <td class="middletdservices">
+                    <div class="tableservices">
+                        <table>
+                            <tr>
+                                <td class="lefttdservices">Office 365</td>
+                                <td class="righttdservices">
 
+                                    <input name="service365" id="service365" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.UpdateConf.Service365) { @: checked="checked"
+                                                                                            } } /><label for="service365" class="lbl"></label>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="lefttdservices">Virtual Machines (Azure Compute)</td>
+                                <td class="righttdservices">
+
+                                    <input name="servicecompute" id="servicecompute" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.UpdateConf.ServiceCompute) { @: checked="checked"
+                                                 } } /><label for="servicecompute" class="lbl"></label>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="lefttdservices">Microsoft Intune</td>
+                                <td class="righttdservices">
+
+                                    <input name="serviceintune" id="serviceintune" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.UpdateConf.ServiceIntune) { @: checked="checked"
+                                                                                            } } /><label for="serviceintune" class="lbl"></label>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
         </table>
         <br />
+        <div id="loading" name="loading" class="loading" hidden>
+            <span><img src="~/Images/loading.gif" /></span>
+        </div>
         <input type="submit" class="button" id="buttonSubmit" value="Update Configuration" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>
 

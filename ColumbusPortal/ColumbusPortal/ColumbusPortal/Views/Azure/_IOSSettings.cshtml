@@ -1,0 +1,934 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">General (IOS)</legend>
+    <table>
+        <!--#################### IOS CONFIGURATION ####################-->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Share usage data<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="diagnosticDataBlockSubmission" id="diagnosticDataBlockSubmission">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.diagnosticDataBlockSubmission == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.diagnosticDataBlockSubmission == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the device from sending diagnostic and usage telemetry data.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Diagnostics submission settings modification (supervised only)<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="diagnosticDataBlockSubmissionModification" id="diagnosticDataBlockSubmissionModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.diagnosticDataBlockSubmissionModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.diagnosticDataBlockSubmissionModification == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Block the modification of the diagnostic submission and app analytics settings in the Diagnostics and Usage pane in Settings.</p>
+                    <p class="descriptiontext">To use this setting, the device must be in supervised mode (iOS 9.3.2+).</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Screen capture</td>
+            <td class="righttdsettings">
+                <select name="iosscreenCaptureBlocked" id="iosscreenCaptureBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iosscreenCaptureBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iosscreenCaptureBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Remote screen observation by Classroom app (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="classroomAppBlockRemoteScreenObservation" id="classroomAppBlockRemoteScreenObservation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.classroomAppBlockRemoteScreenObservation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.classroomAppBlockRemoteScreenObservation == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Unprompted screen observation by Classroom app<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="classroomAppForceUnpromptedScreenObservation" id="classroomAppForceUnpromptedScreenObservation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.classroomAppForceUnpromptedScreenObservation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.classroomAppForceUnpromptedScreenObservation == "True")" value="True">Allow</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Student devices enrolled in a class via the Classroom app will automatically give permission to that course’s teacher to silently observe the student’s screen.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Untrusted TLS certificates</td>
+            <td class="righttdsettings">
+                <select name="certificatesBlockUntrustedTlsCertificates" id="certificatesBlockUntrustedTlsCertificates">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.certificatesBlockUntrustedTlsCertificates == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.certificatesBlockUntrustedTlsCertificates == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings tooltip">Enterprise app trust<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="enterpriseAppBlockTrust" id="enterpriseAppBlockTrust">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.enterpriseAppBlockTrust == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.enterpriseAppBlockTrust == "True")" value="True">Block</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Removes the Trust Enterprise Developer button in Settings->General->Profiles & Device Management.</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Account modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="accountBlockModification" id="accountBlockModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.accountBlockModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.accountBlockModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Enabling restrictions in the device settings (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="deviceBlockEnableRestrictions" id="deviceBlockEnableRestrictions">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockEnableRestrictions == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockEnableRestrictions == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Use of the erase all content and settings option on the device (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="deviceBlockEraseContentAndSettings" id="deviceBlockEraseContentAndSettings">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockEraseContentAndSettings == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockEraseContentAndSettings == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Device name modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="deviceBlockNameModification" id="deviceBlockNameModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockNameModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.deviceBlockNameModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Notification settings modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="notificationsBlockSettingsModification" id="notificationsBlockSettingsModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.notificationsBlockSettingsModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.notificationsBlockSettingsModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Wallpaper modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="wallpaperBlockModification" id="wallpaperBlockModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wallpaperBlockModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wallpaperBlockModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Enterprise app trust settings modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="enterpriseAppBlockTrustModification" id="enterpriseAppBlockTrustModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.enterpriseAppBlockTrustModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.enterpriseAppBlockTrustModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Configuration profile changes</td>
+            <td class="righttdsettings">
+                <select name="configurationProfileBlockChanges" id="configurationProfileBlockChanges">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.configurationProfileBlockChanges == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.configurationProfileBlockChanges == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Activation Lock (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="activationLockAllowWhenSupervised" id="activationLockAllowWhenSupervised">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.activationLockAllowWhenSupervised == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.activationLockAllowWhenSupervised == "True")" value="True">Allow</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Password (IOS)</legend>
+    <table>
+        <!-- Password -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Password</td>
+            <td class="righttdsettings">
+                <select name="passcodeRequired" id="passcodeRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeRequired == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Simple passwords</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeBlockSimple" id="passcodeBlockSimple">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockSimple == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockSimple == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeRequiredType" id="passcodeRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeRequiredType == "deviceDefault")" value="deviceDefault">deviceDefault</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeRequiredType == "numeric")" value="numeric">Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeRequiredType == "alphanumeric")" value="alphanumeric">Alphanumeric</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Number of non-alphanumeric characters in password</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeMinimumCharacterSetCount" id="passcodeMinimumCharacterSetCount">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinimumCharacterSetCount == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinimumCharacterSetCount == "1")" value="1">1</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinimumCharacterSetCount == "2")" value="2">2</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinimumCharacterSetCount == "3")" value="3">3</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinimumCharacterSetCount == "4")" value="4">4</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodeMinimumLength" name="passcodeMinimumLength" placeholder="Number (4-14)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passcodeMinimumLength"
+                                                                                                           } />
+            </td>
+        </tr>
+
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Number of sign-in failures before wiping device</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodeSignInFailureCountBeforeWipe" name="passcodeSignInFailureCountBeforeWipe" placeholder="Number (4-11)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passcodeSignInFailureCountBeforeWipe"
+                                                                                                                                      } />
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Maximum minutes after screen lock before password is required</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeMinutesOfInactivityBeforeLock" id="passcodeMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "0")" value="0">Immidiately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity until screen locks</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeMinutesOfInactivityBeforeScreenTimeout" id="passcodeMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "0")" value="0">Immidiately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "2")" value="2">2 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "3")" value="3">3 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "4")" value="4">4 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "10")" value="10">10 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodeExpirationDays" name="passcodeExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passcodeExpirationDays"
+                                                                                                                                                                                    } />
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings"><span>Prevent reuse of previous passwords</span></td>
+            <td class="righttdsettings">
+                <input class="IOSPassword" type="number" id="passcodePreviousPasscodeBlockCount" name="passcodePreviousPasscodeBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.passcodePreviousPasscodeBlockCount"
+                                                                                                                                                                                            } />
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Fingerprint unlock</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeBlockFingerprintUnlock" id="passcodeBlockFingerprintUnlock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockFingerprintUnlock == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockFingerprintUnlock == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Passcode modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeBlockModification" id="passcodeBlockModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Fingerprint modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select class="IOSPassword" name="passcodeBlockFingerprintModification" id="passcodeBlockFingerprintModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockFingerprintModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.passcodeBlockFingerprintModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Control Center access while device locked</td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockControlCenter" id="lockScreenBlockControlCenter">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockControlCenter == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockControlCenter == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Notifications while device locked</td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockNotificationView" id="lockScreenBlockNotificationView">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockNotificationView == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockNotificationView == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Passbook while device locked</td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockPassbook" id="lockScreenBlockPassbook">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockPassbook == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockPassbook == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Today view while device locked</td>
+            <td class="righttdsettings">
+                <select name="lockScreenBlockTodayView" id="lockScreenBlockTodayView">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockTodayView == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.lockScreenBlockTodayView == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">App Store (IOS)</legend>
+    <table>
+        <!-- App Store -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">App store</td>
+            <td class="righttdsettings">
+                <select name="appStoreBlocked" id="appStoreBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Installing apps from App Store (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="appStoreBlockUIAppInstallation" id="appStoreBlockUIAppInstallation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockUIAppInstallation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockUIAppInstallation == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Automatic app downloads (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="appStoreBlockAutomaticDownloads" id="appStoreBlockAutomaticDownloads">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockAutomaticDownloads == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockAutomaticDownloads == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Password to access app store</td>
+            <td class="righttdsettings">
+                <select name="appStoreRequirePassword" id="appStoreRequirePassword">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreRequirePassword == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreRequirePassword == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">In-app purchases</td>
+            <td class="righttdsettings">
+                <select name="appStoreBlockInAppPurchases" id="appStoreBlockInAppPurchases">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockInAppPurchases == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appStoreBlockInAppPurchases == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Explicit iTunes music, podcast, or news content</td>
+            <td class="righttdsettings">
+                <select name="iTunesBlockExplicitContent" id="iTunesBlockExplicitContent">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockExplicitContent == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockExplicitContent == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Download content from iBook store flagged as 'Erotica' (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="iBooksStoreBlockErotica" id="iBooksStoreBlockErotica">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iBooksStoreBlockErotica == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iBooksStoreBlockErotica == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Viewing corporate documents in unmanaged apps</td>
+            <td class="righttdsettings">
+                <select name="documentsBlockManagedDocumentsInUnmanagedApps" id="documentsBlockManagedDocumentsInUnmanagedApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.documentsBlockManagedDocumentsInUnmanagedApps == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.documentsBlockManagedDocumentsInUnmanagedApps == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Viewing non-corporate documents in corporate apps</td>
+            <td class="righttdsettings">
+                <select name="documentsBlockUnmanagedDocumentsInManagedApps" id="documentsBlockUnmanagedDocumentsInManagedApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.documentsBlockUnmanagedDocumentsInManagedApps == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.documentsBlockUnmanagedDocumentsInManagedApps == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Treat AirDrop as an unmanaged destination</td>
+            <td class="righttdsettings">
+                <select name="airDropForceUnmanagedDropTarget" id="airDropForceUnmanagedDropTarget">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airDropForceUnmanagedDropTarget == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airDropForceUnmanagedDropTarget == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Adding Game Center friends</td>
+            <td class="righttdsettings">
+                <select name="gamingBlockGameCenterFriends" id="gamingBlockGameCenterFriends">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gamingBlockGameCenterFriends == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gamingBlockGameCenterFriends == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Game Center (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="gameCenterBlocked" id="gameCenterBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gameCenterBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gameCenterBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Multiplayer Gaming</td>
+            <td class="righttdsettings">
+                <select name="gamingBlockMultiplayer" id="gamingBlockMultiplayer">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gamingBlockMultiplayer == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.gamingBlockMultiplayer == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Apps</td>
+            <td class="righttdsettings">
+                <select name="mediaContentRatingApps" id="mediaContentRatingApps">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "allAllowed")" value="allAllowed">All Allowed</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "agesAbove4")" value="agesAbove4">4+</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "agesAbove9")" value="agesAbove9">9+</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "agesAbove12")" value="agesAbove12">12+</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "agesAbove17")" value="agesAbove17">17+</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.mediaContentRatingApps == "allBlocked")" value="allBlocked">All Blocked</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Build-in Apps (IOS)</legend>
+    <table>
+        <!-- Build-in Apps-->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Camera</td>
+            <td class="righttdsettings">
+                <select name="ioscameraBlocked" id="ioscameraBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscameraBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscameraBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">FaceTime</td>
+            <td class="righttdsettings">
+                <select name="faceTimeBlocked" id="faceTimeBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.faceTimeBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.faceTimeBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Siri</td>
+            <td class="righttdsettings">
+                <select name="siriBlocked" id="siriBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Siri while device is locked</td>
+            <td class="righttdsettings">
+                <select name="siriBlockedWhenLocked" id="siriBlockedWhenLocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlockedWhenLocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlockedWhenLocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Siri profanity filter (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="siriRequireProfanityFilter" id="siriRequireProfanityFilter">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriRequireProfanityFilter == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriRequireProfanityFilter == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Siri to query user-generated content from the internet (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="siriBlockUserGeneratedContent" id="siriBlockUserGeneratedContent">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlockUserGeneratedContent == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.siriBlockUserGeneratedContent == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Apple News (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="appleNewsBlocked" id="appleNewsBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleNewsBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleNewsBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">iBooks store (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="iBooksStoreBlocked" id="iBooksStoreBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iBooksStoreBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iBooksStoreBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Messages app on the device (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="messagesBlocked" id="messagesBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.messagesBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.messagesBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Podcasts (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="podcastsBlocked" id="podcastsBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.podcastsBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.podcastsBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Music service (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="iTunesBlockMusicService" id="iTunesBlockMusicService">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockMusicService == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockMusicService == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">iTunes Radio service (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="iTunesBlockRadio" id="iTunesBlockRadio">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockRadio == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iTunesBlockRadio == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Changes to the Find My Friends app settings (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="findMyFriendsBlocked" id="findMyFriendsBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.findMyFriendsBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.findMyFriendsBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Spotlight search to return results from internet (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="spotlightBlockInternetResults" id="spotlightBlockInternetResults">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.spotlightBlockInternetResults == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.spotlightBlockInternetResults == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Wireless (IOS)</legend>
+    <table>
+        <!-- Wireless -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Data roaming</td>
+            <td class="righttdsettings">
+                <select name="ioscellularBlockDataRoaming" id="ioscellularBlockDataRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscellularBlockDataRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscellularBlockDataRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Global background fetch while roaming</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockGlobalBackgroundFetchWhileRoaming" id="cellularBlockGlobalBackgroundFetchWhileRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockGlobalBackgroundFetchWhileRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockGlobalBackgroundFetchWhileRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Voice dialing</td>
+            <td class="righttdsettings">
+                <select name="iosvoiceDialingBlocked" id="iosvoiceDialingBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iosvoiceDialingBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iosvoiceDialingBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Voice roaming</td>
+            <td class="righttdsettings">
+                <select name="ioscellularBlockVoiceRoaming" id="ioscellularBlockVoiceRoaming">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscellularBlockVoiceRoaming == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.ioscellularBlockVoiceRoaming == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Changes to app cellular data usage settings (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockPerAppDataModification" id="cellularBlockPerAppDataModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockPerAppDataModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockPerAppDataModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Personal Hotspot</td>
+            <td class="righttdsettings">
+                <select name="cellularBlockPersonalHotspot" id="cellularBlockPersonalHotspot">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockPersonalHotspot == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.cellularBlockPersonalHotspot == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Join Wi-Fi networks only using configuration profiles (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="wiFiConnectOnlyToConfiguredNetworks" id="wiFiConnectOnlyToConfiguredNetworks">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiConnectOnlyToConfiguredNetworks == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.wiFiConnectOnlyToConfiguredNetworks == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Connected Devices (IOS)</legend>
+    <table>
+        <!-- Connected Devices -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">AirDrop (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="airDropBlocked" id="airDropBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airDropBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airDropBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Apple Watch pairing (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="appleWatchBlockPairing" id="appleWatchBlockPairing">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleWatchBlockPairing == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleWatchBlockPairing == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Wrist detection for paired Apple watch</td>
+            <td class="righttdsettings">
+                <select name="appleWatchForceWristDetection" id="appleWatchForceWristDetection">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleWatchForceWristDetection == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.appleWatchForceWristDetection == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Bluetooth modification (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="bluetoothBlockModification" id="bluetoothBlockModification">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockModification == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.bluetoothBlockModification == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Host pairing to control the devices an iOS device can pair with (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="hostPairingBlocked" id="hostPairingBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.hostPairingBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.hostPairingBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Require AirPlay outgoing requests pairing password</td>
+            <td class="righttdsettings">
+                <select name="airPlayForcePairingPasswordForOutgoingRequests" id="airPlayForcePairingPasswordForOutgoingRequests">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airPlayForcePairingPasswordForOutgoingRequests == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.airPlayForcePairingPasswordForOutgoingRequests == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Keyboard (IOS)</legend>
+    <table>
+        <!-- Keyboard -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Word definition lookup (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="definitionLookupBlocked" id="definitionLookupBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.definitionLookupBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.definitionLookupBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Predictive keyboards (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="keyboardBlockPredictive" id="keyboardBlockPredictive">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockPredictive == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockPredictive == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Auto-correction (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="keyboardBlockAutoCorrect" id="keyboardBlockAutoCorrect">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockAutoCorrect == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockAutoCorrect == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Keyboard spell-check (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="keyboardBlockSpellCheck" id="keyboardBlockSpellCheck">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockSpellCheck == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockSpellCheck == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Keyboard shortcuts (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="keyboardBlockShortcuts" id="keyboardBlockShortcuts">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockShortcuts == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockShortcuts == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Dictation (supervised only)</td>
+            <td class="righttdsettings">
+                <select name="keyboardBlockDictation" id="keyboardBlockDictation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockDictation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.keyboardBlockDictation == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Cloud and Storage (IOS)</legend>
+    <table>
+        <!-- Cloud and Storage -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Backup to iCloud</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockBackup" id="iCloudBlockBackup">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockBackup == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockBackup == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Document sync to iCloud</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockDocumentSync" id="iCloudBlockDocumentSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockDocumentSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockDocumentSync == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Photo stream syncing to iCloud</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockPhotoStreamSync" id="iCloudBlockPhotoStreamSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockPhotoStreamSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockPhotoStreamSync == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Encrypted backup</td>
+            <td class="righttdsettings">
+                <select name="iCloudRequireEncryptedBackup" id="iCloudRequireEncryptedBackup">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudRequireEncryptedBackup == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudRequireEncryptedBackup == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">iCloud Photo Library</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockPhotoLibrary" id="iCloudBlockPhotoLibrary">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockPhotoLibrary == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockPhotoLibrary == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Managed apps sync to cloud</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockManagedAppsSync" id="iCloudBlockManagedAppsSync">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockManagedAppsSync == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockManagedAppsSync == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Shared photo stream</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockSharedPhotoStream" id="iCloudBlockSharedPhotoStream">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockSharedPhotoStream == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockSharedPhotoStream == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Activity continuation</td>
+            <td class="righttdsettings">
+                <select name="iCloudBlockActivityContinuation" id="iCloudBlockActivityContinuation">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockActivityContinuation == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.iCloudBlockActivityContinuation == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="IOS subfieldset" hidden>
+    <legend class="sublegend">Safari (IOS)</legend>
+    <table>
+        <!-- Safari -->
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Safari</td>
+            <td class="righttdsettings">
+                <select name="safariBlocked" id="safariBlocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Autofill</td>
+            <td class="righttdsettings">
+                <select name="safariBlockAutofill" id="safariBlockAutofill">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockAutofill == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockAutofill == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Cookies</td>
+            <td class="righttdsettings">
+                <select name="safariCookieSettings" id="safariCookieSettings">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariCookieSettings == "browserDefault")" value="browserDefault">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariCookieSettings == "allowAlways")" value="allowAlways">Allow</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariCookieSettings == "blockAlways")" value="blockAlways">Block All Cookies</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariCookieSettings == "allowFromWebsitesVisited")" value="allowFromWebsitesVisited">Allow Cookies From Visited Web Sites</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariCookieSettings == "allowCurrentWebSite")" value="allowCurrentWebSite">Allow Cookies From Current Web Site</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">JavaScript</td>
+            <td class="righttdsettings">
+                <select name="safariBlockJavaScript" id="safariBlockJavaScript">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockJavaScript == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockJavaScript == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Fraud warnings</td>
+            <td class="righttdsettings">
+                <select name="safariRequireFraudWarning" id="safariRequireFraudWarning">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariRequireFraudWarning == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariRequireFraudWarning == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="IOS" hidden>
+            <td class="lefttdsettings">Pop-ups</td>
+            <td class="righttdsettings">
+                <select name="safariBlockPopups" id="safariBlockPopups">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockPopups == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.safariBlockPopups == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+
+    </table>
+</fieldset>
+<br />

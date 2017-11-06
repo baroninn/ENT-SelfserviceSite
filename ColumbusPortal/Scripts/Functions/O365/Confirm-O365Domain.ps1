@@ -18,13 +18,13 @@
 
     Process {
 
-            Connect-O365 -Organization $Organization
+            Connect-MSOnline -Organization $Organization
             
             try {
                 Confirm-MsolDomain -DomainName $Domain
             }
             catch {
-                throw "Please make sure you have created the following DNS TXT record: " + (Get-MsolDomainVerificationDns -Mode DnsTXTRecord -DomainName $Domain | select -ExpandProperty text) + " - ERROR: $_"
+                throw "Please make sure you have created the following DNS TXT record: " + (Get-MsolDomainVerificationDns -Mode DnsTXTRecord -DomainName $Domain | select -ExpandProperty text) + " - ERROR: $($_.exception)"
             }
 
     }

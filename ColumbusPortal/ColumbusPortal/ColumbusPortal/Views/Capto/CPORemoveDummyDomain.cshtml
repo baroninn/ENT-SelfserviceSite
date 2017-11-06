@@ -1,0 +1,72 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Organization > Remove Dummy Domain";
+}
+@section script {
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to remove dummy domain configuration.</p>
+
+@using (Html.BeginForm("CPORemoveDummyDomain", "Capto"))
+{
+    <fieldset>
+        <legend>Remove Dummy Domain</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option 
+                                @if (Model.ActionFailed) { 
+                                    if (organization == Model.CPORemoveDummyDomain.Organization) { 
+                                        @: selected="selected"
+                                    } 
+                                }>@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Info<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <div class="description">
+                        <p class="descriptiontext">
+                            When run, this will remove the prepended 'dummy.' from alle the organizations e-mail configuration, as well as changing the user principal name of all users, mathcing their new primary address. This should not be run before the organization has been migrated and is ready, as all existing organizations will start delivering e-mails here.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Remove Dummy Domain" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

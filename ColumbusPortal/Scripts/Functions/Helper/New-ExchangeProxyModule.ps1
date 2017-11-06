@@ -28,7 +28,7 @@ function New-ExchangeProxyModule {
         }
         
 
-        if($Config.ExchangeServer -notlike $null){
+        if(-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)){
             try {
                 $returnModule = Import-PSSession -Session (New-PSsession -Name $sessionName -ConfigurationName Microsoft.Exchange -ConnectionUri "http://$($Config.ExchangeServer)/Powershell" -Credential $cred) -CommandName $Command -AllowClobber
             }
@@ -37,7 +37,7 @@ function New-ExchangeProxyModule {
             }
         }
 
-        if ($Config.TenantID -notlike $null -and $Config.ExchangeServer -like $null) {
+        if ($Config.TenantID -notlike $null -and [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
             try {
                 ## Create O365 credential object
                 $Username = $Config.AdminUser

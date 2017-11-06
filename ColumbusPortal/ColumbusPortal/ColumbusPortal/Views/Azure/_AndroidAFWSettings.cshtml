@@ -1,0 +1,209 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="AFW subfieldset" hidden>
+    <legend class="sublegend">Work profile settings (Android for Work)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### ANDROID CONFIGURATION ####################-->
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Data sharing between work and personal profiles<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="workProfileDataSharingType" id="workProfileDataSharingType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDataSharingType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDataSharingType == "preventAny")" value="preventAny">Prevent any shareing across boundaries</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDataSharingType == "allowPersonalToWork")" value="allowPersonalToWork">Apps in work profiles can handle shareing request from personal profile</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDataSharingType == "noRestrictions")" value="noRestrictions">No restrictions on sharing</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether or not apps in the work profile are allowed to share data with apps in the personal profile.</p>
+                    <p class="descriptiontext">Recommended value: Prevent any sharing across boundaries</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Work profile notifications while device locked</td>
+            <td class="righttdsettings">
+                <select name="workProfileBlockNotificationsWhileDeviceLocked" id="workProfileBlockNotificationsWhileDeviceLocked">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileBlockNotificationsWhileDeviceLocked == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileBlockNotificationsWhileDeviceLocked == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="righttdsettings">Default app permissions</td>
+            <td>
+                <select name="workProfileDefaultAppPermissionPolicy" id="workProfileDefaultAppPermissionPolicy">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDefaultAppPermissionPolicy == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDefaultAppPermissionPolicy == "prompt")" value="prompt">Prompt</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDefaultAppPermissionPolicy == "autoGrant")" value="autoGrant">Auto Grant</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileDefaultAppPermissionPolicy == "autoDeny")" value="autoDeny">Auto Deny</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Require Work Profile Password<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="workProfileRequirePassword" id="workProfileRequirePassword">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileRequirePassword == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfileRequirePassword == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">Require a password to use work apps. This can be separate from the device password. Requires Android 7.0+ </p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="workProfilePasswordMinimumLength" name="workProfilePasswordMinimumLength" placeholder="Number (4-16)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.workProfilePasswordMinimumLength"
+                                                                                                                                                                  } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity until work profile locks</td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="workProfilePasswordMinutesOfInactivityBeforeScreenTimeout" id="workProfilePasswordMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == "30")" value="30">30 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout == "60")" value="60">1 Hour</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Number of sign-in failures before wiping the work profile</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="workProfilePasswordSignInFailureCountBeforeFactoryReset" name="workProfilePasswordSignInFailureCountBeforeFactoryReset" placeholder="Number (4-11)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.workProfilePasswordSignInFailureCountBeforeFactoryReset"
+                                                                                                                                                                                              } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="workProfilePasswordExpirationDays" name="workProfilePasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.workProfilePasswordExpirationDays"
+                                                                                                                                                      } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="workProfilePasswordRequiredType" id="workProfilePasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "lowSecurityBiometric")" value="lowSecurityBiometric">Low Security Biometric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "required")" value="required">Required</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "atLeastNumeric")" value="atLeastNumeric">At Least Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "numericComplex")" value="numericComplex">Numeric Complex</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "atLeastAlphabetic")" value="atLeastAlphabetic">At Least Alphabetic</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "atLeastAlphanumeric")" value="atLeastAlphanumeric">At Least Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordRequiredType == "alphanumericWithSymbols")" value="alphanumericWithSymbols">At Least Alphanumeric with Symbols</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Prevent reuse of previous passwords</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="workProfilePasswordPreviousPasswordBlockCount" name="workProfilePasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.workProfilePasswordPreviousPasswordBlockCount"
+                                                                                                                                                                                                                                                  } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Fingerprint unlock</td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="workProfilePasswordBlockFingerprintUnlock" id="workProfilePasswordBlockFingerprintUnlock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordBlockFingerprintUnlock == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordBlockFingerprintUnlock == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Smart Lock and other trust agents</td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="workProfilePasswordBlockTrustAgents" id="workProfilePasswordBlockTrustAgents">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordBlockTrustAgents == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.workProfilePasswordBlockTrustAgents == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="AFW subfieldset" hidden>
+    <legend class="sublegend">Password (Android for Work)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Minimum password length</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="afwpasswordMinimumLength" name="afwpasswordMinimumLength" placeholder="Number (4-16)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.afwpasswordMinimumLength"
+                                                                                                                                           } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Maximum minutes of inactivity until screen locks</td>
+            <td class="righttdsettings">
+                <select name="afwpasswordMinutesOfInactivityBeforeScreenTimeout" id="afwpasswordMinutesOfInactivityBeforeScreenTimeout">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == "30")" value="30">30 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordMinutesOfInactivityBeforeScreenTimeout == "60")" value="60">1 Hour</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Number of sign-in failures before wiping device</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="afwpasswordSignInFailureCountBeforeFactoryReset" name="afwpasswordSignInFailureCountBeforeFactoryReset" placeholder="Number (4-11)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.afwpasswordSignInFailureCountBeforeFactoryReset"
+                                                                                                                                                                       } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="afwpasswordExpirationDays" name="afwpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.afwpasswordExpirationDays"
+                                                                                                                               } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Required password type</td>
+            <td class="righttdsettings">
+                <select name="afwpasswordRequiredType" id="afwpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "lowSecurityBiometric")" value="lowSecurityBiometric">Low Security Biometric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "numeric")" value="numeric">At Least Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "numericComplex")" value="numericComplex">Numeric Complex</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "alphabetic")" value="alphabetic">At Least Alphabetic</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "alphanumeric")" value="alphanumeric">At Least Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordRequiredType == "alphanumericWithSymbols")" value="alphanumericWithSymbols">At Least Alphanumeric with Symbols</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Prevent reuse of previous passwords</span></td>
+            <td class="righttdsettings">
+                <input type="number" id="afwpasswordPreviousPasswordBlockCount" name="afwpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceConfiguration.afwpasswordPreviousPasswordBlockCount"
+                                                                                                                                                                                                                           } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Fingerprint unlock</td>
+            <td class="righttdsettings">
+                <select name="afwpasswordBlockFingerprintUnlock" id="afwpasswordBlockFingerprintUnlock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordBlockFingerprintUnlock == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordBlockFingerprintUnlock == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Smart Lock and other trust agents</td>
+            <td class="righttdsettings">
+                <select name="afwpasswordBlockTrustAgents" id="afwpasswordBlockTrustAgents">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordBlockTrustAgents == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceConfiguration.afwpasswordBlockTrustAgents == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>

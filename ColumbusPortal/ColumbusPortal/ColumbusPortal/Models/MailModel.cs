@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace ColumbusPortal.Models
 {
@@ -18,6 +20,7 @@ namespace ColumbusPortal.Models
         public CustomMailboxAutoResize MailboxAutoResize = new CustomMailboxAutoResize();
         public CustomItemsReport ItemsReport = new CustomItemsReport();
         public CustomSikkermail Sikkermail = new CustomSikkermail();
+        public CustomOOF OOF = new CustomOOF();
 
 
     }
@@ -127,6 +130,20 @@ namespace ColumbusPortal.Models
         public bool Remove { get; set; }
         public bool Force { get; set; }
         public bool UpdateAll { get; set; }
+
+    }
+    public class CustomOOF
+    {
+        public string Organization { get; set; }
+        public string UserPrincipalName { get; set; }
+        [AllowHtml]
+        [UIHint("tinymce_full_compressed")]
+        public string Internal { get; set; }
+        [AllowHtml]
+        [UIHint("tinymce_full_compressed")]
+        public string External { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
 
     }
 }

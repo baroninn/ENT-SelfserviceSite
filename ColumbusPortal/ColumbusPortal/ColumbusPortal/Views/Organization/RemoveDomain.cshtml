@@ -50,7 +50,8 @@
                     </div>
                 </td>
             </tr>
-
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
@@ -58,7 +59,7 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.Domain.Organization) { @: selected="selected"
-                                                                                                        } }>
+                                                                                                                                            } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -83,8 +84,9 @@
             <tr>
                 <td class="lefttd">Remove domain in Exchange/Office365</td>
                 <td>
-                    <input name="removeasemail" type="checkbox" @if (Model.ActionFailed) { if (Model.Domain.RemoveasEmail) { @: checked="checked"
-                                                                                                                      } } />
+                    <input name="removeasemail" id="removeasemail" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.Domain.RemoveasEmail) { @: checked="checked"
+                                                                                                                                                 } } />
+                    <label for="removeasemail" class="lbl"></label>
                 </td>
             </tr>
 

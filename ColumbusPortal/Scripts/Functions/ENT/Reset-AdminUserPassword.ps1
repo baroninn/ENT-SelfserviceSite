@@ -46,7 +46,7 @@
                 }
             }
             catch {
-                throw "ERROR with $($org): $_"
+                Write-Output "ERROR with $($org): $_"
             }
         }
     }

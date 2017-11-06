@@ -52,23 +52,24 @@
                 </div>
             </td>
         </tr>
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
-            <td class="middletd"><select name="organization">
-                @foreach(string organization in Model.Organizations) 
-                {
-                    <option @if(Model.ActionFailed)
-                            {
-                                if(organization == Model.Alias.Organization) {
-                                    @:selected="selected"
-                                }
-                            }>@organization</option>
-                }
+            <td class="middletd">
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
+                    {
+                        <option @if (Model.ActionFailed) { if (organization == Model.Alias.Organization) { @: selected="selected"
+                                                                } } value="@organization.Split(' ')[0]">
+                            @organization
+                                                            </option>
+                    }
                 </select>
                 <span class="mandatory">*</span>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Existing aliases:</td>
             <td class="middletd">
                 <div id="existingAliasesDiv">
@@ -83,21 +84,30 @@
                 <span class="mandatory">*</span>
             </td>
         </tr>
-        <tr>
+        <tr class="hide">
             <td class="lefttd">Remove email aliases</td>
             <td class="middletd">
                 @if (Model.ActionFailed)
                 {
-                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
-            }
-            else
-            {
-                <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
-            }
-          <span class="mandatory">*</span>
-        </td>
-    </tr>
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.Alias.EmailAddresses)</textarea>
+                }
+                else
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+                }
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
     </table>
+    <div id="loading" name="loading" class="loading" hidden>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <span><img src="~/Images/loading.gif" /></span>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br />
     <input type="submit" class="button" value="Remove Alias" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
 </fieldset>

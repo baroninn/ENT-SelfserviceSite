@@ -1,0 +1,152 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > CPOCreateUser";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+            CPOGetAcceptedDomain2();
+
+            $("select[name=organization]").change(function () {
+                $("select[name=domainname]").html('<option>loading...</option>');
+
+                CPOGetAcceptedDomain2();
+
+            });
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new Capto user account.</p>
+
+@using (Html.BeginForm("CPOCreateUser", "Capto"))
+{
+    <fieldset>
+        <legend>Create Capto user</legend>
+        <table>
+            <tr>
+                <td colspan="2">@if (Model.Message != null)
+                { <div class="message">@Model.Message</div> }</td>
+            </tr>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CPOUserList[0].Organization) { @: selected="selected"
+                                                                            } }>
+                                @organization
+                                                                        </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">First name</td>
+                <td class="middletd">
+                    <input name="firstname" placeholder="John" @if (Model.ActionFailed) {  @: value="@Model.CPOUserList[0].FirstName"
+                                                                                                                } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Last name</td>
+                <td class="middletd">
+                    <input name="lastname" placeholder="Doe" @if (Model.ActionFailed) {  @: value="@Model.CPOUserList[0].LastName"
+                                                                                                                } />
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Primary Email</td>
+                <td class="lefttdaccepteddomain">
+                    <input name="userprincipalname" placeholder="john.doe" @if (Model.ActionFailed) { @: value="@Model.CPOUserList[0].UserPrincipalName"
+                                                                                                                   } />
+                </td>
+                <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">@@</td>
+                <td class="righttdaccepteddomain">
+                    <select name="domainname"><option>loading...</option></select>
+                </td>
+            </tr>
+
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Password</td>
+                <td class="middletd">
+                    <input name="password" placeholder="Password" @if (Model.ActionFailed) { @: value="@Model.CPOUserList[0].Password"
+                                                                                         } />
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Email aliases</td>
+                <td class="middletd">
+                    @if (Model.ActionFailed)
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line">@string.Join("\r\n", Model.CPOUserList[0].EmailAddresses)</textarea>
+                }
+                else
+                {
+                    <textarea name="emailaddresses" rows="10" placeholder="Write one alias per line"></textarea>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Stud Jur<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="studjur" id="studjur" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOUserList[0].StudJur) { @: checked="checked"
+                                                                                              } } /><label for="studjur" class="lbl"></label>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Grouping used by Capto. Stud Jur users have the same rights as everyone else, but costs less. It is used for law students.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Mail Only<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="mailonly" id="mailonly" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOUserList[0].MailOnly) { @: checked="checked"
+                                                                                                                     } } /><label for="mailonly" class="lbl"></label>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Mail Only users can only use webmail, Outlook Anywhere and ActiveSync. They do not have access to a remote desktop.
+                    </p>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="lefttd tooltip"><span>Password Never Expires<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="passwordneverexpires" id="passwordneverexpires" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOUserList[0].PasswordNeverExpires) { @: checked="checked"
+                                                                                              } } /><label for="passwordneverexpires" class="lbl"></label>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Passwords will never expire if this is checked. This must be confirmed by the organization first.
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd tooltip"><span>Test user<i class="material-icons infoicon">info</i></span></td>
+            <td class="middletd">
+                <input name="testuser" id="testuser" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOUserList[0].TestUser) { @: checked="checked"
+                                                                                       } } /><label for="testuser" class="lbl"></label>
+                <div class="description">
+                    <p class="descriptiontext">
+                        Users marked as Test User are for testing purposes, and must not be used for real users. These users does not count towards mailbox quota or SPLA's. But data left in these accounts will take up space on their file server.
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+
+}

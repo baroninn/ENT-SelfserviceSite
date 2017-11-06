@@ -1,0 +1,36 @@
+﻿@model ColumbusPortal.Models.ServiceModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Created VMs the last 10 days</legend>
+    <div style="max-height:500px; overflow: auto;">
+
+        @if (Model.LatestVMList.Count() != 0)
+        {
+            <table class="IntuneDevice">
+                <tr>
+                    <td style="width: 45%"><b>Name</b></td>
+                    <td style="width: 45%"><b>Creation Time</b></td>
+                    <td style="width: 45%"><b>Tag</b></td>
+                </tr>
+                @foreach (var item in Model.LatestVMList)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.CreationTime</td>
+                        <td>@item.Tag</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <table class="IntuneDevice">
+                <tr>
+                    <td>
+                        Latest VM list is empty...
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+</fieldset>

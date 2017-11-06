@@ -1,0 +1,178 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="AFW subfieldset" hidden>
+    <legend class="sublegend">Device Health (AFW)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### AFW CONFIGURATION ####################-->
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Rooted Devices</td>
+            <td class="righttdsettings">
+                <select name="afwsecurityBlockJailbrokenDevices" id="afwsecurityBlockJailbrokenDevices">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityBlockJailbrokenDevices == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityBlockJailbrokenDevices == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Require the device to be at or under the Mobile Threat Level</td>
+            <td class="righttdsettings">
+                <select name="afwdeviceThreatProtectionRequiredSecurityLevel" id="afwdeviceThreatProtectionRequiredSecurityLevel">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwdeviceThreatProtectionRequiredSecurityLevel == "unavailable")" value="unavailable">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwdeviceThreatProtectionRequiredSecurityLevel == "secured")" value="secured">Secured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwdeviceThreatProtectionRequiredSecurityLevel == "low")" value="low">Low</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwdeviceThreatProtectionRequiredSecurityLevel == "medium")" value="medium">Medium</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwdeviceThreatProtectionRequiredSecurityLevel == "high")" value="high">High</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="AFW subfieldset" hidden>
+    <legend class="sublegend">Device Properties (AFW)</legend>
+    <!-- General -->
+    <table>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="afwosMinimumVersion" id="afwosMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwosMinimumVersion"
+                                                                                                                                                                                                                           } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the min OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="afwosMaximumVersion" id="afwosMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwosMaximumVersion"
+                                                                                                 } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the max OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="AFW subfieldset" hidden>
+    <legend class="sublegend">Password (AFW)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Require a password to unlock mobile devices.<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="afwpasswordRequired" id="afwpasswordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequired == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to require users to enter a password before access is granted to information on their mobile devices.</p>
+                    <p class="descriptiontext">Recommended value: Require (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum password length<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="afwpasswordMinimumLength" name="afwpasswordMinimumLength" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwpasswordMinimumLength"
+                                                                                                                                                                                         } />
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the minimum number of digits or characters in the password. </p>
+                    <p class="descriptiontext">Recommended Value: 4 (4-16) (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Required password type<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="afwpasswordRequiredType" id="afwpasswordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "lowSecurityBiometric")" value="lowSecurityBiometric">Low Security Biometric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "numeric")" value="numeric">At Least Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "numericComplex")" value="numericComplex">Numeric Complex</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "alphabetic")" value="alphabetic">At Least Alphabetic</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "alphanumeric")" value="alphanumeric">At Least Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordRequiredType == "alphanumericWithSymbols")" value="alphanumericWithSymbols">At Least Alphanumeric with Symbols</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether passwords are allowed to be comprised only of numeric characters, or whether they must contain characters other than numbers.</p>
+                    <p class="descriptiontext">Recommendations:  Required password type: Alphanumeric, Minimum number of character sets: 1 (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip">Maximum minutes of inactivity before password is required<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="AFWPassword" name="afwpasswordMinutesOfInactivityBeforeLock" id="afwpasswordMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwpasswordMinutesOfInactivityBeforeLock == "480")" value="480">8 Hours</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the length of time without user input after which the mobile device screen is locked.</p>
+                    <p class="descriptiontext">Recommended value: 15 min (This compliance check is supported for devices with OS versions AFW 4.0 and above, or KNOX 4.0 and above).</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="afwpasswordExpirationDays" name="afwpasswordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwpasswordExpirationDays"
+                                                                  } />
+            </td>
+        </tr>
+
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="AFWPassword" type="number" id="afwpasswordPreviousPasswordBlockCount" name="afwpasswordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwpasswordPreviousPasswordBlockCount"
+                                                                  } />
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Encryption of data storage on device.</td>
+            <td class="righttdsettings">
+                <select name="afwstorageRequireEncryption" id="afwstorageRequireEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwstorageRequireEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwstorageRequireEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Block apps from unknown sources</td>
+            <td class="righttdsettings">
+                <select name="afwsecurityPreventInstallAppsFromUnknownSources" id="afwsecurityPreventInstallAppsFromUnknownSources">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityPreventInstallAppsFromUnknownSources == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityPreventInstallAppsFromUnknownSources == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings">Block USB debugging on device</td>
+            <td class="righttdsettings">
+                <select name="afwsecurityDisableUsbDebugging" id="afwsecurityDisableUsbDebugging">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityDisableUsbDebugging == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.afwsecurityDisableUsbDebugging == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="AFW" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum security patch level</span><i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input id="afwminAndroidSecurityPatchLevel" name="afwminAndroidSecurityPatchLevel" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.afwminAndroidSecurityPatchLevel"
+                                                                                         } />
+                <div class="description">
+                    <p class="descriptiontext">Must be a valid date format (YYYY-MM-DD). Example: 2016-10-01, 2016-10-31 etc.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>

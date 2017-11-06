@@ -21,6 +21,10 @@ namespace ColumbusPortal.Logic
         static string AZURELOGPATH = WebConfigurationManager.AppSettings["AzureLogPath"].ToString();
         static string AZURELOGFILE = string.Format(@"{0}\AzureWebLog.txt", AZURELOGPATH);
 
+        //Capto log
+        static string CPOLOGPATH = WebConfigurationManager.AppSettings["CPOLogPath"].ToString();
+        static string CPOLOGFILE = string.Format(@"{0}\WebLog.txt", CPOLOGPATH);
+
         public static bool DebugMode
         {
             get
@@ -50,6 +54,14 @@ namespace ColumbusPortal.Logic
             // Read LOGSIZE entries and return
             return File.ReadAllLines(AZURELOGFILE).ToList<string>();
         }
+        public static List<string> GetCPOLog()
+        {
+            // Check/create logfile
+            if (!File.Exists(CPOLOGFILE)) { File.Create(CPOLOGFILE).Close(); }
+
+            // Read LOGSIZE entries and return
+            return File.ReadAllLines(CPOLOGFILE).ToList<string>();
+        }
         private static void SaveLog(List<string> log)
         {
             // Check/create logfile
@@ -57,6 +69,14 @@ namespace ColumbusPortal.Logic
 
             // Write logfile
             File.WriteAllLines(LOGFILE, log.Take(LOGSIZE));
+        }
+        private static void SaveCPOLog(List<string> log)
+        {
+            // Check/create logfile
+            if (!File.Exists(CPOLOGFILE)) { File.Create(CPOLOGFILE).Close(); }
+
+            // Write logfile
+            File.WriteAllLines(CPOLOGFILE, log.Take(LOGSIZE));
         }
 
         public static void Log(string entry)
@@ -82,6 +102,31 @@ namespace ColumbusPortal.Logic
             // Logs dataEntry first to get main entry on top
             Log(dataEntry);
             Log(entry);
+        }
+
+        public static void CPOLog(string entry)
+        {
+            try
+            {
+                // Insert new entry on top of log
+                List<string> log = GetCPOLog();
+                log.Insert(0, DateTime.Now.ToString() + " :: " + HttpContext.Current.User.Identity.Name + " :: " + entry);
+                SaveCPOLog(log);
+            }
+            catch (Exception exc)
+            {
+                throw new Exception("Command failed to execute - Failed to write to the logfile: " + exc.Message);
+            }
+        }
+
+        public static void CPOLog(string entry, FormCollection data)
+        {
+            // Generates string "a - b - c - d"
+            string dataEntry = string.Join(" - ", data);
+
+            // Logs dataEntry first to get main entry on top
+            CPOLog(dataEntry);
+            CPOLog(entry);
         }
 
         public static void Stats(string functionName)

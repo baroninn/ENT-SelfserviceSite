@@ -1,6 +1,7 @@
 ﻿using ColumbusPortal.Logic;
 using ColumbusPortal.Models;
 using System.Web.Mvc;
+using System.Data.SqlClient;
 
 namespace ColumbusPortal.Controllers
 {
@@ -42,6 +43,16 @@ namespace ColumbusPortal.Controllers
             return View(model);
         }
         [Authorize]
+        public ActionResult CPOLog()
+        {
+            model.CPOLog = CommonCAS.GetCPOLog();
+
+            if (model.CPOLog.Count == 0) { model.CPOLog.Add("Capto Log is empty..."); }
+
+            return View(model);
+        }
+
+        [Authorize]
         public ActionResult AzureLog()
         {
             model.AzureLog = CommonCAS.GetAzureLog();
@@ -50,5 +61,6 @@ namespace ColumbusPortal.Controllers
 
             return View(model);
         }
+
     }
 }

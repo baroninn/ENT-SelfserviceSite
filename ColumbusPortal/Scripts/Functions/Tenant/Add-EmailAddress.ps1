@@ -14,7 +14,7 @@
         $EmailAddress,
 
         [Parameter(ValueFromPipelineByPropertyName)]
-        [bool]
+        [switch]
         $SetAsPrimary
     )
 
@@ -29,12 +29,17 @@
 
     Process {
         
-        if ($Config.ExchangeServer -ne "null") {
+        if (-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
 
             Import-Module (New-ExchangeProxyModule -Organization $Organization -Command Get-Mailbox, Set-Mailbox)
 
             try {
-                Set-Mailbox -Identity $Name -EmailAddresses @{Add=$EmailAddress}
+                if ($SetAsPrimary) {
+                    Set-Mailbox -Identity $Name -PrimarySmtpAddress "$($EmailAddress)"
+                }
+                else {
+                    Set-Mailbox -Identity $Name -EmailAddresses @{Add="smtp:$($EmailAddress)"}
+                }
             }
             catch {
                 throw $_
@@ -49,20 +54,21 @@
 
             if ($SetAsPrimary) {
 
-                $Proxy = $User.Proxyaddresses
-
                 foreach ($i in $proxy) {
                     if ($i -clike "SMTP:*") {
                         $OldPrimaryProxy = $i -creplace "SMTP:", "smtp:"
                         Set-ADUser $user -Remove @{Proxyaddresses="$i"}
                         Set-ADUser $user -Add @{Proxyaddresses="$OldPrimaryProxy"}
                     }
+                    elseif ($i -clike "smtp:*") {
+                        Set-ADUser $user -Remove @{Proxyaddresses="$i"}
+                    }
                 }
 
-                Set-ADUser $User -Add @{Proxyaddresses="SMTP:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+                Set-ADUser $User -Add @{Proxyaddresses="SMTP:$EmailAddress"} -EmailAddress $EmailAddress -Server $Config.DomainFQDN -Credential $Cred > $null
             }
             else {
-                Set-ADUser $User -Add @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred | Out-Null
+                Set-ADUser $User -Add @{Proxyaddresses="smtp:$EmailAddress"} -Server $Config.DomainFQDN -Credential $Cred > $null
             }
 
             if ($Config.AADsynced -eq 'true') {

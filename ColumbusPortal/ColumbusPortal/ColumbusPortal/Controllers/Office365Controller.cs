@@ -35,11 +35,6 @@ namespace ColumbusPortal.Controllers
                     Domain = _POST["domainname"]
                 };
 
-                if (!model.Organizations.Contains(model.VerifyDomain.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
-
                 CommonCAS.Log(string.Format("has run Office365/VerifyDomain() to verify '{0}' for '{1}'", model.VerifyDomain.Domain, model.VerifyDomain.Organization));
 
                 // execute powershell script and dispose powershell object
@@ -129,20 +124,16 @@ namespace ColumbusPortal.Controllers
                 model.StartDirSync = new CustomStartDirSync()
                 {
                     Organization = _POST["organization"],
-                    Policy = _POST["policy"]
+                    Policy = _POST["policy"],
+                    Force = _POST["force"] == "on" ? true : false
                 };
-                
-                if (!model.Organizations.Contains(model.StartDirSync.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
 
                 CommonCAS.Log(string.Format("has run Office365/StartDirSync() with policy '{0}' for '{1}'", model.StartDirSync.Policy, model.StartDirSync.Organization));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.StartDirSync(model.StartDirSync.Organization, model.StartDirSync.Policy);
+                    ps.StartDirSync(model.StartDirSync.Organization, model.StartDirSync.Policy, model.StartDirSync.Force);
                     var result = ps.Invoke();
 
                     if (result.Count() == 0)

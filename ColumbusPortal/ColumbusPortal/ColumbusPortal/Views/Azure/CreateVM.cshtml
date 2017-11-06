@@ -1,0 +1,159 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > Create VM";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+
+            GetAzureRessourceGroups();
+            GetAzureLocations();
+            $("select[name=organization]").change(function () {
+                GetAzureRessourceGroups();
+                GetAzureLocations();
+
+            });
+
+            $("select[name=ressourcegroup]").change(function () {
+                GetAzureStorageAccounts();
+                GetAzureVirtualNetworks();
+                GetAzureNetworkInterfaces();
+                GetAzureAvailabilitySets();
+                GetAzureVMSizes();
+            });
+            $("select[name=virtualnetwork]").change(function () {
+                GetAzureVirtualSubnets();
+            });
+            $("select[name=location]").change(function () {
+                GetAzurePublicIPs();
+            });
+
+        });
+
+    </script>
+}
+<h1 class="title">@ViewBag.Title</h1>
+<br />
+
+@using (Html.BeginForm("CreateVM", "Azure"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Create VM</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.AzureComputeOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CreateVM.Organization) { @: selected="selected"
+                                                                                                } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Ressource Groups<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="ressourcegroup" name="ressourcegroup"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Location<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="location" name="location"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Storage Accounts<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="storageaccount" name="storageaccount"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Virtual Networks<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="virtualnetwork" name="virtualnetwork"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Network Interfaces<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="networkinterface" name="networkinterface"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Subnets</span></td>
+                <td class="middletd">
+                    <select id="subnet" name="subnet"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Public IPs</span></td>
+                <td class="middletd">
+                    <select id="publicip" name="publicip"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>Availability Sets<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="availabilityset" name="availabilityset"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>VM Size<i class="material-icons infoicon"></i></span></td>
+                <td class="middletd">
+                    <select id="vmsize" name="vmsize"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>VM Name</span></td>
+                <td class="middletd">
+                    <input id="name" name="name" placeholder="SuperVM01" @if (Model.ActionFailed) { @: value="@Model.CreateVM.Name"
+                                                                 } />
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" value="Create VM" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+
+}

@@ -1,0 +1,94 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Mail > Add AcceptedDomain";
+}
+@section script {
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                $("#acceptedDomain").html("Loading...");
+                CPOGetAcceptedDomain();
+            });
+
+            $("#acceptedDomain").html("Loading...");
+            CPOGetAcceptedDomain();
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form add an accepted domain for a capto customer.</p>
+
+@using (Html.BeginForm("CPOAddAcceptedDomain", "Capto"))
+{
+    <fieldset>
+        <legend>Add AcceptedDomain</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CPOAcceptedDomain.Organization) { @: selected="selected"
+                                                                                                        } }>
+                                @organization
+                            </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Accepted emaildomains:</td>
+                <td class="middletd">
+                    <div id="acceptedDomain"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Domain<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="domain" placeholder="testdomæne.dk" @if (Model.ActionFailed) { @: value="@Model.CPOAcceptedDomain.Domain"
+                                                                                                                                                                                          } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            This will add an accepted domain to the Capto tenant, and a UPN on the local on-prem AD.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Add as UPN</td>
+                <td class="middletd">
+                    <input name="setasupn" id="setasupn" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.CPOAcceptedDomain.SetAsUPN) { @: checked="checked"
+                                                                                                                      } } /><label for="setasupn" class="lbl"></label>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" value="Add AcceptedDomain" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

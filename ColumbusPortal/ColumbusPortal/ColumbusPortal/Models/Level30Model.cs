@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace ColumbusPortal.Models
@@ -13,7 +14,7 @@ namespace ColumbusPortal.Models
         public CustomScheduleReboot ScheduleReboot = new CustomScheduleReboot();
         public CustomServerInfo ServerInfo = new CustomServerInfo();
         public List<CustomUser> UserList = new List<CustomUser>();
-        public CustomSharedCustomer UpdateSharedCustomer = new CustomSharedCustomer();
+        public CustomNAVCustomer UpdateNAVCustomer = new CustomNAVCustomer();
         public CustomEXTAdminUser EXTAdminUser = new CustomEXTAdminUser();
         public CustomCASAdminUser CASAdminUser = new CustomCASAdminUser();
         public List<CustomEXTAdminUserLIST> EXTAdminUserLIST = new List<CustomEXTAdminUserLIST>();
@@ -24,6 +25,7 @@ namespace ColumbusPortal.Models
     public class CustomUpdateConf
     {
         public string Organization { get; set; }
+        public string Platform { get; set; }
         public string Name { get; set; }
         public string UserContainer { get; set; }
         public string ExchangeServer { get; set; }
@@ -43,6 +45,17 @@ namespace ColumbusPortal.Models
         public string SQLServer { get; set; }
         public string AdminRDS { get; set; }
         public string AdminRDSPort { get; set; }
+        public string AppID { get; set; }
+        public string AppSecret { get; set; }
+
+        /// <summary>
+        /// Test on enable services..
+        /// </summary>
+        public bool ServiceSQL { get; set; }
+        public bool ServiceAzureAD { get; set; }
+        public bool ServiceCompute { get; set; }
+        public bool Service365 { get; set; }
+        public bool ServiceIntune { get; set; }
 
     }
 
@@ -50,6 +63,7 @@ namespace ColumbusPortal.Models
     {
         public string Organization { get; set; }
         public string Name { get; set; }
+        public string Platform { get; set; }
         public string ExchangeServer { get; set; }
         public string DomainFQDN { get; set; }
         public string NETBIOS { get; set; }
@@ -68,6 +82,13 @@ namespace ColumbusPortal.Models
         public string SQLServer { get; set; }
         public string AdminRDS { get; set; }
         public string AdminRDSPort { get; set; }
+        public string ServiceSQL { get; set; }
+        public string ServiceAzureAD { get; set; }
+        public string ServiceCompute { get; set; }
+        public string Service365 { get; set; }
+        public string AppID { get; set; }
+        public string AppSecret { get; set; }
+        public string ServiceIntune { get; set; }
 
     }
 
@@ -75,15 +96,23 @@ namespace ColumbusPortal.Models
     {
         [Required]
         public string VMID { get; set; }
+
         [Required]
         public string VHDID { get; set; }
+
         [Required]
         public string DateTime { get; set; }
-        [Required]
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "GB is required..")]
         public string GB { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
-        [Required, MinLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
+
+        [Required(ErrorMessage = "Required...")]
+        [MinLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
+        [MaxLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
         public string TaskID { get; set; }
     }
 
@@ -95,20 +124,20 @@ namespace ColumbusPortal.Models
         [Required]
         public string DateTime { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "CPU is required, and can be a max of 16 cores..")]
-        [RegularExpression(@"\d{1,16}", ErrorMessage = "Please enter a valid number (1-16).")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "CPU is required..")]
         public string CPU { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "RAM cannot be null.. If not changing it, put in the current RAM of the VM..")]
         public string RAM { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
+        //[EmailAddress(ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Required...")]
         [MinLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
-        [StringLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
+        [MaxLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
         public string TaskID { get; set; }
 
         public string DynamicMemoryEnabled { get; set; }
@@ -120,9 +149,14 @@ namespace ColumbusPortal.Models
         public string VMID { get; set; }
         [Required]
         public string DateTime { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
-        [Required, MinLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
+
+        [Required(ErrorMessage = "Required...")]
+        [MinLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
+        [MaxLength(6, ErrorMessage = "Please enter a correct taskid from Navision")]
         public string TaskID { get; set; }
     }
 
@@ -144,8 +178,10 @@ namespace ColumbusPortal.Models
         public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string SamAccountName { get; set; }
-        [EmailAddressAttribute]
+
+        [EmailAddress]
         public string Email { get; set; }
+
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string Description { get; set; }
@@ -164,7 +200,9 @@ namespace ColumbusPortal.Models
         public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string SamAccountName { get; set; }
-        [EmailAddressAttribute]
+
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
         public string Description { get; set; }
         public string Company { get; set; }
@@ -182,8 +220,11 @@ namespace ColumbusPortal.Models
         public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string SamAccountName { get; set; }
-        [EmailAddressAttribute]
+
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
+
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string Description { get; set; }
@@ -202,7 +243,9 @@ namespace ColumbusPortal.Models
         public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string SamAccountName { get; set; }
-        [EmailAddressAttribute]
+
+        [Required(ErrorMessage = "Email is mandatory!")]
+        [RegularExpression(@"^(([-\w\d]+)(\.[-\w\d]+)*@([-\w\d]+)(\.[-\w\d]+)*(\.([a-zA-Z]{2,5}|[\d]{1,3})){1,2})$", ErrorMessage = "Please enter correctly formated email.")]
         public string Email { get; set; }
         public string Description { get; set; }
         public string Company { get; set; }
@@ -212,12 +255,18 @@ namespace ColumbusPortal.Models
         public string ExpireDate { get; set; }
     }
 
-    public class CustomSharedCustomer
+    public class CustomNAVCustomer
     {
         public string Organization { get; set; }
+        public string Platform { get; set; }
         public string Name { get; set; }
         public string NavMiddleTier { get; set; }
         public string SQLServer { get; set; }
+
+        [AllowHtml]
+        [UIHint("tinymce_full_compressed")]
+        public string LoginInfo { get; set; }
+        public string RDSServer { get; set; }
     }
 
 }

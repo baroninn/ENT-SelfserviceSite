@@ -10,10 +10,6 @@
         [Parameter(Mandatory)]
         [string]$Email,
         [Parameter(Mandatory)]
-        [string]$Description,
-        [Parameter(Mandatory)]
-        [string]$Department,
-        [Parameter(Mandatory)]
         [string]$UserName,
         [Parameter(Mandatory)]
         [string]$Password,
@@ -76,14 +72,14 @@
                                             -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) `
                                             -PasswordNeverExpires $true `
                                             -AccountExpirationDate $Expiredate `
-                                            -Department $Department `
-                                            -EmailAddress $Email `
-                                            -Description $Description
+                                            -EmailAddress $Email 
 
                         $User = Get-ADUser -Filter "samAccountName -eq '$($SamAccountName)'" -Server $ExchDC -Credential $Cred -ErrorAction SilentlyContinue
 
                         Add-ADGroupMember -Identity "$($Organization)_Organization_Management" -Members $user -Server $CustomerDC -Credential $Cred
-                        Add-ADGroupMember -Identity "Access_Level_10" -Members $user -Server $CustomerDC -Credential $Cred
+                        Add-ADGroupMember -Identity "Access_Level_20" -Members $user -Server $CustomerDC -Credential $Cred
+                        Add-ADGroupMember -Identity "$($Organization)_File_Public" -Members $user -Server $CustomerDC -Credential $Cred
+
                         Write-Verbose "Created CAS Admin at $Organization"
                     }
                     catch {
@@ -105,7 +101,7 @@
             $text = $text -replace "NavMiddleTier", "$($CASPlatform.NavMiddleTier)"
 
             $RDPShared = Get-Content C:\ENTScriptsTest\Shared.rdp -Encoding UTF8
-                $RDPShared = $RDPShared -replace "Organization", "$Organization"
+                $RDPShared = $RDPShared -replace "Organization", "$($CASPlatform.RDSServer)"
                 $RDPShared = $RDPShared -replace "SamAccountName", "EXCHANGE\$($SamAccountName)"
             $RDPShared | Out-File "C:\ENTScriptstest\RDPTemp\$($SamAccountName).rdp"
             $Attachements = @()
@@ -151,9 +147,7 @@
                                             -AccountPassword (ConvertTo-SecureString -AsPlainText $Password -Force) `
                                             -PasswordNeverExpires $true `
                                             -AccountExpirationDate $Expiredate `
-                                            -Department $Department `
-                                            -EmailAddress $Email `
-                                            -Description $Description
+                                            -EmailAddress $Email 
 
                         $User = Get-ADUser -Filter "samAccountName -eq '$($SamAccountName)'" -Server $Config.DomainDC -Credential $Cred -ErrorAction SilentlyContinue
 
@@ -207,7 +201,7 @@
             $UpdateDone = "UPDATE [dbo].[CASAdminUsers_Done]  SET ExpireDate = '$ExpireDate' WHERE [dbo].[CASAdminUsers_Done].[ID] = '$($DBExist.ID)'"
         }
         else {
-            $UpdateDone = "INSERT INTO [dbo].[CASAdminUsers_Done](Status, Organization, FirstName, LastName, Email, UserName, Department, Description, DateTime, ExpireDate) VALUES ('Done', '$Organization', '$Firstname', '$Lastname', '$email', '$UserName', '$Department', '$Description', '$DateTime', '$Expiredate')"
+            $UpdateDone = "INSERT INTO [dbo].[CASAdminUsers_Done](Status, Organization, FirstName, LastName, Email, UserName, DateTime, ExpireDate) VALUES ('Done', '$Organization', '$Firstname', '$Lastname', '$email', '$UserName', '$DateTime', '$Expiredate')"
         }
         $sqlConnection.Open()
         $cmd = $sqlConnection.CreateCommand()

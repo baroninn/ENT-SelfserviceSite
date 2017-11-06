@@ -39,15 +39,15 @@ namespace ColumbusPortal.Models
 #if DEBUG
             // authenticates against your local machine - for development time
             ContextType authenticationType = ContextType.Domain;
-            string DomainIP = "";
-            string ContainerConnectionString = "";
-            DomainIP = "10.101.0.2";
-            ContainerConnectionString = "DC=corp,DC=systemhosting,DC=dk";
+            //string DomainIP = "";
+            //string ContainerConnectionString = "";
+            //DomainIP = "10.101.0.2";
+            //ContainerConnectionString = "DC=corp,DC=systemhosting,DC=dk";
 #else
             // authenticates against your Domain AD
             ContextType authenticationType = ContextType.Domain;
 #endif
-            PrincipalContext principalContext = new PrincipalContext(authenticationType, DomainIP, ContainerConnectionString);
+            PrincipalContext principalContext = new PrincipalContext(authenticationType);
             bool isAuthenticated = false;
             UserPrincipal userPrincipal = null;
             try

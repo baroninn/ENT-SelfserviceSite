@@ -8,6 +8,7 @@ namespace ColumbusPortal.Models
         public CustomExpandVHD ExpandVHD = new CustomExpandVHD();
         public CustomExpandCPURAM ExpandCPURAM = new CustomExpandCPURAM();
         public CustomScheduleReboot ScheduleReboot = new CustomScheduleReboot();
+        public List<CustomLatestVMList> LatestVMList = new List<CustomLatestVMList>();
     }
 
     public class CustomCustomerReport
@@ -88,6 +89,13 @@ namespace ColumbusPortal.Models
         public string ActiveUnits { get; set; }
         public string ConsumedUnits { get; set; }
         public string FreeUnits { get; set; }
+    }
+
+    public class CustomLatestVMList
+    {
+        public string Name { get; set; }
+        public string CreationTime { get; set; }
+        public string Tag { get; set; }
     }
 
 }

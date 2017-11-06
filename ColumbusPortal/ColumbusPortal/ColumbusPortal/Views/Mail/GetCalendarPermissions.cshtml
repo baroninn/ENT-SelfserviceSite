@@ -6,6 +6,7 @@
     <script>
         $(document).ready(function () {
             if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+            if (navigator.userAgent.match(/Edge\/|Trident\/|MSIE /)) { alert('This page is not supported in MSIE'); }
 
             GetMailbox("UserMailbox");
 
@@ -44,6 +45,7 @@
         }
 
         function GetCalendarPermissions() {
+            $('.loading').show();
             var organization = $("select[name=organization]").val();
             var userprincipalname = $("select[name=userprincipalname]").val();
 
@@ -67,6 +69,7 @@
                             AddCalendarPermissionToList(json[i]);
                         }
                     }
+                    $('.loading').hide();
                 }
             });
         }
@@ -153,6 +156,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
@@ -160,7 +165,7 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.CalendarPermissions.Organization) { @: selected="selected"
-                                                                                                    } }>
+                                                                                                                                        } } value="@organization.Split(' ')[0]">
                                 @organization
                             </option>
                         }
@@ -177,6 +182,15 @@
             </tr>
 
         </table>
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br />
         <input type="button" id="buttonget" class="button" value="Get Calendar Permissions" onclick="changeget(); GetCalendarPermissions()" />
     </fieldset>

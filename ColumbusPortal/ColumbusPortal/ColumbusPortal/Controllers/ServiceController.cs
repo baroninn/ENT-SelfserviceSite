@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Linq;
-using System.Management.Automation;
-using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Helpers;
+using System.Management.Automation;
 using ColumbusPortal.Logic;
 using ColumbusPortal.Models;
+using System.Web.Script.Serialization;
+using System.Data.SqlClient;
+//using System.Web.UI.DataVisualization.Charting;
 
 namespace ColumbusPortal.Controllers
 {
@@ -300,43 +303,45 @@ namespace ColumbusPortal.Controllers
                 model.CustomerReport.FileServerfUsed = double.Parse(fileserver.Properties["Used"].Value.ToString());
                 model.CustomerReport.FileServerUsed = model.CustomerReport.FileServerfUsed.ToString("F1") + " GB";
 
-
                 model.CustomerReport.ADUsersCount = 0;
                 model.CustomerReport.ADFullUsersCount = 0;
                 model.CustomerReport.ADLightUsersCount = 0;
                 model.CustomerReport.ENTServersCount = 0;
 
-
-                foreach (PSObject user in users)
+                if (users != null)
                 {
-                    model.CustomerReport.ADUsersCount++;
-                    model.CustomerReport.ADUsers.Add(new ADUser
+                    foreach (PSObject user in users)
                     {
-                        Email = user.Properties["PrimarySmtpAddress"].Value.ToString(),
-                        Name = user.Properties["DisplayName"].Value.ToString(),
-                        LightUser = user.Properties["LightUser"].Value.ToString(),
+                        model.CustomerReport.ADUsersCount++;
+                        model.CustomerReport.ADUsers.Add(new ADUser
+                        {
+                            Email = user.Properties["PrimarySmtpAddress"].Value.ToString(),
+                            Name = user.Properties["DisplayName"].Value.ToString(),
+                            LightUser = user.Properties["LightUser"].Value.ToString(),
 
-                    });
+                        });
+                        string testUser = user.Properties["TestUser"].Value.ToString();
+                        string type = user.Properties["Type"].Value.ToString();
+                        string disabled = user.Properties["Disabled"].Value.ToString();
+                        string displayName = user.Properties["DisplayName"].Value.ToString();
+                        string lightuser = user.Properties["LightUser"].Value.ToString();
 
-                    string testUser = user.Properties["TestUser"].Value.ToString();
-                    string type = user.Properties["Type"].Value.ToString();
-                    string disabled = user.Properties["Disabled"].Value.ToString();
-                    string displayName = user.Properties["DisplayName"].Value.ToString();
-                    string lightuser = user.Properties["LightUser"].Value.ToString();
-
-
-                    // Do not add MailOnly accounts to Windows nor Office.
-                    if (lightuser.Equals("True"))
-                    {
-                        model.CustomerReport.Licenses.LightUser.Add(displayName);
-                        model.CustomerReport.ADLightUsersCount++;
+                        // Do not add MailOnly accounts to Windows nor Office.
+                        if (lightuser.Equals("True"))
+                        {
+                            model.CustomerReport.Licenses.LightUser.Add(displayName);
+                            model.CustomerReport.ADLightUsersCount++;
+                        }
+                        else
+                        {
+                            model.CustomerReport.ADFullUsersCount++;
+                            model.CustomerReport.Licenses.FullUser.Add(displayName);
+                        }
                     }
-                    else
-                    {
-                        model.CustomerReport.ADFullUsersCount++;
-                        model.CustomerReport.Licenses.FullUser.Add(displayName);
-                    }
-
+                }
+                else
+                {
+                    throw new Exception("There are no AD Users registered yet.. Can the customer be charged just yet?");
                 }
 
                 model.CustomerReport.ADUsers.OrderBy(x => x);
@@ -355,7 +360,6 @@ namespace ColumbusPortal.Controllers
 
                 foreach (PSObject info in info365s)
                 {
-
                     model.CustomerReport.Info365s.Add(new Info365
                     {
                         License = info.Properties["License"].Value.ToString(),
@@ -364,33 +368,31 @@ namespace ColumbusPortal.Controllers
                         ConsumedUnits = info.Properties["ConsumedUnits"].Value.ToString(),
                         FreeUnits = info.Properties["FreeUnits"].Value.ToString(),
                     });
-
                 }
-
-
                 //throw new Exception(mailbox.Properties["TotalAllocated"].Value.ToString());
             }
         }
+
         [Authorize(Roles = "Access_SelfService_FullAccess, Role_Level_5")]
         public ActionResult CustomerReportPieChartDisk(string iUsage, string iQuota)
-                {
-                    //iUsage = iUsage.Replace(',', '.');
-                    //iQuota = iQuota.Replace(',', '.');
+        {
+            //iUsage = iUsage.Replace(',', '.');
+            //iQuota = iQuota.Replace(',', '.');
 
-                    double usage = double.Parse(iUsage);
-                    double quota = double.Parse(iQuota);
+            double usage = double.Parse(iUsage);
+            double quota = double.Parse(iQuota);
 
-                    double usagePct = usage / quota * 100;
-                    double quotaPct = 100 - usagePct;
+            double usagePct = usage / quota * 100;
+            double quotaPct = 100 - usagePct;
 
-                    var key = new Chart(width: 100, height: 100).AddSeries(
-                        chartType: "pie",
-                        legend: "Space utulization",
-                        xValue: new[] { "Used", "Free" },
-                        yValues: new[] { usagePct, quotaPct }).Write("png");
+            var key = new Chart(width: 100, height: 100).AddSeries(
+                chartType: "pie",
+                legend: "Space utulization",
+                xValue: new[] { "Used", "Free" },
+                yValues: new[] { usagePct, quotaPct }).Write("png");
 
-                    return null;
-                }
+            return null;
+        }
 
         // Display Expand view
         [Authorize(Roles = "Access_SelfService_FullAccess")]
@@ -413,12 +415,12 @@ namespace ColumbusPortal.Controllers
                 // Expand VHD and create View.
                 CustomExpandVHD ExpandVHD = new CustomExpandVHD()
                 {
-                    TaskID = _POST["taskid"],
+                    TaskID = _POST["ExpandVHD.TaskID"],
                     VMID = _POST["vmid"].ToUpper(),
                     VHDID = _POST["vhdid"],
                     DateTime = _POST["datetime"].ToString(),
-                    GB = _POST["gb"],
-                    Email = _POST["email"]
+                    GB = _POST["ExpandVHD.GB"],
+                    Email = _POST["ExpandVHD.Email"]
                 };
 
                 var GB = Convert.ToInt32(ExpandVHD.GB);
@@ -500,13 +502,12 @@ namespace ColumbusPortal.Controllers
                 CustomExpandCPURAM ExpandCPURAM = new CustomExpandCPURAM()
                 
                 {
-                    
-                    TaskID = _POST["taskid"],
+                    TaskID = _POST["ExpandCPURAM.TaskID"],
                     VMID = _POST["vmid"].ToUpper(),
                     DateTime = _POST["datetime"].ToString(),
-                    CPU = _POST["cpu"].ToString(),
-                    RAM = _POST["ram"].ToString(),
-                    Email = _POST["email"],
+                    CPU = _POST["ExpandCPURAM.CPU"].ToString(),
+                    RAM = _POST["ExpandCPURAM.RAM"].ToString(),
+                    Email = _POST["ExpandCPURAM.Email"],
                     DynamicMemoryEnabled = _POST[""]
                 };
 
@@ -534,7 +535,7 @@ namespace ColumbusPortal.Controllers
                 }
 
 
-                CommonCAS.Log(string.Format("has run Service/ExpandVHD() to Expand CPU/RAM on server {0}, at date {1}, with TaskID {2}", ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.TaskID));
+                CommonCAS.Log(string.Format("has run Service/ExpandCPURAM() to Expand CPU/RAM on server {0}, at date {1}, with TaskID {2}", ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.TaskID));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
@@ -607,10 +608,10 @@ namespace ColumbusPortal.Controllers
                 // Schedule Reboot and create View.
                 CustomScheduleReboot ScheduleReboot = new CustomScheduleReboot()
                 {
-                    TaskID = _POST["taskid"].ToString(),
+                    TaskID = _POST["ScheduleReboot.TaskID"].ToString(),
                     VMID = _POST["vmid"].ToUpper(),
                     DateTime = _POST["datetime"].ToString(),
-                    Email = _POST["email"]
+                    Email = _POST["ScheduleReboot.Email"]
                 };
 
                 if (ScheduleReboot.TaskID.Length == 0)
@@ -845,6 +846,113 @@ namespace ColumbusPortal.Controllers
             returnstr += "</table>";
 
             return returnstr;
+        }
+
+        /// <summary>
+        /// Get current EXT Admins
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public class CustomScheduledJobs
+        {
+            public string ScheduledTime { get; set; }
+            public string Status { get; set; }
+            public string VMName { get; set; }
+            public string Parameters { get; set; }
+            public string RunbookID { get; set; }
+            public string TaskID { get; set; }
+            public string EmailStatusTo { get; set; }
+            public string JobID { get; set; }
+
+        }
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public string GetScheduledJobsJSON(string job)
+        {
+            try
+            {
+                List<CustomScheduledJobs> ScheduledJobs = new List<CustomScheduledJobs>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetScheduledJobs(job);
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject Job in result)
+                    {
+                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(Job);
+                        ScheduledJobs.Add(new CustomScheduledJobs()
+                        {
+                            ScheduledTime = properties["ScheduledTime"].ToString(),
+                            Status = properties["Status"].ToString(),
+                            VMName = properties["VMName"].ToString(),
+                            Parameters = properties["Parameters"].ToString(),
+                            RunbookID = properties["RunbookID"].ToString(),
+                            TaskID = properties["TaskID"].ToString(),
+                            EmailStatusTo = properties["EmailStatusTo"].ToString(),
+                            JobID = properties["JobID"].ToString(),
+                        });
+                    }
+
+                }
+
+
+                return new JavaScriptSerializer().Serialize(ScheduledJobs);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
+        // Display latest alert view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult SCOMLatestVMs()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
+
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult GetLatestVMs()
+        {
+            List<CustomLatestVMList> LatestVMList = new List<CustomLatestVMList>();
+            string conString = "Server=sht004;Integrated Security=true;Database=VirtualManagerDB";
+            SqlConnection con = new SqlConnection(conString);
+
+            string selectSql = @"SELECT Name, CreationTime, Tag from [dbo].[tbl_WLC_VObject] WHERE CreationTime > DATEADD(DAY, -11, GETDATE()) AND ObjectType = 1 ORDER by CreationTime DESC;";
+            SqlCommand cmd = new SqlCommand(selectSql, con);
+
+            try
+            {
+                con.Open();
+                using (SqlDataReader read = cmd.ExecuteReader())
+                {
+                    while (read.Read())
+                    {
+                        LatestVMList.Add(new CustomLatestVMList()
+                        {
+                            Name = (read["Name"].ToString()),
+                            CreationTime = (read["CreationTime"].ToString()),
+                            Tag = (read["Tag"].ToString()),
+                        });
+                    }
+                    model.LatestVMList = LatestVMList;
+                }
+                return PartialView("_SCOMLatestVMs", model);
+            }
+            catch (Exception exc)
+            {
+                throw new Exception(exc.ToString());
+            }
+            finally
+            {
+                con.Close();
+            }
+
         }
 
     }

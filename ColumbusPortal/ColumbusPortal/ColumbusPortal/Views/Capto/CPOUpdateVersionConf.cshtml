@@ -1,0 +1,82 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Level30 > Update Version Conf";
+}
+@section script {
+    <script>
+    /*    function setGrey() {
+            var el = document.getElementById("updateall");
+            var org = document.getElementById("org");
+            var force = document.getElementById("force");
+            if (el.checked) {
+                org.disabled = true;
+                force.disabled = true;
+            } else {
+                org.disabled = false;
+                force.disabled = false;
+            }
+        }
+        */
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create/update the version config file on Legal..</p>
+
+@using (Html.BeginForm("CPOUpdateVersionConf", "Capto"))
+{
+    <fieldset>
+        <legend>Update Version Conf</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization" id="org">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option selected="@(Model.ActionFailed && Model.CPOUpdateVersionConf.Organization == organization)">@organization</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Update All Organizations<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="updateall" id="updateall" type="checkbox" class="cbx hidden" onchange="setGrey();" /><label for="updateall" class="lbl"></label>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Use this checkbox to create/update the folder/config file on all customers..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Update Version Conf" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

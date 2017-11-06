@@ -15,9 +15,6 @@
 
         if ($AdminUsers.SamAccountName -contains $SamAccountName) {
 
-            #$NewConfig = $AdminUsers | where{$_.SamAccountName -ne $SamAccountName}
-            #$NewConfig | ConvertTo-Json | Out-File ("C:\ENTConfig\AdminUsers\AdminUsers.txt") -Force -Encoding utf8
-
             $Organizations = Get-Organizations
 
             try {

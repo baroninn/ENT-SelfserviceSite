@@ -43,7 +43,7 @@
 
         $SamAccountName = "CAS$($Organization)$($tables.UserName)"
 
-        if ($CASPlatform.Platform -eq "ENT") {
+        if ($CASPlatform.Platform -eq "Enterprise") {
 
             $Config = Get-SQLEntConfig -Organization $Organization
             $Cred = Get-RemoteCredentials -Organization $Organization

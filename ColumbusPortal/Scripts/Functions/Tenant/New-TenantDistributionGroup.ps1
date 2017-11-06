@@ -59,7 +59,7 @@
             throw $_
         }
 
-        if ($Config.ExchangeServer -ne 'null') {
+        if (-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
 
             Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Enable-DistributionGroup", "Set-DistributionGroup")
 

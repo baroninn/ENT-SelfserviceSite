@@ -60,7 +60,7 @@
                     </div>
                     <div id="okMessageDiv">
                         @if (Model.OKMessage.Count > 0)
-                        { 
+                        {
                             <div class="okmessage">
                                 @foreach (string msg in Model.OKMessage)
                                 {
@@ -72,6 +72,8 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td class="lefttd">Organization</td>
                 <td class="middletd">
@@ -79,9 +81,9 @@
                         @foreach (string organization in Model.Organizations)
                         {
                             <option @if (Model.ActionFailed) { if (organization == Model.RemoveUser.Organization) { @: selected="selected"
-                                                                            } }>
+                                                                                                                } } value="@organization.Split(' ')[0]">
                                 @organization
-                                                                        </option>
+                            </option>
                         }
                     </select>
                     <span class="mandatory">*</span>
@@ -95,20 +97,31 @@
                     <span class="mandatory">*</span>
                 </td>
             </tr>
-            <tr>
+            <tr class="hide">
                 <td class="lefttd">Delete UserHome Data:</td>
                 <td>
-                    <input id="deldata" type="checkbox" name="deldata" />
+                    <input id="deldata" type="checkbox" name="deldata" class="cbx hidden" @if (Model.ActionFailed) { if (Model.RemoveUser.DelData) { @: checked="checked"
+                                                                  } } /><label for="deldata" class="lbl"></label><p></p>
                 </td>
             </tr>
-            <tr>
+
+            <tr class="hide">
                 <td class="lefttd">Confirm<br /></td>
                 <td>
-                    <input name="confirm" type="checkbox" @if (Model.ActionFailed) { if (Model.RemoveUser.Confirm) { @: checked="checked"
-                                                                                                                                                                        } } onclick="Confirm()" />
+                    <input name="confirm" id="confirm" type="checkbox" class="cbx hidden" @if (Model.ActionFailed) { if (Model.RemoveUser.Confirm) { @: checked="checked"
+                                                                  } } onclick="Confirm()" /> <label for="confirm" class="lbl"></label>
                 </td>
             </tr>
         </table>
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <br />
         <input type="submit" class="button" id="buttonSubmit" value="Remove User" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
     </fieldset>

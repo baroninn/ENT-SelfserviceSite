@@ -11,7 +11,7 @@
         $Server= 'vmm-a.corp.systemhosting.dk'
         $Cred = Get-RemoteCredentials -SSS
         $Cmdlets = @("Get-SCVMMServer", "Get-SCVirtualMachine")
-        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force | Out-Null
+        Import-Module virtualmachinemanager -Cmdlet $Cmdlets -DisableNameChecking -Force > $null
         $SCVMMServer = Get-SCVMMServer -ConnectAs Administrator -ComputerName $Server -Credential $Cred
     }
     Process {

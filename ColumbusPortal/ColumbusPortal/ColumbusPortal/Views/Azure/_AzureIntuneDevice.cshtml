@@ -1,0 +1,103 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="subfieldset">
+    <legend class="sublegend">Intune Managed Devices</legend>
+
+    <div style="max-height:500px; overflow: auto;">
+
+        @if (Model.IntuneDevice.Count() != 0)
+        {
+            <table class="IntuneDevice">
+                <tr>
+                    <td style="width: 45%"><b>Device Name</b></td>
+                    <td><b>User</b></td>
+                    <td><b>Owner Type</b></td>
+                    <td><b>Compliant</b></td>
+                    <td><b>Operating System</b></td>
+                    <td><b>OS Version</b></td>
+                </tr>
+                @foreach (var item in Model.IntuneDevice)
+                {
+                    <tr>
+                        <td class="lefttd"><i class="material-icons infoiconleft intunedevicesummary" style="margin-right: 20px">info</i>@item.deviceName</td>
+                        <td>@item.userPrincipalName.Split('@')[0]</td>
+                        <td>@item.ownerType</td>
+                        @if (item.complianceState == "compliant")
+                        {
+                            <td><text style="color: green">@item.complianceState</text></td>
+                        }
+                        @if (item.complianceState == "noncompliant")
+                        {
+                            <td><text style="color: red">@item.complianceState</text></td>
+                        }
+                        <td>@item.operatingSystem</td>
+                        <td>@item.osVersion</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="description">
+                                <table style="background-color: ghostwhite;">
+                                    <tbody class="descriptiontext">
+                                        <tr><td class="descriptiontext"><b>Device Name: </b></td><td>@item.deviceName</td></tr>
+                                        <tr><td class="descriptiontext"><b>Owner Type: </b></td><td>@item.ownerType</td></tr>
+                                        <tr><td class="descriptiontext"><b>Compliant: </b></td><td>@item.complianceState</td></tr>
+                                        <tr><td class="descriptiontext"><b>Operating System: </b></td><td>@item.operatingSystem</td></tr>
+                                        <tr><td class="descriptiontext"><b>OS Version: </b></td><td>@item.osVersion</td></tr>
+                                        <tr><td class="descriptiontext"><b>JailBroken: </b></td><td>@item.jailBroken</td></tr>
+                                        <tr><td class="descriptiontext"><b>Enroll Type: </b></td><td>@item.deviceEnrollmentType</td></tr>
+                                        <tr><td class="descriptiontext"><b>Manufacturer: </b></td><td>@item.manufacturer</td></tr>
+                                        <tr><td class="descriptiontext"><b>SE Number: </b></td><td>@item.serialNumber</td></tr>
+                                        <tr><td class="descriptiontext"><b>Device Type: </b></td><td>@item.deviceType</td></tr>
+                                        <tr><td class="descriptiontext"><b>Last Sync: </b></td><td>@item.lastSyncDateTime</td></tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <input type="button" class="deviceactions" id="buttonSubmit" value="Sync Device" onclick="StartIntuneDeviceTask('syncDevice', '@item.id', '@item.deviceName')" />
+                                                <input type="button" class="deviceactions" id="buttonSubmit" value="Remote Lock" onclick="StartIntuneDeviceTask('remoteLock','@item.id','@item.deviceName')" />
+                                                <input type="button" class="deviceactions" id="buttonSubmit" value="Wipe" onclick="StartIntuneDeviceTask('wipe','@item.id','@item.deviceName')" />
+                                                <input type="button" class="deviceactions" id="buttonSubmit" value="Retire" onclick="StartIntuneDeviceTask('retire','@item.id','@item.deviceName')" />
+
+                                                @if (item.operatingSystem == "Android")
+                                                {
+                                                    if (double.Parse(item.osVersion) >= 7.0)
+                                                    {
+                                                        <input type="button" class="deviceactions" id="buttonSubmit" disabled value="Reset Passcode" title="Android version is above 7.0" onclick="StartIntuneDeviceTask('resetPasscode','@item.id','@item.deviceName')" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" class="deviceactions" id="buttonSubmit" value="Reset Passcode" onclick="StartIntuneDeviceTask('resetPasscode','@item.id','@item.deviceName')" />
+                                                    }
+                                                }
+                                                @if (item.operatingSystem == "iOS")
+                                                {
+                                                    <input type="button" class="deviceactions" id="buttonSubmit" value="Remove Passcode" onclick="StartIntuneDeviceTask('resetPasscode','@item.id','@item.deviceName')" />
+                                                    if (item.deviceEnrollmentType != "userEnrollment")
+                                                    {
+                                                        <input type="button" class="deviceactions" id="buttonSubmit" value="LostMode" onclick="StartIntuneDeviceTask('enableLostMode','@item.id','@item.deviceName')" />
+                                                    }
+                                                }
+                                                @if (item.operatingSystem == "Windows")
+                                                {
+                                                    <input type="button" class="deviceactions" id="buttonSubmit" value="Reboot" onclick="StartIntuneDeviceTask('rebootNow','@item.id','@item.deviceName')" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <table class="IntuneDevice">
+                <tr>
+                    <td>
+                        IntuneDevice list is empty...
+                    </td>
+                </tr>
+            </table>
+        }
+        </div>
+</fieldset>

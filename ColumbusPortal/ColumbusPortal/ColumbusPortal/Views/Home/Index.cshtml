@@ -1,4 +1,6 @@
-﻿@using System.Security.Claims
+﻿@using System.Security.Claims;
+@using ColumbusPortal.Logic;
+
 @model ColumbusPortal.Models.ServiceModel
 @{
     ViewBag.Title = "Home > SCOM latest alerts";
@@ -10,18 +12,43 @@
             var alert = 'LatestAlerts'
             GetLatestAlerts(alert);
             $("#latestalerts").html("Contacting DB... please be patient..");
+
         });
+
+        var stupid = 'Was a little stupid..'
+        var mistake = 'made an honest mistake..'
+        function Really() {
+                $.confirm({
+                    theme: 'light',
+                    type: 'red',
+                    typeAnimated: true,
+                    title: 'OMG!',
+                    content: '<b>Really??!</b>' +
+                        '<p>But... WHY?... What if.... OMG... WHY would you do it??...' +
+                        '<p><br />',
+                    buttons: {
+                        A_Little_Stupid: function () {
+                            WriteToLog(stupid)
+                        },
+                        Honest_mistake: function () {
+                            WriteToLog(mistake)
+                        },
+                    }
+                });
+            }
 
     </script>
 }
 
 <h3 class="title">Welcome @User.Identity.Name</h3>
 <p>Please enjoy your stay! if not..  Eat a cookie!</p>
+
 <br />
 <br />
 
 @using (Html.BeginForm("ScomLatestAlerts", "Service"))
 {
+    @Html.AntiForgeryToken()
     <fieldset>
         <legend>SCOM Latest Alerts</legend>
         <table>
@@ -36,5 +63,5 @@
         <br />
         <input type="submit" class="button" id="buttonSubmit" value="Refresh Alerts" onclick="ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); GetLatestAlerts();" />
     </fieldset>
-
+    <div style="width:100%; text-align:right;"><a href="#" onclick="Really()"><b><text style="font-size: xx-small">DON'T CLICK THIS LINK!</text></b></a></div>
 }

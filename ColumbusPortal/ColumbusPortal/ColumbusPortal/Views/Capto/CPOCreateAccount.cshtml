@@ -1,0 +1,87 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Organization > Create new account DB";
+}
+@section script {
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to add an additional new account database to the tenant.</p>
+
+@using (Html.BeginForm("CPOCreateAccount", "Capto"))
+{
+    <fieldset>
+        <legend>Add Account Database (Capto)</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.CPOOrganizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.CPOCreateAccount.Organization) { @: selected="selected"
+                                                                        } }>
+                                @organization
+                                                                    </option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="lefttd tooltip"><span>Account/Company name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="accountname" placeholder="Contoso Advokater" @if (Model.ActionFailed) { @: value="@Model.CPOCreateAccount.AccountName"
+                                                                                                             } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The name the customer will see in Navision.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Shortname<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="shortname" placeholder="CA" @if (Model.ActionFailed) { @: value="@Model.CPOCreateAccount.ShortName"
+                                                                                                                                        } />
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Please keep this as short as possible... ex CA.. This will be used for SPN's and SVC accounts..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <p class="warning2">Remember to convert the current GPO account settings to comply with item level targeting!</p>
+        <br />
+        <input type="submit" class="button" class:hover="button:hover" id="buttonSubmit" value="Create new account" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit(); " />
+    </fieldset>
+
+}

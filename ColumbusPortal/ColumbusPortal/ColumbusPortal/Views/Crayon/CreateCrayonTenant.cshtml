@@ -1,0 +1,236 @@
+﻿@model ColumbusPortal.Models.CrayonModel
+@{
+    ViewBag.Title = "Crayon > CreateTenant";
+}
+@section script {
+
+<script>
+    $(document).ready(function () {
+        if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+        document.getElementById("FirstName").value = "Annike";
+        document.getElementById("LastName").value = "Fossing";
+        document.getElementById("Email").value = "DriftenSystemHosting@columbusglobal.com";
+        document.getElementById("PhoneNumber").value = "+45 28888225";
+        GetCrayonInvoiceProfiles();
+    });
+    function info() {
+        $.confirm({
+            theme: 'light',
+            type: 'green',
+            typeAnimated: true,
+            title: 'INFO:',
+            content: 'This will create a CSP tenant at Crayon' +
+                     '<p>The username and password will be written to log.' + 
+                     '<p>Are you sure you wish to do this?',
+            buttons: {
+                OK: function () {
+                    StartSubmitButtonMessage();
+                    //$("#mCreateUser").submit();
+                    ///jQuery("form").submit();
+                    document.getElementById("CreateCrayonTenant").submit();
+                },
+                cancel: function () {
+
+                }
+            }
+        });
+    }
+
+</script>
+
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to create a new CSP tenant at Crayon.</p>
+<br />
+
+@using (Html.BeginForm("CreateCrayonTenant", "Crayon", FormMethod.Post, new { id = "CreateCrayonTenant" }))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>Create CSP Tenant</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd tooltip"><span>Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="Name" placeholder="Contoso A/S" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.Name"
+                                                     } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies the full name of the Tenant..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Reference<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="Reference" id="Reference" placeholder="CON" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.Reference"
+                                                                                } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            Specifies the customers initials so we can reference it in the portal..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Invoice Profile</td>
+                <td class="middletd">
+                    <select name="InvoiceProfile" id="InvoiceProfile"><option>loading...</option></select>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Domain Prefix</td>
+                <td class="lefttdaccepteddomain">
+                    <input name="DomainPrefix" id="DomainPrefix" placeholder="Contoso" @if (Model.ActionFailed) { @: value="@Model.CrayonTenant.DomainPrefix"
+                                                                                                                   } />
+                </td>
+                <td style="width:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;"><p><text>></text></p></td>
+                <td class="righttdaccepteddomain">
+                    <input readonly placeholder=".onmicrosoft.com" value=".onmicrosoft.com" />
+                </td>
+            </tr>
+
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd tooltip"><span>Columbus First Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="FirstName" id="FirstName" placeholder="Annike" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.FirstName"
+                                              } />
+                    <span class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The first name on the contact person at Columbus CIS.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Columbus Last Name<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="LastName" id="LastName" placeholder="Fossing" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.LastName"
+                                                             } />
+                    <span id="mandatory_subnet" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The last name on the contact person at Columbus CIS.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Columbus Email<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="Email" id="Email" placeholder="driftenSystemHosting@columbusglobal.com" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.Email"
+                                                          } />
+                    <span id="mandatory_vlan" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            the email at which we get information from Crayon on the customer, ex: driften@columbusglobal.com
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>Columbus Phone Number<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="PhoneNumber" id="PhoneNumber" placeholder="+45 8188 8223" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.PhoneNumber"
+                                                                                                                                                                                                               } />
+                    <span id="mandatory_gateway" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            The phone number in which Crayon can contact us. (Type in Annike's phone number).
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>End Customer First Name</span></td>
+                <td class="middletd">
+                    <input name="CustomerFirstName" placeholder="bob" id="CustomerFirstName" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.CustomerFirstName"
+                                                                                                                                                                                                               } />
+                    <span id="mandatory_ipstart" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>End Customer Last Name</span></td>
+                <td class="middletd">
+                    <input name="CustomerLastName" placeholder="Lee Swagger" id="CustomerLastName" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.CustomerLastName"
+                                                                                                                                                                                                               } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>End Customer Address</span></td>
+                <td class="middletd">
+                    <input name="AddressLine1" placeholder="Bobvej 1" id="AddressLine1" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.AddressLine1"
+                                                                                                                                                                                                                                                                     } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>End Customer City</span></td>
+                <td class="middletd">
+                    <input name="City" placeholder="Søborg" id="City" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.City"
+                                                                                                                                                                                                                                          } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd tooltip"><span>End Customer Region<i class="material-icons infoicon">info</i></span></td>
+                <td class="middletd">
+                    <input name="Region" placeholder="Copenhagen" id="Region" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.Region"
+                                                                                                                                                                                                                                                                     } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                    <div class="description">
+                        <p class="descriptiontext">
+                            It's mandatory so type in Copenhagen..
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd"><span>End Customer Postal Code</span></td>
+                <td class="middletd">
+                    <input name="PostalCode" placeholder="2860" id="PostalCode" @if (Model.ActionFailed) {  @: value="@Model.CrayonTenant.PostalCode"
+                                                                                                                                                                                                                                                                     } />
+                    <span id="mandatory_ipend" class="mandatory">*</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" class="button" id="buttonSubmit" value="Create Organization" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); info()" />
+    </fieldset>
+
+}

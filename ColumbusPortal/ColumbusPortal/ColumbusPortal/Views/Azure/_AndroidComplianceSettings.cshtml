@@ -1,0 +1,178 @@
+﻿@model ColumbusPortal.Models.AzureModel
+
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Device Health (Android)</legend>
+    <!-- General -->
+    <table>
+        <!--#################### ANDROID CONFIGURATION ####################-->
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Rooted Devices</td>
+            <td class="righttdsettings">
+                <select name="securityBlockJailbrokenDevices" id="securityBlockJailbrokenDevices">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityBlockJailbrokenDevices == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityBlockJailbrokenDevices == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Require the device to be at or under the Mobile Threat Level</td>
+            <td class="righttdsettings">
+                <select name="deviceThreatProtectionRequiredSecurityLevel" id="deviceThreatProtectionRequiredSecurityLevel">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.deviceThreatProtectionRequiredSecurityLevel == "unavailable")" value="unavailable">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.deviceThreatProtectionRequiredSecurityLevel == "secured")" value="secured">Secured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.deviceThreatProtectionRequiredSecurityLevel == "low")" value="low">Low</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.deviceThreatProtectionRequiredSecurityLevel == "medium")" value="medium">Medium</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.deviceThreatProtectionRequiredSecurityLevel == "high")" value="high">High</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Device Properties (Android)</legend>
+    <!-- General -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip">Minimum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="osMinimumVersion" id="osMinimumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.osMinimumVersion"
+                                                                                                                                                                                                    } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the min OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip">Maximum OS version<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input name="osMaximumVersion" id="osMaximumVersion" type="text" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.osMaximumVersion"
+                                                                          } />
+                <div class="description">
+                    <p class="descriptiontext">Specify the max OS version compliance requirement for devices.</p>
+                    <p class="descriptiontext">E.g. specify “7.1” in this field for Nougat (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset class="Android subfieldset" hidden>
+    <legend class="sublegend">Password (Android)</legend>
+    <!-- Password -->
+    <table>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip">Require a password to unlock mobile devices.<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select name="passwordRequired" id="passwordRequired">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequired == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequired == "True")" value="True">Require</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether to require users to enter a password before access is granted to information on their mobile devices.</p>
+                    <p class="descriptiontext">Recommended value: Require (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum password length<i class="material-icons infoicon">info</i></span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordMinimumLength" name="passwordMinimumLength" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passwordMinimumLength"
+                                                                                                                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the minimum number of digits or characters in the password. </p>
+                    <p class="descriptiontext">Recommended Value: 4 (4-16) (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip">Required password type<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordRequiredType" id="passwordRequiredType">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "deviceDefault")" value="deviceDefault">Device Default</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "lowSecurityBiometric")" value="lowSecurityBiometric">Low Security Biometric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "numeric")" value="numeric">At Least Numeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "numericComplex")" value="numericComplex">Numeric Complex</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "alphabetic")" value="alphabetic">At Least Alphabetic</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "alphanumeric")" value="alphanumeric">At Least Alphanumeric</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordRequiredType == "alphanumericWithSymbols")" value="alphanumericWithSymbols">At Least Alphanumeric with Symbols</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies whether passwords are allowed to be comprised only of numeric characters, or whether they must contain characters other than numbers.</p>
+                    <p class="descriptiontext">Recommendations:  Required password type: Alphanumeric, Minimum number of character sets: 1 (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above)</p>
+                </div>
+            </td>
+        </tr>
+
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip">Maximum minutes of inactivity before password is required<i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <select class="AndroidPassword" name="passwordMinutesOfInactivityBeforeLock" id="passwordMinutesOfInactivityBeforeLock">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == null)" value="">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "0")" value="0">Immediately</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "1")" value="1">1 Minute</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "5")" value="5">5 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "15")" value="15">15 Minutes</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "60")" value="60">1 Hour</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "240")" value="240">4 Hours</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.passwordMinutesOfInactivityBeforeLock == "480")" value="480">8 Hours</option>
+                </select>
+                <div class="description">
+                    <p class="descriptiontext">This setting specifies the length of time without user input after which the mobile device screen is locked.</p>
+                    <p class="descriptiontext">Recommended value: 15 min (This compliance check is supported for devices with OS versions Android 4.0 and above, or KNOX 4.0 and above).</p>
+                </div>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Password expiration (days)</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordExpirationDays" name="passwordExpirationDays" placeholder="Number (1-255)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passwordExpirationDays"
+                                           } />
+            </td>
+        </tr>
+
+        <tr class="Android" hidden>
+            <td class="lefttdsettings"><span>Number of previous passwords to prevent reuse</span></td>
+            <td class="righttdsettings">
+                <input class="AndroidPassword" type="number" id="passwordPreviousPasswordBlockCount" name="passwordPreviousPasswordBlockCount" placeholder="Number (1-24)" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.passwordPreviousPasswordBlockCount"
+                                           } />
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Encryption of data storage on device.</td>
+            <td class="righttdsettings">
+                <select name="storageRequireEncryption" id="storageRequireEncryption">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.storageRequireEncryption == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.storageRequireEncryption == "True")" value="True">Require</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Block apps from unknown sources</td>
+            <td class="righttdsettings">
+                <select name="securityPreventInstallAppsFromUnknownSources" id="securityPreventInstallAppsFromUnknownSources">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityPreventInstallAppsFromUnknownSources == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityPreventInstallAppsFromUnknownSources == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings">Block USB debugging on device</td>
+            <td class="righttdsettings">
+                <select name="securityDisableUsbDebugging" id="securityDisableUsbDebugging">
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityDisableUsbDebugging == "False")" value="False">Not Configured</option>
+                    <option selected="@(Model.ActionFailed && Model.AzureDeviceComplianceSetting.securityDisableUsbDebugging == "True")" value="True">Block</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="Android" hidden>
+            <td class="lefttdsettings tooltip"><span>Minimum security patch level</span><i class="material-icons infoicon">info</i></td>
+            <td class="righttdsettings">
+                <input id="minAndroidSecurityPatchLevel" name="minAndroidSecurityPatchLevel" placeholder="Not Configured" @if (Model.ActionFailed) { @: value="@Model.AzureDeviceComplianceSetting.minAndroidSecurityPatchLevel"
+                                                                  } />
+                <div class="description">
+                    <p class="descriptiontext">Must be a valid date format (YYYY-MM-DD). Example: 2016-10-01, 2016-10-31 etc.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>

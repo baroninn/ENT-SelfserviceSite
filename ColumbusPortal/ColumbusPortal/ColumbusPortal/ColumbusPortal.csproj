@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.0\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -48,17 +48,25 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Crayon.Api.Sdk, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crayon.Api.Sdk.1.3.3\lib\net451\Crayon.Api.Sdk.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.14.1.10, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.14.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    <Reference Include="Microsoft.Graph, Version=1.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.1.6.2\lib\net45\Microsoft.Graph.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.14.1.10, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.14.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+    <Reference Include="Microsoft.Graph.Core, Version=1.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.Core.1.6.2\lib\net45\Microsoft.Graph.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.17.0.27603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.17.0\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -85,6 +93,14 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
@@ -92,7 +108,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.0.0\lib\net4\System.Management.Automation.dll</HintPath>
+      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DataVisualization" />
@@ -154,6 +170,10 @@
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="XKCDPasswordGen, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XKCDPasswordGen.1.0.3\lib\net451\XKCDPasswordGen.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -162,6 +182,10 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\ViewEngine.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\AzureController.cs" />
+    <Compile Include="Controllers\CaptoController.cs" />
+    <Compile Include="Controllers\CPOAjaxController.cs" />
+    <Compile Include="Controllers\CrayonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Level30Controller.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -173,11 +197,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\CaptoPowershell.cs" />
     <Compile Include="Logic\CommonCAS.cs" />
     <Compile Include="Logic\Directory.cs" />
     <Compile Include="Logic\MyPowerShell.cs" />
     <Compile Include="Models\AdAuthenticationService.cs" />
+    <Compile Include="Models\AzureModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CaptoModel.cs" />
+    <Compile Include="Models\CrayonModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\Level30Model.cs" />
     <Compile Include="Models\MailModel.cs" />
@@ -205,6 +233,7 @@
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\jquery.datetimepicker.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\reset.css" />
     <Content Include="Content\reset.min.css">
       <DependentUpon>reset.css</DependentUpon>
@@ -217,6 +246,7 @@
     <Content Include="Content\styleOrange.min.css">
       <DependentUpon>styleOrange.css</DependentUpon>
     </Content>
+    <Content Include="Content\superfish.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -271,14 +301,39 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Images\Azure-VM.png" />
+    <Content Include="Images\Azure-VMsmall.png" />
+    <Content Include="Images\Azure\AzureAPP.PNG" />
+    <Content Include="Images\Azure\AzureAPP2.PNG" />
+    <Content Include="Images\Azure\AzureAPP3.PNG" />
+    <Content Include="Images\Azure\AzureAPP4.PNG" />
+    <Content Include="Images\Azure\AzureAPP5.PNG" />
+    <Content Include="Images\Azure\AzureAPP6.PNG" />
+    <Content Include="Images\Azure\AzureAPP7.PNG" />
     <Content Include="Images\bg3try.jpg" />
     <Content Include="Images\business12+links.jpg" />
+    <Content Include="Images\collapsed.gif" />
     <Content Include="Images\Columbus logo+strap_rgb.png" />
+    <Content Include="Images\CPO-GPO-6.png" />
+    <Content Include="Images\CPO-GPO2.png" />
+    <Content Include="Images\CPO-GPO5.png" />
+    <Content Include="Images\CPOTenantID2.png" />
+    <Content Include="Images\CPOTenantID3.png" />
+    <Content Include="Images\CPO_GPO1.png" />
+    <Content Include="Images\CPO_GPO3.png" />
+    <Content Include="Images\Create2.png" />
+    <Content Include="Images\expanded.gif" />
+    <Content Include="Images\favicon.ico" />
+    <Content Include="Images\linux.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\mysprite.sprite" />
     <None Include="bundleconfig.json" />
+    <Content Include="Content\jquery-3.1.1.min.map" />
+    <Content Include="Content\jquery-3.1.1.slim.min.map" />
     <None Include="Properties\PublishProfiles\8082 - Test.pubxml" />
     <None Include="Properties\PublishProfiles\EntTest.pubxml" />
-    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <None Include="Properties\PublishProfiles\TEST.pubxml" />
+    <Content Include="SampleCSV.csv" />
     <Content Include="Images\1.png" />
     <Content Include="Images\1columbus_logo.png" />
     <Content Include="Images\2.png" />
@@ -336,22 +391,32 @@
     <Content Include="Images\ui-icons_ededed_256x240.png" />
     <Content Include="Images\ui-icons_ffcf29_256x240.png" />
     <Content Include="Images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Images\Windows_logo.png" />
+    <Content Include="SampleCSV.txt" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\Captofunctions.js" />
+    <Content Include="Scripts\float-panel.js" />
+    <Content Include="Scripts\hoverIntent.js" />
+    <None Include="Scripts\jquery-3.2.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.2.1.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-confirm.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.collapse.js" />
     <Content Include="Scripts\jquery.collapse.min.js" />
+    <Content Include="Scripts\jquery.coolfieldset.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.datetimepicker.min.js" />
@@ -380,8 +445,152 @@
     <Content Include="Scripts\shtfunctions.min.js">
       <DependentUpon>shtfunctions.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\superfish.js" />
+    <Content Include="Scripts\tinymce\jquery.tinymce.min.js" />
+    <Content Include="Scripts\tinymce\license.txt" />
+    <Content Include="Scripts\tinymce\plugins\advlist\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\anchor\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\autolink\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\autoresize\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\autosave\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\bbcode\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\charmap\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\codesample\css\prism.css" />
+    <Content Include="Scripts\tinymce\plugins\codesample\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\codesample\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\code\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\colorpicker\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\colorpicker\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\css\dialog.css" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\buttons.png" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\icons.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\items.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\menu_arrow.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\menu_check.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\progress.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\img\tabs.gif" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\tiny_mce_popup.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\utils\editable_selects.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\utils\form_utils.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\utils\mctabs.js" />
+    <Content Include="Scripts\tinymce\plugins\compat3x\utils\validate.js" />
+    <Content Include="Scripts\tinymce\plugins\contextmenu\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\directionality\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\fullpage\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\fullscreen\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\help\img\logo.png" />
+    <Content Include="Scripts\tinymce\plugins\help\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\help\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\hr\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\imagetools\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\imagetools\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\image\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\importcss\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\importcss\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\insertdatetime\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\legacyoutput\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\link\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\lists\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\media\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\nonbreaking\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\noneditable\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\pagebreak\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\paste\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\preview\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\print\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\save\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\searchreplace\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\spellchecker\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\tabfocus\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\table\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\template\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\textcolor\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\textpattern\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\textpattern\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\toc\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\toc\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\tinymce\plugins\visualblocks\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\visualchars\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\tinymce\plugins\wordcount\plugin.js" />
+    <Content Include="Scripts\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\tinymce\skins\lightgray\content.inline.min.css" />
+    <Content Include="Scripts\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\tinymce\skins\lightgray\content.mobile.min.css" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\tinymce\skins\lightgray\skin.mobile.min.css" />
+    <Content Include="Scripts\tinymce\themes\inlite\theme.js" />
+    <Content Include="Scripts\tinymce\themes\inlite\theme.min.js" />
+    <Content Include="Scripts\tinymce\themes\mobile\theme.js" />
+    <Content Include="Scripts\tinymce\themes\mobile\theme.min.js" />
+    <Content Include="Scripts\tinymce\themes\modern\theme.js" />
+    <Content Include="Scripts\tinymce\themes\modern\theme.min.js" />
+    <Content Include="Scripts\tinymce\tinymce.js" />
+    <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -411,7 +620,6 @@
     <Content Include="Views\Mail\CreateDistributionGroupSuccess.cshtml" />
     <Content Include="Views\Mail\CreateMailbox.cshtml" />
     <Content Include="Views\Mail\CreateMailboxSuccess.cshtml" />
-    <Content Include="Views\Mail\EnableSikkerMail.cshtml" />
     <Content Include="Views\Mail\GetCalendarPermissions.cshtml" />
     <Content Include="Views\Mail\GetDeviceReport.cshtml" />
     <Content Include="Views\Mail\GetDeviceReportSuccess.cshtml" />
@@ -427,9 +635,6 @@
     <Content Include="Views\Organization\AddDomain.cshtml" />
     <Content Include="Views\Organization\Create.cshtml" />
     <Content Include="Views\Organization\CreateALLAdmins.cshtml" />
-    <Content Include="Views\Organization\DisableCustomer.cshtml" />
-    <Content Include="Views\Organization\EnableCustomer.cshtml" />
-    <Content Include="Views\Organization\RemoveCustomer.cshtml" />
     <Content Include="Views\Organization\RemoveDomain.cshtml" />
     <Content Include="Views\Service\CustomerReport.cshtml" />
     <Content Include="Views\Service\CustomerReportSuccess.cshtml" />
@@ -454,23 +659,109 @@
     <Content Include="Views\Level30\ScheduleEXTAdminSuccess.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutOLD.cshtml" />
-    <Content Include="Views\Level30\CreateSharedCustomer.cshtml" />
-    <Content Include="Views\Level30\UpdateSharedCustomer.cshtml" />
+    <Content Include="Views\Level30\CreateNAVCustomer.cshtml" />
+    <Content Include="Views\Level30\UpdateNAVCustomer.cshtml" />
     <Content Include="Views\Home\MyInfo.cshtml" />
     <Content Include="Views\Level30\RemoveCASAdmin.cshtml" />
-    <Content Include="Views\Level30\RemoveSharedCustomer.cshtml" />
+    <Content Include="Views\Level30\RemoveNAVCustomer.cshtml" />
+    <Content Include="Views\Level30\RemoveCASAdminALL.cshtml" />
+    <Content Include="Views\Mail\SetOOFMessage.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
+    <Content Include="Views\Mail\RemoveOOFMessage.cshtml" />
+    <Content Include="Views\Azure\AzureOverView.cshtml" />
+    <Content Include="Views\Azure\CreateVM.cshtml" />
+    <Content Include="Views\Azure\CreateAzurePIP.cshtml" />
+    <Content Include="Views\Azure\UpdateAzureIntuneDeviceConfiguration.cshtml" />
+    <Content Include="Views\Azure\_AndroidSettings.cshtml" />
+    <Content Include="Views\Azure\_IOSSettings.cshtml" />
+    <Content Include="Views\Azure\_Win10Settings.cshtml" />
+    <Content Include="Views\Capto\CPOCreateUser.cshtml" />
+    <Content Include="Views\Capto\CPOCreateSuccess.cshtml" />
+    <Content Include="Views\Capto\CPODisableUser.cshtml" />
+    <Content Include="Views\Capto\CPOCreateUserBatch.cshtml" />
+    <Content Include="Views\Capto\CPOEnableUser.cshtml" />
+    <Content Include="Views\Capto\CPORemoveUser.cshtml" />
+    <Content Include="Views\Capto\CPOCreateUserBatchSuccess.cshtml" />
+    <Content Include="Views\Capto\CPOCreateUserBatchVerify.cshtml" />
+    <Content Include="Views\Capto\CPOAddAcceptedDomain.cshtml" />
+    <Content Include="Views\Capto\CPOAddAlias.cshtml" />
+    <Content Include="Views\Capto\CPOAddMailboxPermission.cshtml" />
+    <Content Include="Views\Capto\CPOCreateDistributionGroup.cshtml" />
+    <Content Include="Views\Capto\CPOCreateDistributionGroupSuccess.cshtml" />
+    <Content Include="Views\Capto\CPOCreateMailbox.cshtml" />
+    <Content Include="Views\Capto\CPOEnableSikkerMail.cshtml" />
+    <Content Include="Views\Capto\CPOGetCalendarPermissions.cshtml" />
+    <Content Include="Views\Capto\CPOGetDeviceReport.cshtml" />
+    <Content Include="Views\Capto\CPOGetDeviceReportSuccess.cshtml" />
+    <Content Include="Views\Capto\CPOGetItemsReport.cshtml" />
+    <Content Include="Views\Capto\CPORemoveAlias.cshtml" />
+    <Content Include="Views\Capto\CPORemoveOOFMessage.cshtml" />
+    <Content Include="Views\Capto\CPOSetAllMailboxPlans.cshtml" />
+    <Content Include="Views\Capto\CPOSetMailboxAutoResize.cshtml" />
+    <Content Include="Views\Capto\CPOSetMailboxPlan.cshtml" />
+    <Content Include="Views\Capto\CPOSetMailboxPlanSuccess.cshtml" />
+    <Content Include="Views\Capto\CPOSetMailForward.cshtml" />
+    <Content Include="Views\Capto\CPOSetOOFMessage.cshtml" />
+    <Content Include="Views\Capto\CPOConvertCustomer.cshtml" />
+    <Content Include="Views\Capto\CPOCreate.cshtml" />
+    <Content Include="Views\Capto\CPOCreateAccount.cshtml" />
+    <Content Include="Views\Capto\CPODisableCustomer.cshtml" />
+    <Content Include="Views\Capto\CPOEnableCustomer.cshtml" />
+    <Content Include="Views\Capto\CPORemoveCustomer.cshtml" />
+    <Content Include="Views\Capto\CPORemoveDummyDomain.cshtml" />
+    <Content Include="Views\Capto\CPOSetNavCompanyName.cshtml" />
+    <Content Include="Views\Capto\CPOAddDomain.cshtml" />
+    <Content Include="Views\Capto\CPOEnable365Customer.cshtml" />
+    <Content Include="Views\Capto\CPOEnableFederation.cshtml" />
+    <Content Include="Views\Capto\CPOCustomerReport.cshtml" />
+    <Content Include="Views\Capto\CPOCustomerReportSuccess.cshtml" />
+    <Content Include="Views\Capto\CPOCreateGoldenVM.cshtml" />
+    <Content Include="Views\Capto\CPOMCSCreateCatalog.cshtml" />
+    <Content Include="Views\Capto\CPOMCSUpdateImage.cshtml" />
+    <Content Include="Views\Capto\CPOUpdateVersionConf.cshtml" />
+    <Content Include="Views\Home\CPOLog.cshtml" />
+    <Content Include="Views\Azure\CreateDefaultIntuneConfiguration.cshtml" />
+    <Content Include="Views\Azure\_IntuneOverview.cshtml" />
+    <Content Include="Views\Azure\IntuneOverview.cshtml" />
+    <Content Include="Views\Azure\_AzureVMs.cshtml" />
+    <Content Include="Views\Azure\_AzureSecurity.cshtml" />
+    <Content Include="Views\Azure\UpdateAzureIntuneComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_AndroidComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_IOSComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_Win10ComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_AndroidAFWComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_macOSComplianceSettings.cshtml" />
+    <Content Include="Views\Azure\_AndroidAFWSettings.cshtml" />
+    <Content Include="Views\Azure\_macOSSettings.cshtml" />
+    <Content Include="Views\Azure\_AzureIntuneDevice.cshtml" />
+    <Content Include="Views\Organization\ConnectAdminRDS.cshtml" />
+    <Content Include="Views\Crayon\CreateCrayonTenant.cshtml" />
+    <Content Include="Views\Crayon\CreateCrayonTenantSuccess.cshtml" />
+    <Content Include="Views\Azure\_IntuneComplianceOverview.cshtml" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
+    <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Service\SCOMLatestVMs.cshtml" />
+    <Content Include="Views\Service\_SCOMLatestVMs.cshtml" />
+    <Content Include="Views\Azure\CreatePSAppRegistration.cshtml" />
+    <Content Include="Views\Organization\CreateSuccess.cshtml" />
+    <Content Include="Views\Azure\CreatePSAppRegistrationSuccess.cshtml" />
+    <Content Include="Views\Azure\CreatePSAppRegistrationSuccessPermissions.cshtml" />
+    <Content Include="Views\Azure\SetCloudAdminPassword.cshtml" />
+    <Content Include="Views\User\GetUserMemberOf.cshtml" />
+    <Content Include="Views\User\GetUserMemberOfSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -522,8 +813,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.3.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.3.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

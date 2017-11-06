@@ -1,0 +1,31 @@
+﻿@model ColumbusPortal.Models.UserModel
+@{
+    ViewBag.Title = "User > Get user groups > Success";
+}
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to get a list of customer groups the selected user is a member of</p>
+
+<fieldset>
+    <legend>Get user groups</legend>
+    <table>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="righttd">@Model.MemberOf.Organization</td>
+        </tr>
+        <tr>
+            <td class="lefttd">UserPrincipalName</td>
+            <td class="righttd">@Model.MemberOf.UserPrincipalName</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Groups</td>
+            <td class="righttd">
+                <ul>
+                    @foreach (string group in Model.MemberOf.Groups)
+                    {
+                        <li>@group</li>
+                    }
+                </ul>
+            </td>
+        </tr>
+    </table>
+</fieldset>

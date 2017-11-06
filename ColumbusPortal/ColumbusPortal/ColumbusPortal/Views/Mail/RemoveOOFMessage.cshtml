@@ -1,0 +1,102 @@
+﻿@model ColumbusPortal.Models.MailModel
+@{
+    ViewBag.Title = "Remove Out Of Office Reply";
+}
+@section script {
+    <script>
+    $(document).ready(function () {
+        if (navigator.userAgent.match(/msie/gi)) { alert('This page is not supported in MSIE'); }
+
+        GetMailbox("UserMailbox");
+
+        $("#currentOOF").html("Waiting...");
+
+        $("select[name=organization]").change(function () {
+            GetMailbox("UserMailbox");
+        });
+        $("select[name=userprincipalname]").change(function () {
+            GetCurrentOOF();
+        });
+    });
+
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form to remove an Auto reply on a users mailbox.</p>
+<br />
+
+@using (Html.BeginForm("RemoveOOFMessage", "Mail"))
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <table>
+            <tr>
+                <td colspan="2">
+                    <div id="messageDiv">
+                        @if (Model.Message != null)
+                        {
+                            <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                        }
+                    </div>
+                    <div id="okMessageDiv">
+                        @if (Model.OKMessage.Count > 0)
+                        {
+                            <div class="okmessage">
+                                @foreach (string msg in Model.OKMessage)
+                                {
+                                    <p>@msg</p>
+                                }
+                                <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="lefttd">Organization</td>
+                <td class="middletd">
+                    <select name="organization">
+                        @foreach (string organization in Model.Organizations)
+                        {
+                            <option @if (Model.ActionFailed) { if (organization == Model.OOF.Organization) { @: selected="selected"
+                                                                                                                                            } } value="@organization.Split(' ')[0]">
+                                @organization
+                            </option>
+                        }
+                    </select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="lefttd">Mailbox</td>
+                <td class="middletd">
+                    <select name="userprincipalname"><option>loading...</option></select>
+                    <span class="mandatory">*</span>
+                </td>
+            </tr>
+            <tr class="hide">
+                <td class="lefttd">Existing Out Of Office:</td>
+                <td class="middletd">
+                    <div id="existingAliasesDiv">
+                        <ul id="currentOOF"></ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id="loading" name="loading" class="loading" hidden>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <span><img src="~/Images/loading.gif" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <input type="submit" class="button" value="Remove Out Of Office Reply" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+    </fieldset>
+}

@@ -17,8 +17,15 @@ Import-Module (Join-Path $PSScriptRoot Functions)
 $Config = Get-SQLEntConfig -Organization $Organization
 $Cred  = Get-RemoteCredentials -Organization $Organization
 
-$User = Get-ADUser -Identity ($UserPrincipalName -split '@')[0] -Server $Config.DomainFQDN -Credential $Cred
+$User = Get-ADUser -Identity ($UserPrincipalName -split '@')[0] -Server $Config.DomainFQDN -Credential $Cred -Properties homeDirectory
 
+try {
+    Remove-ADUser $user -Server $Config.DomainFQDN -Credential $Cred -Confirm:$false
+}
+catch {
+    throw $_
+}
+<#
 if ($Config.ExchangeServer -ne "null") {
 
     Import-Module (New-ExchangeProxyModule -Organization $Organization -Command 'Get-Mailbox', 'Enable-Mailbox', 'Remove-Mailbox')
@@ -39,7 +46,7 @@ else {
         throw $_
     }
 }
-
+#>
 if ($user.HomeDirectory -notlike $null -and $DelData) {
 
         $scriptblock = {
@@ -48,7 +55,6 @@ if ($user.HomeDirectory -notlike $null -and $DelData) {
             $path = $user.HomeDirectory
 
             try {
-                robocopy C:\DontDelete "$Path" /purge | out-null
                 $Path | Remove-Item -Recurse -Force
             }
             catch {

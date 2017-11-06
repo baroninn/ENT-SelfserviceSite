@@ -12,7 +12,7 @@
     
     $ErrorActionPreference = "Stop"
 
-    $Config = Get-SQLEntConfig -Organization $Organization -JSON
+    $Config = Get-SQLEntConfig -Organization $Organization
 
     $ID = [pscustomobject]@{
           Organization = $Organization
@@ -31,7 +31,7 @@
         return $ID
     }
     else{
-        Connect-O365 -Organization $Organization
+        Connect-MSOnline -Organization $Organization
         $SKU = (Get-MsolAccountSku).AccountSkuId
         $ID.PartnerName = Get-MsolPartnerInformation -TenantId $Config.Office365.TenantID | select -ExpandProperty PartnerCompanyName
         $ID.ID          = $Config.Office365.TenantID

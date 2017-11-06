@@ -42,42 +42,46 @@
         <legend>Create EXT. user</legend>
         <table>
             <tr>
-                <td colspan="2">@if (Model.Message != null)
-                { <div class="message">@Model.Message</div> }</td>
-            </tr>
-            <tr>
-                <td class="lefttd">Organization</td>
-                <td class="middletd">
-                    <select name="organization">
-                        @foreach (string organization in Model.Organizations)
-                        {
-                            <option @if (Model.ActionFailed) { if (organization == Model.CreateExtUser.Organization) { @: selected="selected"
-                                                                            } }>
-                                @organization
-                                                                        </option>
-                        }
-                    </select>
-                    <span class="mandatory">*</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="lefttd">DisplayName</td>
-                <td class="middletd">
-                    <input name="displayname" placeholder="John - Visma" @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.DisplayName"
-                                                                                                                } />
-                    <span class="mandatory">*</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="lefttd">Description</td>
-                <td class="middletd">
-                    <input name="description" placeholder="Used for Navision etc." @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.Description"
-                                                                                                                } />
-                    <span class="mandatory">*</span>
-                </td>
-            </tr>
+                <td colspan="2">
+                    @if (Model.Message != null)
+                { <div class="message">@Model.Message</div> }
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="middletd">
+                <select name="organization">
+                    @foreach (string organization in Model.Organizations)
+                    {
+                        <option @if (Model.ActionFailed) { if (organization == Model.CreateExtUser.Organization) { @: selected="selected"
+                                                                                                            } } value="@organization.Split(' ')[0]">
+                            @organization
+                        </option>
+                    }
+                </select>
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="lefttd">DisplayName</td>
+            <td class="middletd">
+                <input name="displayname" placeholder="John - Visma" @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.DisplayName"
+                                                                                                                                       } />
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Description</td>
+            <td class="middletd">
+                <input name="description" placeholder="Used for Navision etc." @if (Model.ActionFailed) {  @: value="@Model.CreateExtUser.Description"
+                                                                                                                                       } />
+                <span class="mandatory">*</span>
+            </td>
+        </tr>
 
-        </table>
+    </table>
         <table>
             <tr>
                 <td class="lefttd">UserPrincipalName</td>

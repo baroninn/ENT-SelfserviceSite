@@ -32,6 +32,7 @@
             $object = [pscustomobject] @{
                 Organization = $reader["Organization"]
                 Name = $reader["Name"]
+                Platform = $reader["Platform"]
                 UserContainer = $reader["UserContainer"]
                 ExchangeServer = $reader["ExchangeServer"]
                 DomainFQDN = $reader["DomainFQDN"]
@@ -50,6 +51,11 @@
                 SQLServer = $reader["SQLServer"]
                 AdminRDS = $reader["AdminRDS"]
                 AdminRDSPort = $reader["AdminRDSPort"]
+                AppID = $reader["AppID"]
+                AppSecret = $reader["AppSecret"]
+                ServiceCompute = $reader["ServiceCompute"]
+                Service365 = $reader["Service365"]
+                ServiceIntune = $reader["ServiceIntune"]
             }
             $tables += $object
         }
@@ -60,6 +66,7 @@
         $Config += [pscustomobject]@{
                 Organization     = $tables.Organization
                 Name             = $tables.Name
+                Platform         = $tables.Platform
                 UserContainer    = $tables.UserContainer
                 ExchangeServer   = $tables.ExchangeServer
                 DomainFQDN       = $tables.DomainFQDN
@@ -78,6 +85,11 @@
                 SQLServer        = $tables.SQLServer
                 AdminRDS         = $tables.AdminRDS
                 AdminRDSPort     = $tables.AdminRDSPort
+                AppID            = $tables.AppID
+                AppSecret        = $tables.AppSecret
+                ServiceCompute   = $tables.ServiceCompute
+                Service365       = $tables.Service365
+                ServiceIntune    = $tables.ServiceIntune
         }
 
         return $Config

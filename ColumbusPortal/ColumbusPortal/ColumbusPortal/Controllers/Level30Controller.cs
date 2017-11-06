@@ -35,7 +35,8 @@ namespace ColumbusPortal.Controllers
                 CustomUpdateConf UpdateConf = new CustomUpdateConf()
                 {
                     Organization = _POST["organization"].ToUpper(),
-                    Name = _POST["Name"],
+                    Platform = _POST["platform"],
+                    Name = _POST["name"],
                     UserContainer = _POST["usercontainer"],
                     ExchangeServer = _POST["exchangeserver"],
                     DomainFQDN = _POST["domainfqdn"],
@@ -53,7 +54,13 @@ namespace ColumbusPortal.Controllers
                     NavMiddleTier = _POST["navmiddletier"],
                     SQLServer = _POST["sqlserver"],
                     AdminRDS = _POST["adminrds"],
-                    AdminRDSPort = _POST["adminrdsport"]
+                    AdminRDSPort = _POST["adminrdsport"],
+                    AppID = _POST["appid"],
+                    AppSecret = _POST["appsecret"],
+                    Service365 = _POST["service365"] == "on" ? true : false,
+                    ServiceCompute = _POST["servicecompute"] == "on" ? true : false,
+                    ServiceIntune = _POST["serviceintune"] == "on" ? true : false
+
 
                 };
                 for (int i = 0; i < UpdateConf.EmailDomains.Count; i++) { UpdateConf.EmailDomains[i] = UpdateConf.EmailDomains[i].Trim(); }
@@ -84,42 +91,6 @@ namespace ColumbusPortal.Controllers
             }
         }
 
-
-        /// <summary>
-        /// Ajax function for aquiring currentconf
-        /// </summary>
-        /// <param name="organization"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "Role_Level_30")]
-        public string GetCurrentConf(string organization)
-        {
-            string returnstr = "<table>";
-
-            using (MyPowerShell ps = new MyPowerShell())
-            {
-                ps.GetCurrentConf(organization);
-                var result = ps.Invoke();
-                // Returns PSObject with properties..
-                foreach (var item in result)
-                {
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>ExchangeServer: </b></td><td>" + item.Members["ExchangeServer"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>DomainFQDN: </b></td><td>" + item.Members["DomainFQDN"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>NETBIOS: </b></td><td>" + item.Members["NETBIOS"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>Customer OU DN: </b></td><td>" + item.Members["CustomerOUDN"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>TenantID365: </b></td><td>" + item.Members["TenantID365"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminUser365: </b></td><td>" + item.Members["AdminUser365"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AdminPass365: </b></td><td>" + item.Members["AdminPass365"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AADsynced: </b></td><td>" + item.Members["AADsynced"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>ADConnect Server: </b></td><td>" + item.Members["ADConnectServer"].Value.ToString() + "</td></tr>";
-                    returnstr += "<tr><td class=" + "lefttd" + "><b>AD Server: </b></td><td>" + item.Members["DomainDC"].Value.ToString() + "</td></tr>";
-                }
-            }
-
-            returnstr += "</table>";
-
-            return returnstr;
-        }
-
         /// <summary>
         /// Get current conf to JSON
         /// </summary>
@@ -142,6 +113,7 @@ namespace ColumbusPortal.Controllers
                         GetConfList.Add(new CustomGetConfLIST()
                         {
                             Name = properties["Name"].ToString(),
+                            Platform = properties["Platform"].ToString(),
                             UserContainer = properties["UserContainer"].ToString(),
                             ExchangeServer = properties["ExchangeServer"].ToString(),
                             DomainFQDN = properties["DomainFQDN"].ToString(),
@@ -160,51 +132,11 @@ namespace ColumbusPortal.Controllers
                             AdminRDS = properties["AdminRDS"].ToString(),
                             AdminRDSPort = properties["AdminRDSPort"].ToString(),
                             EmailDomains = properties["EmailDomains"].ToString(),
-                        });
-                    }
-
-                }
-
-
-                return new JavaScriptSerializer().Serialize(GetConfList);
-            }
-            catch (Exception exc)
-            {
-                return new JsonException(exc).ToString();
-            }
-        }
-        /// <summary>
-        /// Get current conf to JSON
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Role_Level_30")]
-        public string GetconfDomainsLIST(string organization)
-        {
-            try
-            {
-                List<CustomGetConfLIST> GetConfList = new List<CustomGetConfLIST>();
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.GetCurrentConf(organization);
-                    IEnumerable<PSObject> result = ps.Invoke();
-
-                    foreach (PSObject conf in result)
-                    {
-                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(conf);
-                        GetConfList.Add(new CustomGetConfLIST()
-                        {
-                            DomainFQDN = properties["DomainFQDN"].ToString(),
-                            ExchangeServer = properties["ExchangeServer"].ToString(),
-                            NETBIOS = properties["NETBIOS"].ToString(),
-                            CustomerOUDN = properties["CustomerOUDN"].ToString(),
-                            TenantID = properties["TenantID365"].ToString(),
-                            AdminUser = properties["AdminUser365"].ToString(),
-                            AdminPass = properties["AdminPass365"].ToString(),
-                            AADsynced = properties["AADsynced"].ToString(),
-                            ADConnectServer = properties["ADConnectServer"].ToString(),
-                            DomainDC = properties["DomainDC"].ToString(),
-
+                            AppID = properties["AppID"].ToString(),
+                            AppSecret = properties["AppSecret"].ToString(),
+                            Service365 = properties["Service365"].ToString(),
+                            ServiceCompute = properties["ServiceCompute"].ToString(),
+                            ServiceIntune = properties["ServiceIntune"].ToString()
                         });
                     }
 
@@ -262,12 +194,12 @@ namespace ColumbusPortal.Controllers
                 // Expand VHD and create View.
                 CustomExpandVHD ExpandVHD = new CustomExpandVHD()
                 {
-                    TaskID = _POST["taskid"],
+                    TaskID = _POST["ExpandVHD.TaskID"],
                     VMID = _POST["vmid"].ToUpper(),
                     VHDID = _POST["vhdid"],
                     DateTime = _POST["datetime"].ToString(),
-                    GB = _POST["gb"],
-                    Email = _POST["email"]
+                    GB = _POST["ExpandVHD.GB"],
+                    Email = _POST["ExpandVHD.Email"]
                 };
 
                 if (ExpandVHD.TaskID.Length == 0)
@@ -340,12 +272,12 @@ namespace ColumbusPortal.Controllers
                 // Expand CPU and create View.
                 CustomExpandCPURAM ExpandCPURAM = new CustomExpandCPURAM()
                 {
-                    TaskID = _POST["taskid"],
+                    TaskID = _POST["ExpandCPURAM.TaskID"],
                     VMID = _POST["vmid"].ToUpper(),
                     DateTime = _POST["datetime"].ToString(),
-                    CPU = _POST["cpu"].ToString(),
-                    RAM = _POST["ram"].ToString(),
-                    Email = _POST["email"],
+                    CPU = _POST["ExpandCPURAM.CPU"].ToString(),
+                    RAM = _POST["ExpandCPURAM.RAM"].ToString(),
+                    Email = _POST["ExpandCPURAM.Email"],
                     DynamicMemoryEnabled = _POST["dynamicmb"]
                 };
 
@@ -359,7 +291,7 @@ namespace ColumbusPortal.Controllers
                     throw new ArgumentException("The taskid must be 6 characters long.");
                 }
 
-                CommonCAS.Log(string.Format("has run Level30/ExpandVHD() to Expand CPU/RAM on server {0}, at date {1}, with TaskID {2}", ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.TaskID));
+                CommonCAS.Log(string.Format("has run Level30/ExpandCPURAM() to Expand CPU/RAM on server {0}, at date {1}, with TaskID {2}", ExpandCPURAM.VMID, ExpandCPURAM.DateTime, ExpandCPURAM.TaskID));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
@@ -388,7 +320,7 @@ namespace ColumbusPortal.Controllers
         /// </summary>
         /// <param name="VMID"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Role_Level_30")]
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
         public string GetVMInfo(string vmid)
         {
             string returnstr = "<table>";
@@ -401,7 +333,6 @@ namespace ColumbusPortal.Controllers
                 // Returns string with properties..
                 foreach (var item in result)
                 {
-                    var CPUCount = item.Members["CPUCount"].Value;
                     returnstr += "<tr><td><b>Current CPU Count : </b></td><td class='lefttd'>" + item.Members["CPUCount"].Value.ToString() + "</td></tr>";
                     returnstr += "<tr><td><b>Current Memory Count : </b></td><td>" + item.Members["Memory"].Value.ToString() + " GB" + "</td></tr>";
                     returnstr += "<tr><td><b>DynamicMemoryEnabled : </b></td><td>" + item.Members["DynamicMemoryEnabled"].Value.ToString() + "</td></tr>";
@@ -411,73 +342,6 @@ namespace ColumbusPortal.Controllers
             returnstr += "</table>";
 
             return returnstr;
-        }
-
-        /// <summary>
-        /// Ajax function for aquiring CPU and RAM for VMs
-        /// </summary>
-        /// <param name="VMID"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "Role_Level_30")]
-        public string GetVMInfotoModel(string vmid)
-        {
-
-            using (MyPowerShell ps = new MyPowerShell())
-            {
-                ps.GetVMInfo(vmid);
-                var result = ps.Invoke();
-
-                // Returns string with properties..
-                foreach (var item in result)
-                {
-                    model.ExpandCPURAM.CPU = item.Members["CPUCount"].Value.ToString();
-                    model.ExpandCPURAM.RAM = item.Members["Memory"].Value.ToString();
-                    model.ExpandCPURAM.DynamicMemoryEnabled = item.Members["DynamicMemoryEnabled"].Value.ToString();
-                }
-            }
-
-            return model.ExpandCPURAM.CPU;
-        }
-
-        // Function for getting VMInfo as select list..
-        [Authorize(Roles = "Role_Level_30")]
-        public class Lvl30ServerInfo
-        {
-            public string VMID { get; set; }
-            public string CPU { get; set; }
-            public string RAM { get; set; }
-            public string DynamicMemoryEnabled { get; set; }
-        }
-        public string GetVMInfo3(string vmid)
-        {
-            try
-            {
-                List<Lvl30ServerInfo> ServerInfo = new List<Lvl30ServerInfo>();
-
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.GetVMInfo(vmid);
-                    IEnumerable<PSObject> result = ps.Invoke();
-
-                    foreach (PSObject infoobject in result)
-                    {
-                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(infoobject);
-                        ServerInfo.Add(new Lvl30ServerInfo()
-                        {
-                            CPU = properties["CPU"].ToString(),
-                            RAM = properties["RAM"].ToString(),
-                            DynamicMemoryEnabled = properties["DynamicMemoryEnabled"].ToString(),
-                        });
-                    }
-
-                }
-
-                return new JavaScriptSerializer().Serialize(ServerInfo);
-            }
-            catch (Exception exc)
-            {
-                return new JsonException(exc).ToString();
-            }
         }
 
         // Display create ADMIN view
@@ -1061,6 +925,50 @@ namespace ColumbusPortal.Controllers
             }
         }
 
+        /// <summary>
+        /// Get current EXT Admins
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Role_Level_30")]
+        public string GetCASAdminUsersSELECTALL()
+        {
+            try
+            {
+                List<CustomCASAdminUserLIST> CASAdmins = new List<CustomCASAdminUserLIST>();
+
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.GetCASAdminUserALL();
+                    IEnumerable<PSObject> result = ps.Invoke();
+
+                    foreach (PSObject CASAdmin in result)
+                    {
+                        Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(CASAdmin);
+                        CASAdmins.Add(new CustomCASAdminUserLIST()
+                        {
+                            ID = properties["ID"].ToString(),
+                            Organization = properties["Organization"].ToString().Split(' ')[0],
+                            Status = properties["Status"].ToString(),
+                            UserName = properties["UserName"].ToString(),
+                            FirstName = properties["FirstName"].ToString(),
+                            LastName = properties["LastName"].ToString(),
+                            Email = properties["Email"].ToString(),
+                            Description = properties["Description"].ToString(),
+                            Department = properties["Department"].ToString(),
+                            ExpireDate = properties["ExpireDate"].ToString(),
+                        });
+                    }
+
+                }
+
+                return new JavaScriptSerializer().Serialize(CASAdmins);
+            }
+            catch (Exception exc)
+            {
+                return new JsonException(exc).ToString();
+            }
+        }
+
         [Authorize(Roles = "Role_Level_30")]
         public string GetCASAdminUsers(string id, string status, string organization)
         {
@@ -1184,10 +1092,9 @@ namespace ColumbusPortal.Controllers
             }
         }
 
-
-
+        // Display RemoveCASAdminALL view
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult UpdateSharedCustomer()
+        public ActionResult RemoveCASAdminALL()
         {
             try
             {
@@ -1198,36 +1105,104 @@ namespace ColumbusPortal.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult UpdateSharedCustomer(FormCollection _POST)
+        public ActionResult RemoveCASAdminALL(FormCollection _POST)
         {
             try
             {
-                // set up a user account for display in view
-                CustomSharedCustomer UpdateSharedCustomer = new CustomSharedCustomer()
+                CustomCASAdminUser CASAdminUser = new CustomCASAdminUser()
                 {
-                    Organization = _POST["organization"].ToUpper(),
-                    Name = _POST["Name"],
-                    NavMiddleTier = _POST["navmiddletier"],
-                    SQLServer = _POST["sqlserver"]
-
+                    SamAccountName = _POST["UserName"].ToString(),
                 };
 
-                model.UpdateSharedCustomer = UpdateSharedCustomer;
+                //if (!model.Organizations.Contains(model.EXTAdminUser.Organization))
+                //{
+                //    throw new Exception(string.Format("{0} does not exist.", EXTAdminUser.Organization));
+                //}
 
-                CommonCAS.Log(string.Format("has run Level30/UpdateSharedCustomer() for {0}", UpdateSharedCustomer.Organization));
+                CommonCAS.Log(string.Format("has run Level30/RemoveCASAdminALL(), '{0}'", CASAdminUser.SamAccountName));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.UpdateSharedCustomer(UpdateSharedCustomer);
+                    ps.RemoveCASAdminUserALL(CASAdminUser.SamAccountName);
+                    var result = ps.Invoke();
+
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("Admin {0} has been removed from all customers.", CASAdminUser.SamAccountName));
+                    }
+                    else
+                    {
+
+                        foreach (PSObject message in result)
+                        {
+                            model.OKMessage.Add(string.Format("{0}", message.ToString()));
+                        }
+                    }
+                }
+
+                CommonCAS.Stats("Level30/RemoveCASAdminALL");
+
+                return View("RemoveCASAdminALL", model);
+            }
+            catch (Exception exc)
+            {
+                CommonCAS.Log("Exception: " + exc.Message);
+                model.ActionFailed = true;
+                model.Message = exc.Message;
+                return View(model);
+            }
+        }
+
+
+
+        [Authorize(Roles = "Role_Level_30")]
+        public ActionResult UpdateNAVCustomer()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc) { return View("Error", exc); }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Role_Level_30")]
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
+        public ActionResult UpdateNAVCustomer(FormCollection _POST)
+        {
+            try
+            {
+                // set up a user account for display in view
+                CustomNAVCustomer UpdateNAVCustomer = new CustomNAVCustomer()
+                {
+                    Organization = _POST["organization"].ToUpper().Split(' ')[0],
+                    Platform = _POST["Platform"],
+                    Name = _POST["Name"],
+                    NavMiddleTier = _POST["navmiddletier"],
+                    SQLServer = _POST["sqlserver"],
+                    LoginInfo = _POST["LoginInfo"],
+                    RDSServer = _POST["RDSServer"]
+
+                };
+
+                model.UpdateNAVCustomer = UpdateNAVCustomer;
+
+                CommonCAS.Log(string.Format("has run Level30/UpdateNAVCustomer() for {0}", UpdateNAVCustomer.Organization));
+
+                // execute powershell script and dispose powershell object
+                using (MyPowerShell ps = new MyPowerShell())
+                {
+                    ps.UpdateNAVCustomer(UpdateNAVCustomer);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", UpdateSharedCustomer.Organization));
+                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", UpdateNAVCustomer.Organization));
 
-                CommonCAS.Stats("Level30/UpdateSharedCustomer");
+                CommonCAS.Stats("Level30/UpdateNAVCustomer");
 
-                return View("UpdateSharedCustomer", model);
+                return View("UpdateNAVCustomer", model);
             }
             catch (Exception exc)
             {
@@ -1243,27 +1218,30 @@ namespace ColumbusPortal.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Role_Level_30")]
-        public string GetCurrentSharedCustomerConfLIST(string organization)
+        public string GetCurrentNAVCustomerConfLIST(string organization)
         {
             try
             {
-                List<CustomGetConfLIST> GetConfList = new List<CustomGetConfLIST>();
+                List<CustomNAVCustomer> GetConfList = new List<CustomNAVCustomer>();
 
 
                 using (MyPowerShell ps = new MyPowerShell())
                 {
                     var shortorganization = organization.ToString().Split(' ')[0];
-                    ps.GetCurrentSharedCustomerConf(shortorganization);
+                    ps.GetCurrentNAVCustomerConf(shortorganization);
                     IEnumerable<PSObject> result = ps.Invoke();
 
                     foreach (PSObject conf in result)
                     {
                         Dictionary<string, object> properties = CommonCAS.GetPSObjectProperties(conf);
-                        GetConfList.Add(new CustomGetConfLIST()
+                        GetConfList.Add(new CustomNAVCustomer()
                         {
+                            Platform = properties["Platform"].ToString(),
                             Name = properties["Name"].ToString(),
                             NavMiddleTier = properties["NavMiddleTier"].ToString(),
                             SQLServer = properties["SQLServer"].ToString(),
+                            LoginInfo = properties["LoginInfo"].ToString(),
+                            RDSServer = properties["RDSServer"].ToString()
                         });
                     }
 
@@ -1279,7 +1257,7 @@ namespace ColumbusPortal.Controllers
         }
 
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult CreateSharedCustomer()
+        public ActionResult CreateNAVCustomer()
         {
             try
             {
@@ -1290,36 +1268,41 @@ namespace ColumbusPortal.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult CreateSharedCustomer(FormCollection _POST)
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
+        public ActionResult CreateNAVCustomer(FormCollection _POST)
         {
             try
             {
                 // set up a user account for display in view
-                CustomSharedCustomer UpdateSharedCustomer = new CustomSharedCustomer()
+                CustomNAVCustomer UpdateNAVCustomer = new CustomNAVCustomer()
                 {
                     Organization = _POST["organization"].ToUpper(),
+                    Platform = _POST["Platform"],
                     Name = _POST["Name"],
                     NavMiddleTier = _POST["navmiddletier"],
-                    SQLServer = _POST["sqlserver"]
+                    SQLServer = _POST["sqlserver"],
+                    LoginInfo = _POST["LoginInfo"],
+                    RDSServer = _POST["RDSServer"]
 
                 };
 
-                model.UpdateSharedCustomer = UpdateSharedCustomer;
+                model.UpdateNAVCustomer = UpdateNAVCustomer;
 
-                CommonCAS.Log(string.Format("has run Level30/CreateSharedCustomer() for {0}", UpdateSharedCustomer.Organization));
+                CommonCAS.Log(string.Format("has run Level30/CreateNAVCustomer() for {0}", UpdateNAVCustomer.Organization));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.CreateSharedCustomer(UpdateSharedCustomer);
+                    ps.CreateNAVCustomer(UpdateNAVCustomer);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", UpdateSharedCustomer.Organization));
+                model.OKMessage.Add(string.Format("The configuration has been updated for {0}", UpdateNAVCustomer.Organization));
 
-                CommonCAS.Stats("Level30/CreateSharedCustomer");
+                CommonCAS.Stats("Level30/CreateNAVCustomer");
 
-                return View("CreateSharedCustomer", model);
+                return View("CreateNAVCustomer", model);
             }
             catch (Exception exc)
             {
@@ -1352,9 +1335,11 @@ namespace ColumbusPortal.Controllers
 
                         {
                             returnstr += "<center><table class='SQLlight'><tr><td style='width: 150px; text-align: left;'><b>Organization</b></td><td style='text-align: left; font-weight:bold'>" + item.Members["Organization"].Value.ToString() + "</td></tr>";
+                            returnstr += "<tr><td style='width: 150px; text-align: left;'><b>Platform</b></td><td style='text-align: left'>" + item.Members["Platform"].Value.ToString() + "</td></tr>";
                             returnstr += "<tr><td style='width: 150px; text-align: left;'><b>Name</b></td><td style='text-align: left'>" + item.Members["Name"].Value.ToString() + "</td></tr>";
                             returnstr += "<tr><td style='width: 150px; text-align: left;'><b>NavMiddleTier</b></td><td style='text-align: left'>" + item.Members["NavMiddleTier"].Value.ToString() + "</td></tr>";
-                            returnstr += "<tr><td style='width: 150px; text-align: left;'><b>SQLServer</b></td><td style='text-align: left'>" + item.Members["SQLServer"].Value.ToString() + "</td></tr></table></center></br>";
+                            returnstr += "<tr><td style='width: 150px; text-align: left;'><b>SQLServer</b></td><td style='text-align: left'>" + item.Members["SQLServer"].Value.ToString() + "</td></tr>";
+                            returnstr += "<tr><td style='width: 150px; text-align: left;'><b>LoginInfo</b></td><td style='text-align: left'>" + item.Members["LoginInfo"].Value.ToString() + "</td></tr></table></center></br>";
                         }
                     
                     }
@@ -1367,7 +1352,7 @@ namespace ColumbusPortal.Controllers
         }
 
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult RemoveSharedCustomer()
+        public ActionResult RemoveNAVCustomer()
         {
             try
             {
@@ -1378,30 +1363,30 @@ namespace ColumbusPortal.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Role_Level_30")]
-        public ActionResult RemoveSharedCustomer(FormCollection _POST)
+        public ActionResult RemoveNAVCustomer(FormCollection _POST)
         {
             try
             {
-                CustomSharedCustomer UpdateSharedCustomer = new CustomSharedCustomer()
+                CustomNAVCustomer UpdateNAVCustomer = new CustomNAVCustomer()
                 {
                     Organization = _POST["organization"].ToString().Split(' ')[0]
 
                 };
 
-                CommonCAS.Log(string.Format("has run Level30/RemoveSharedCustomer() for {0}", UpdateSharedCustomer.Organization));
+                CommonCAS.Log(string.Format("has run Level30/RemoveNAVCustomer() for {0}", UpdateNAVCustomer.Organization));
 
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.RemoveSharedCustomer(UpdateSharedCustomer.Organization);
+                    ps.RemoveNAVCustomer(UpdateNAVCustomer.Organization);
                     var result = ps.Invoke();
                 }
 
-                model.OKMessage.Add(string.Format("The configuration has been removed for {0}", UpdateSharedCustomer.Organization));
+                model.OKMessage.Add(string.Format("The configuration has been removed for {0}", UpdateNAVCustomer.Organization));
 
-                CommonCAS.Stats("Level30/RemoveSharedCustomer");
+                CommonCAS.Stats("Level30/RemoveNAVCustomer");
 
-                return View("RemoveSharedCustomer", model);
+                return View("RemoveNAVCustomer", model);
             }
             catch (Exception exc)
             {

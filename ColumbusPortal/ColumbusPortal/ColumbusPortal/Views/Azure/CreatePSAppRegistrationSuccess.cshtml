@@ -1,0 +1,49 @@
+﻿@model ColumbusPortal.Models.AzureModel
+@{
+    ViewBag.Title = "Azure > CreatePSAppRegistration > Success";
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<br />
+<fieldset>
+    <legend>Result</legend>
+    <table>
+        <tr>
+            <td colspan="2">@if (Model.Message != null)
+            { <div class="message">@Model.Message</div> }</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Organization:</td>
+            <td class="middletd">@Model.AzureSetup.Organization</td>
+        </tr>
+        <tr>
+            <td class="lefttd">App Display Name:</td>
+            <td class="middletd">@Model.AzureSetup.Name</td>
+        </tr>
+        <tr>
+            <td class="lefttd">App ID:</td>
+            <td class="middletd">@Model.AzureSetup.AppId</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Key Secret:</td>
+            <td class="middletd">@Model.AzureSetup.KeySecret</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Azure Admin User:</td>
+            <td class="middletd">@Model.AzureSetup.AdminUser</td>
+        </tr>
+        <tr>
+            <td class="lefttd">Azure Admin Pass:</td>
+            <td class="middletd">@Model.AzureSetup.AdminPass</td>
+        </tr>
+       
+    </table>
+    <br />
+    <div>
+        <p class="warning">The app has been created, but you need to log in to the portal and give "Admin Consent"</p>
+        <br />
+        <p>Please follow the link below to give consent.</p>
+        <p><a href="@("https://login.microsoftonline.com/")@Model.AzureSetup.TenantId@("/oauth2/authorize?client_id=")@Model.AzureSetup.AppId@("&username=")@Model.AzureSetup.AdminUser@("&response_type=code&resource=https://graph.windows.net&prompt=admin_consent")" title="Click here to log on." target="_blank" />Click here to give consent.</p>
+
+    </div>
+</fieldset>

@@ -1,0 +1,92 @@
+﻿@model ColumbusPortal.Models.CaptoModel
+@{
+    ViewBag.Title = "Capto > Mail > Remove Alias";
+}
+@section script { 
+    <script>
+        $(document).ready(function () {
+            $("select[name=organization]").change(function () {
+                CPOGetMailbox();
+
+                $("#existingAliases").html("");
+            });
+            $("select[name=userprincipalname]").change(function () {
+                CPOGetAliases();
+            });
+            
+            CPOGetMailbox();
+
+        });
+    </script>
+}
+
+<h1 class="title">@ViewBag.Title</h1>
+<p>Use this form remove email aliases from a user account.</p>
+
+@using(Html.BeginForm("CPORemoveAlias", "Capto")) {
+<fieldset>
+    <legend>Remove alias</legend>
+    <table>
+        <tr>
+            <td colspan="2">
+                <div id="messageDiv">
+                    @if (Model.Message != null)
+                    {
+                        <div class="message">@Model.Message <p><small><a href="javascript:ClearErrors()">Clear errors</a></small></p></div>
+                    }
+                </div>
+                <div id="okMessageDiv">
+                    @if (Model.OKMessage.Count > 0)
+                    {
+                        <div class="okmessage">
+                            @foreach (string msg in Model.OKMessage)
+                            {
+                                <p>@msg</p>
+                            }
+                            <p><small><a href="javascript:ClearMessages()">Clear messages</a></small></p>
+                        </div>
+                    }
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Organization</td>
+            <td class="middletd">
+            <select name="organization">
+                @foreach(string organization in Model.CPOOrganizations) 
+                {
+                    <option @if(Model.ActionFailed)
+                            {
+                                if(organization == Model.CPOAlias.Organization) {
+                                    @:selected="selected"
+                                }
+                            }>@organization</option>
+                }
+                </select></td>
+        </tr>
+        <tr>
+            <td class="lefttd">Existing aliases:</td>
+            <td class="middletd">
+                <div id="existingAliasesDiv">
+                    <ul id="existingAliases"></ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Mailbox</td>
+            <td class="middletd">
+                <select name="userprincipalname"><option>loading...</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td class="lefttd">Remove email aliases</td>
+            <td><textarea name="emailaddresses" rows="10" placeholder="One alias per line">@if (Model.ActionFailed)
+                                                                                                 {
+                                                                                                     string.Join("\r\n", Model.CPOAlias.EmailAddresses);
+                                                                                                 }</textarea></td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" class="button" class:hover="button:hover" value="Remove Alias" id="buttonSubmit" onclick="buttonSubmit.disabled = true; ClearMessages(); ClearErrors(); StartSubmitButtonMessage(); this.form.submit()" />
+</fieldset>
+}

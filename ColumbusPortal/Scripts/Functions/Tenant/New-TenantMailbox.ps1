@@ -22,7 +22,7 @@
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2.0
 
-        Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "New-Mailbox", "Get-Mailbox", "Set-Mailbox")
+        Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "New-Mailbox", "Get-Mailbox", "Set-Mailbox") > $null
         
         $Config = Get-SQLEntConfig -Organization $Organization
         $Cred  = Get-RemoteCredentials -Organization $Organization
@@ -53,7 +53,7 @@
 
         Write-Verbose "SAMAccountName: $SAMAccountName"
 
-        if ($Config.TenantID365 -ne "null" -and $Config.ExchangeServer -eq "null") {
+        if ($Config.TenantId -ne "null" -and $Config.ExchangeServer -eq "null") {
 
             ## Create remote session because of O365 insane throttling...!
             $session = (Get-PSSession -Name "EntExchange")
@@ -72,7 +72,7 @@
                 if ($EmailAddresses) {
                     foreach ($extraAlias in $EmailAddresses) {
                         Write-Verbose "Adding alias '$($extraAlias)'."
-                        $newMbx.EmailAddresses.Add($extraAlias) | Out-Null
+                        $newMbx.EmailAddresses.Add($extraAlias) > $null
                     }
 
                     $session = Renew-O365session -Organization $Organization
@@ -142,7 +142,7 @@
 
         }
 
-        if ($Config.ExchangeServer -ne "null") {
+        if (-not [string]::IsNullOrWhiteSpace($Config.ExchangeServer)) {
 
             if ($Type -eq "SharedMailbox") {
                 $newMbx = New-Mailbox -OrganizationalUnit $Config.CustomerOUDN -Name $SAMAccountName -DisplayName "$Displayname - Shared" -PrimarySmtpAddress $PrimarySmtpAddress -Shared

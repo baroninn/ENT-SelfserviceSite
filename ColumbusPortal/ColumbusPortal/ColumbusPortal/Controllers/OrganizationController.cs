@@ -25,6 +25,19 @@ namespace ColumbusPortal.Controllers
                 return View("Error", exc);
             }
         }
+        // Display Connect view
+        [Authorize(Roles = "Access_SelfService_FullAccess")]
+        public ActionResult ConnectAdminRDS()
+        {
+            try
+            {
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                return View("Error", exc);
+            }
+        }
 
         // Create POSTed organization
         [HttpPost]
@@ -35,15 +48,34 @@ namespace ColumbusPortal.Controllers
             {
                 CustomOrganization organization = new CustomOrganization()
                 {
-                    Name = _POST["name"],
-                    initials = _POST["initials"].ToUpper(),
-                    EmailDomainName = _POST["emaildomainname"].ToLower(),
-                    Subnet = _POST["subnet"],
-                    Vlan = _POST["vlan"],
-                    Gateway = _POST["gateway"],
-                    IPAddressRangeStart = _POST["ipaddressrangestart"],
-                    IPAddressRangeEnd = _POST["ipaddressrangeend"],
-                    CreateVMM = _POST["createvmm"] == "on" ? true : false
+                    Platform = _POST["platform"],
+                    Name = _POST["Organization.Name"],
+                    initials = _POST["Organization.initials"].ToUpper(),
+                    EmailDomainName = _POST["Organization.EmailDomainName"].ToLower(),
+                    Subnet = _POST["Organization.Subnet"],
+                    Vlan = _POST["Organization.Vlan"],
+                    Gateway = _POST["Organization.Gateway"],
+                    IPAddressRangeStart = _POST["Organization.IPAddressRangeStart"],
+                    IPAddressRangeEnd = _POST["Organization.IPAddressRangeEnd"],
+                    CreateVMM = _POST["createvmm"] == "on" ? true : false,
+                    createcrayon = _POST["createcrayon"] == "on" ? true : false,
+                };
+
+                CustomCrayonTenantInfoDetailed crayontenantinfodetailed = new CustomCrayonTenantInfoDetailed()
+                {
+                    InvoiceProfile = _POST["InvoiceProfile"].ToString(),
+                    DomainPrefix = _POST["CrayonDomainPrefix"],
+                    FirstName = _POST["CrayonFirstName"],
+                    LastName = _POST["CrayonLastName"],
+                    Email = _POST["CrayonTenantInfoDetailed.CrayonEmail"],
+                    PhoneNumber = _POST["CrayonPhoneNumber"],
+                    CustomerFirstName = _POST["CrayonCustomerFirstName"],
+                    CustomerLastName = _POST["CrayonCustomerLastName"],
+                    AddressLine1 = _POST["CrayonAddressLine1"],
+                    City = _POST["CrayonCity"],
+                    Region = _POST["CrayonRegion"],
+                    PostalCode = _POST["CrayonPostalCode"]
+
                 };
 
                 model.Organization = organization;
@@ -65,18 +97,39 @@ namespace ColumbusPortal.Controllers
 
                 CommonCAS.Log(string.Format("has run Organization/Create() to create {0}", organization.initials));
 
+
+
                 // execute powershell script and dispose powershell object
                 using (MyPowerShell ps = new MyPowerShell())
                 {
-                    ps.CreateOrganization(organization.initials, organization.Name, organization.EmailDomainName, organization.Subnet, organization.Vlan, organization.Gateway, organization.IPAddressRangeStart, organization.IPAddressRangeEnd, organization.CreateVMM);
+                    ps.CreateOrganization(organization, crayontenantinfodetailed);
                     var result = ps.Invoke();
-                }
 
-                model.OKMessage.Add(string.Format("Organization '{0}' created.", organization.initials));
+                    if (result.Count() == 0)
+                    {
+                        model.OKMessage.Add(string.Format("Organization '{0}' created.", organization.initials));
+                        CommonCAS.Log(string.Format("has run Organization/Create() to create {0}", organization.initials));
+                    }
+                    else
+                    {
+                        CommonCAS.Log(string.Format("has run Organization/Create() to create {0}", organization.initials));
+                        model.OKMessage.Add(string.Format("Organization '{0}' created with following info:", organization.initials));
+                        
+                        if (organization.createcrayon)
+                        {
+                            foreach (PSObject item in result)
+                            {
+                                model.CrayonTenantDetailed.ExternalPublisherCustomerId = item.Members["ExternalPublisherCustomerId"].Value.ToString();
+                                model.CrayonTenantDetailed.AdminUser = item.Members["AdminUser"].Value.ToString();
+                                model.CrayonTenantDetailed.AdminPass = item.Members["AdminPass"].Value.ToString();
+                                
+                            }
+                        }
+                    }
+                }
 
                 CommonCAS.Stats("Organization/Create");
-
-                return View("Create", model);
+                return View("CreateSuccess", model);
             }
             catch (Exception exc)
             {
@@ -87,162 +140,6 @@ namespace ColumbusPortal.Controllers
             }
         }
 
-
-        // Display create view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult RemoveCustomer()
-        {
-            try
-            {
-                return View(model);
-            }
-            catch (Exception exc) { return View("Error", exc); }
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult RemoveCustomer(FormCollection _POST)
-        {
-            try
-            {
-                model.RemoveCustomer = new CustomRemoveCustomer()
-                {
-                    Organization = _POST["organization"],
-                    RemoveData = _POST["removedata"] == "on" ? true : false,
-                    Confirm = _POST["confirm"] == "on" ? true : false
-                };
-
-                if (!model.Organizations.Contains(model.RemoveCustomer.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
-
-                CommonCAS.Log(string.Format("has run Organization/RemoveCustomer() to remove customer '{0}'", model.RemoveCustomer.Organization));
-
-                // execute powershell script and dispose powershell object
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.RemoveCustomer(model.RemoveCustomer.Organization, model.RemoveCustomer.RemoveData, model.RemoveCustomer.Confirm);
-                    var result = ps.Invoke();
-                }
-
-                model.OKMessage.Add(string.Format("Customer '{0}' removed, Check manual steps.", model.RemoveCustomer.Organization));
-
-                CommonCAS.Stats("Organization/RemoveCustomer");
-
-                return View("RemoveCustomer", model);
-            }
-            catch (Exception exc)
-            {
-                CommonCAS.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View(model);
-            }
-        }
-
-        // Display create view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult DisableCustomer()
-        {
-            try
-            {
-                return View(model);
-            }
-            catch (Exception exc) { return View("Error", exc); }
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult DisableCustomer(FormCollection _POST)
-        {
-            try
-            {
-                model.DisableCustomer = new CustomDisableCustomer()
-                {
-                    Organization = _POST["organization"],
-                    Confirm = _POST["confirm"] == "on" ? true : false
-                };
-
-                if (!model.Organizations.Contains(model.DisableCustomer.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
-
-                CommonCAS.Log(string.Format("has run Organization/DisableCustomer()", model.DisableCustomer.Organization));
-
-                // execute powershell script and dispose powershell object
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.DisableCustomer(model.DisableCustomer.Organization, model.DisableCustomer.Confirm);
-                    var result = ps.Invoke();
-                }
-
-                model.OKMessage.Add(string.Format("Organization '{0}', ADUsers has been disabled and Activesync is disabled on mailbox.", model.DisableCustomer.Organization));
-
-                CommonCAS.Stats("Organization/DisableCustomer");
-
-                return View("DisableCustomer", model);
-            }
-            catch (Exception exc)
-            {
-                CommonCAS.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View(model);
-            }
-        }
-
-        // Display create view
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult EnableCustomer()
-        {
-            try
-            {
-                return View(model);
-            }
-            catch (Exception exc) { return View("Error", exc); }
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Access_SelfService_FullAccess")]
-        public ActionResult EnableCustomer(FormCollection _POST)
-        {
-            try
-            {
-                model.EnableCustomer = new CustomEnableCustomer()
-                {
-                    Organization = _POST["organization"],
-                };
-
-                if (!model.Organizations.Contains(model.EnableCustomer.Organization))
-                {
-                    throw new Exception("Organization does not exist.");
-                }
-
-                CommonCAS.Log(string.Format("has run Organization/EnableCustomer()", model.EnableCustomer.Organization));
-
-                // execute powershell script and dispose powershell object
-                using (MyPowerShell ps = new MyPowerShell())
-                {
-                    ps.EnableCustomer(model.EnableCustomer.Organization);
-                    var result = ps.Invoke();
-                }
-
-                model.OKMessage.Add(string.Format("Organization '{0}', ADUsers has been enabled and Activesync is enabled on mailbox.", model.EnableCustomer.Organization));
-
-                CommonCAS.Stats("Organization/EnableCustomer");
-
-                return View("EnableCustomer", model);
-            }
-            catch (Exception exc)
-            {
-                CommonCAS.Log("Exception: " + exc.Message);
-                model.ActionFailed = true;
-                model.Message = exc.Message;
-                return View(model);
-            }
-        }
 
         [Authorize(Roles = "Access_SelfService_FullAccess")]
         public ActionResult AddDomain()

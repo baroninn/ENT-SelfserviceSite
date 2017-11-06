@@ -64,24 +64,26 @@
                 </div>
             </td>
         </tr>
+    </table>
+    <table>
         <tr>
             <td class="lefttd">Organization</td>
             <td>
                 <select name="organization">
                     @foreach (string organization in Model.Organizations)
                     {
-                        <option selected="@(Model.Mailbox.Organization != null && Model.Mailbox.Organization == organization)">@organization</option>
+                        <option selected="@(Model.Mailbox.Organization != null && Model.Mailbox.Organization == organization)" value="@organization.Split(' ')[0]">@organization</option>
                     }
                 </select>
                 <span class="mandatory">*</span>
             </td>
         </tr>
 
-        <tr>
+        <tr class="hide">
             <td class="lefttd tooltip"><span>DisplayName<i class="material-icons infoicon">info</i></span></td>
             <td class="middletd">
                 <input name="displayname" placeholder="Bogholderi" @if (Model.ActionFailed) {  @: value="@Model.Mailbox.DisplayName"
-                                                                                                                    } />
+                                                                                                                                           } />
                 <span class="mandatory">*</span>
                 <div class="description">
                     <p class="descriptiontext">
@@ -90,8 +92,8 @@
                 </div>
             </td>
         </tr>
-        </table>
-        <table>
+    </table>
+        <table class="hide">
             <tr>
                 <td class="lefttd">Primary email</td>
                 <td class="lefttdaccepteddomain">
@@ -104,7 +106,7 @@
                 </td>
             </tr>
         </table>
-        <table>
+        <table class="hide">
         <tr>
             <td class="lefttd">Mailbox type</td>
             <td class="middletd">

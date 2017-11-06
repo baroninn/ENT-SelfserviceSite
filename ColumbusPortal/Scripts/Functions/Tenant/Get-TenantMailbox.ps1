@@ -9,14 +9,16 @@
         [string]$Name,
 
         # Will return only a single mailbox, or write an error if more than one item matched the name.
-        [switch]$Single
+        [switch]$Single,
+        # Will return result based on identity which is important for internal forwards..
+        [switch]$forwardingaddress
     )
 
     Begin {
         $ErrorActionPreference = 'Stop'
         Set-StrictMode -Version 2.0
 
-        Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Get-Mailbox")
+        Import-Module (New-ExchangeProxyModule -Organization $Organization -Command "Get-Mailbox") > $null
     }
     Process {
         $params = @{
@@ -29,8 +31,11 @@
             }
         }
 
-        if ($Name) {
+        if ($Name -and -not $forwardingaddress) {
             $result = @(Get-Mailbox -filter "UserPrincipalName -eq '$Name'")
+        }
+        elseif ($forwardingaddress) {
+            $result = @(Get-Mailbox -Identity $Name)
         }
         else {
             $result = @(Get-Mailbox @params)
